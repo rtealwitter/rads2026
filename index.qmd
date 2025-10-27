@@ -1,0 +1,145 @@
+---
+title: "**CSCI 167: Randomized Algorithms for Data Science**"
+output:
+  html_document:
+    css: styles.css
+---
+
+<center>
+*A course on how to leverage randomness to build fast algorithms for data science problems.*
+</center>
+
+<br>
+
+<div class="row">
+  <div class="col" markdown="1">
+
+  **Instructor**: [R. Teal Witter](https://www.rtealwitter.com/). Please call me Teal.
+  
+  **Class Times**: We meet Tuesdays and Thursdays from 2:45 to 4:00pm in Kravis 164.
+  
+  **Office Hours**: Mondays and Thursdays from 12:30 to 2pm in Adams 213.
+  
+  **Participation**: I expect you to engage in class, ask questions, and make connections. To receive credit, please fill out this form after every lecture.
+
+  **Problem Sets**: Your primary opportunity to learn the material will be on problem sets. You may work with others to solve the problems, but you must write your solutions by yourself, and explicitly acknowledge any outside help (websites, people, LLMs).
+
+  </div>
+  <div class="col" markdown="1">
+
+  **Quizzes**:
+  There will be short quizzes at the beginning of our Tuesday classes. These quizzes will test your understanding of the problem sets and the concepts from the prior week.
+
+  **Exams**: The two exams are the primary method of assessing your understanding of the material. The first exam will cover the content from the first half of the course, while the second exam will cover the content from the second half.
+
+  **Project**: The  project offers a chance to explore an area that interests you, practice writing high quality code, and develop your ability to communicate technical ideas to an audience. In addition to your codebase, you will write a report and give a short presentation at the end of the semester. 
+
+  </div>
+</div>
+
+**Resources**: This class is based on Chris Musco’s phenomenal algorithmic machine learning and data science [course](https://www.chrismusco.com/amlds2023/) at NYU. While we do not have a textbook, I have prepared typed notes for every lecture; I highly recommend you **read the notes before each class**.
+
+<table style="width: 100%; border-collapse: collapse;">
+  <tr>
+    <td>Week</td>
+    <td>Topic</td>
+    <td>Slides</td>
+    <td>Assignments</td>
+  </tr>
+
+  <tr class="section-header">
+    <td colspan="5">Streaming & Sketching</td>
+  </tr>
+
+  <tr>
+    <td>Week 1 (1/20 and 1/22)</td>
+    <td><a href="notes/01_set_size.html">Set Size Estimation</a></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>Week 2 (1/27 and 1/29)</td>
+    <td><a href="notes/02_frequent_items.html">Frequent Items</a></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>Week 3 (2/3 and 2/5)</td>
+    <td><a href="notes/03_distinct_elements.html">Distinct Elements</a></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>Week 4 (2/10 and 2/12)</td>
+    <td><a href="notes/04_load_balancing.html">Load Balancing</a></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>Week 5 (2/17 and 2/19)</td>
+    <td><a href="notes/05_concentration_inequalities.html">Concentration Inequalities</a></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>Week 6 (2/24 and 2/26)</td>
+    <td><a href="notes/06_high_dimensional_geometry.html">High-Dimensional Geometry</a></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>Week 7 (3/3 and 3/5)</td>
+    <td><a href="notes/07_dimensionality_reduction.html">Dimensionality Reduction</a></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>Week 8 (3/10 and 3/12)</td>
+    <td><a href="notes/08_similarity_estimation.html">Similarity Estimation</a></td>
+    <td></td>
+    <td></td>
+  </tr>
+
+  <tr>
+    <td>Week 9 (3/17 and 3/19)</td>
+    <td><i>Spring Break (No Class)</i></td>
+    <td></td>
+    <td></td>
+  </tr>
+
+  <tr class="section-header">
+    <td colspan="5">Linear Algebra & Spectral Methods</td>
+  </tr>
+
+  <tr>
+    <td>Week 10 (3/24 and 3/26)</td>
+    <td><a href="notes/14_singular_value_decomposition.html">Singular Value Decomposition</a></td>
+    <td></td>
+    <td></td>
+  </tr>
+
+  <tr>
+    <td>Week 11 (4/7 and 4/9)</td>
+    <td><a href="notes/16_spectral_graph_theory.html">Spectral Graph Theory</a></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>Week 12 (4/14 and 4/16)</td>
+    <td><a href="notes/17_sketched_regression.html">Sketched Regression</a></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>Week 13 (4/21 and 4/23)</td>
+    <td><a href="notes/18_fast_jl_transform.html">Fast JL Transform</a></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>Week 14 (4/28 and 4/30)</td>
+    <td><a href="notes/19_sparse_recovery.html">Sparse Recovery</a></td>
+    <td></td>
+    <td></td>
+  </tr>
+</table>
