@@ -147,14 +147,14 @@ output:
   </tr>
   <tr>
     <td>Week 14 (4/21 and 4/23)</td>
-    <td><a href="notes/18_fast_jl_transform.html">Fast JL Transform</a></td>
-    <td><a href="notes/18_fast_jl_transform.html">Fast JL Transform</a></td>
+    <td><a href="notes/explainable_ai.html">Explainable AI</a></td>
+    <td><a href="notes/explainable_ai.html">Explainable AI</a></td>
     <td></td>
     <td></td>
   </tr>
   <tr>
     <td>Week 15 (4/28 and 4/30)</td>
-    <td><a href="notes/19_sparse_recovery.html">Sparse Recovery</a></td>
+    <td><a href="notes/explainable_ai.html">Explainable AI</a></td>
     <td><i>Midterm Exam</i></td>
     <td></td>
     <td></td>
