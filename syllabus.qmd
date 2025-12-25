@@ -22,26 +22,23 @@ In this class, we will explore how data science is deployed at scale. The questi
 
 Your grade in the class will be based on the number of points $P$ that you earn. You will receive an A if $P \geq 93$, an A- if $93 > P \geq 90$, a B+ if $90 > P \geq 87$, and so on. You may earn points through the following assignments:
 
-- **Participation (10 points):**
-The classes at CMC are intentionally small. Unless you have a reasonable excuse (e.g. sickness, family emergency), I expect you to attend every class. Whether you are able to attend or not, I expect you to fill out the form linked from the home page to receive credit for participation (one point per lecture day that you fill it out). Of course, if you are not able to attend in person, you should read the notes before filling out the form. 
-
 - **Problem Sets (10 Points):**
 Learning requires practice. Your main opportunity to practice the concepts we cover in this class will be on the problem sets. Your grade will be based on turning in solutions to each problem and, so that you engage with the solutions, a self grade of your own work. Because I do not want to incentivize the use of LLMs, I will not grade your solutions for correctness; instead, your problem set grade is based on completion and the accuracy of your own self grade.
 
 - **Quizzes (20 Points):**
-In lieu of grading for correctness on the problem sets, I will give short quizzes at the beginning of our Tuesday classes. These quizzes will be based on the problem sets and will test your understanding of the concepts we cover in class. The quizzes will be short (5 minutes) and will be graded for correctness.
+In lieu of grading for correctness on the problem sets, I will give short quizzes at the beginning of randomly selected classes. These quizzes will be based on the problem sets and will test your understanding of the concepts we cover in class. The quizzes will be short (5 minutes) and will be graded for correctness.
 
-- **Exams (40 Points):**
+- **Exams (50 Points):**
 The two exams will be in-person, and cover the material from the first and second halves of the course, respectively. You may bring a double-sided cheat sheet, but you will not be allowed to use any electronic devices. The exams will be graded for correctness.
 
 - **Project (20 Points):**
 The final project will be a chance for you to apply the concepts we have covered in class to a real-world problem. You will select a topic we cover in class and implement an algorithm we discussed on a data set of your choosing. You will write a report describing your results and what you learned. You will also give a presentation showcasing your results to the class. Except in special circumstances, you will complete your project as an individual. 
 
 - **Extra Credit:**
-My typed notes are work in progress, and I would love your help improving them! If you find an issue in the notes *on the day of the lecture or later*, please open an issue on the [repo](https://github.com/rtealwitter/rads2026). I will give extra credit to the first person to correct each typo (worth 1/4 point), ambiguous statement (worth 1/2 point), and mistake (worth 1 point).
+My typed notes are work in progress, and I would love your help improving them! If you find an issue in the notes *on the day of the lecture or later*, please open an issue on the [repo](https://github.com/rtealwitter/rads2026). I will give extra credit to the first person to correct each typo (worth 1/4 point), and mistake (worth 1/2 point).
 
 **Late Policy:**
-I expect all assignments to be turned in on time. If you are unable to turn in an assignment on time, please contact me 24 hours before the assignment is due to request an extension.
+Most assignments will have a no-questions-asked late policy of 24 hours (refer to Gradescope for details on each specific assignment). I will not accept assignments more than 24 hours late.
 
 ### **Honor Code**
 Academic integrity is an important part of your learning experience. You are welcome to use online material and discuss problems with others but you must explicitly acknowledge the outside resources (website, person, or LLM) on the work you submit.
