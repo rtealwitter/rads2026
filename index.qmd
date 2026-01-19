@@ -53,7 +53,7 @@ output:
     <td>Week 1 (1/20 and 1/22)</td>
     <td><a href="notes/01_set_size.html">Math Review</a></td>
     <td><a href="notes/01_set_size.html">Set Size Estimation</a></td>
-    <td></td>
+    <td><a href="slides/Week01.pdf">Slides</a></td>
     <td></td>
   </tr>
   <tr>
