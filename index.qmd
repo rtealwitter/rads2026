@@ -54,7 +54,7 @@ output:
     <td><a href="notes/01_set_size.html">Math Review</a></td>
     <td><a href="notes/01_set_size.html">Set Size Estimation</a></td>
     <td><a href="slides/Week01.pdf">Slides</a></td>
-    <td></td>
+    <td><a href="https://colab.research.google.com/drive/1dVCKdYtpymvJlFcipDiUd813Liet0uWv?usp=sharing">Problem 1</a></td>
   </tr>
   <tr>
     <td>Week 2 (1/27 and 1/29)</td>
