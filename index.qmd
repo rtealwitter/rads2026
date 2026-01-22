@@ -61,7 +61,7 @@ output:
     <td><a href="notes/01_set_size.html">Set Size Estimation</a></td>
     <td><a href="notes/02_frequent_items.html">Frequent Items</a></td>
     <td></td>
-    <td></td>
+    <td><a href="https://colab.research.google.com/drive/1gaNqPQmEDnXKQVemAYGs1sATgQe2xpHK?usp=sharing">Problem 2</a></td>
   </tr>
   <tr>
     <td>Week 3 (2/3 and 2/5)</td>
