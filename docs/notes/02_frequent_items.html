@@ -260,7 +260,7 @@ f(v) \leq A[h(v)] \leq f(v) + \frac{2n}{m}
 <center>
 <img src="images/union.png" width="600">
 </center>
-<p>Let’s apply the union bound to the total failure probability of our estimate. The algorithm fails if <span class="math inline">\(\hat{f}(v_i) &gt; \frac{\epsilon n }{k}\)</span> for any item <span class="math inline">\(v_i\)</span>. By the union bound, <span class="math display">\[
+<p>Let’s apply the union bound to the total failure probability of our estimate. The algorithm fails if <span class="math inline">\(\hat{f}(v_i) &gt; f(v_i) + \frac{\epsilon n }{k}\)</span> for any item <span class="math inline">\(v_i\)</span>. By the union bound, <span class="math display">\[
 \Pr \left(
 \textrm{fail for } v_1
 \cup \textrm{fail for } v_2

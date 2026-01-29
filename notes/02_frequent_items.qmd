@@ -197,7 +197,7 @@ the outcome space covered by the events if they were to not overlap.
 <center><img src="images/union.png" width="600"></center>
 
 Let's apply the union bound to the total failure probability of our estimate.
-The algorithm fails if $\hat{f}(v_i) > \frac{\epsilon n }{k}$ for
+The algorithm fails if $\hat{f}(v_i) > f(v_i) + \frac{\epsilon n }{k}$ for
 any item $v_i$.
 By the union bound,
 $$
