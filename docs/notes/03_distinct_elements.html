@@ -209,16 +209,23 @@ window.Quarto = {
 </ul>
 <p>While Chebyshev’s gives a more general bound, it also needs a bound on the variance of <span class="math inline">\(X\)</span>. In general, bounding the variance is harder than bounding the expectation.</p>
 <p>Note: There’s no hard rule for which to apply! Both Markov’s and Chebyshev’s are useful in different settings.</p>
-<p><strong>Proof of Chebyshev’s Inequality:</strong> We’ll apply Markov’s inequality to the non-negative random variable <span class="math inline">\(S = (X - \mathbb{E}[X])^2\)</span>. By Markov’s, <span class="math display">\[
+<div class="proof-block">
+<details closed="">
+<summary>
+Proof of Chebyshev’s Inequality
+</summary>
+<p>We’ll apply Markov’s inequality to the non-negative random variable <span class="math inline">\(S = (X - \mathbb{E}[X])^2\)</span>. By Markov’s, <span class="math display">\[
 \Pr\left(S \geq t \right) \leq \frac{\mathbb{E}[S]}{t}.
 \]</span> Observe that <span class="math inline">\(\mathbb{E}[S] = \mathbb{E}[(X-\mathbb{E}[X])^2] = \textrm{Var}(X)\)</span>, plug in <span class="math inline">\(t = k^2 \sigma^2\)</span>, and use the definition of <span class="math inline">\(S\)</span>. Then</p>
 <p><span class="math display">\[
 \Pr \left((X - \mathbb{E}[X])^2 \geq k^2 \sigma^2\right)
 \leq \frac{\textrm{Var}(X)}{k^2 \sigma^2}.
 \]</span> We’ll take the square root of the event inside the probability (this preserves the inequality) and observe that <span class="math inline">\(\textrm{Var}(X) = \sigma^2\)</span>. Then simplifying</p>
-<p><span class="math display">\[
+<span class="math display">\[
 \Pr\left(|X - \mathbb{E}[X]| \geq k \sigma\right) \leq \frac{1}{k^2}.
-\]</span></p>
+\]</span>
+</details>
+</div>
 </section>
 <section id="linearity-of-variance" class="level2">
 <h2 class="anchored" data-anchor-id="linearity-of-variance">Linearity of Variance</h2>
@@ -278,19 +285,31 @@ abstraction which makes understanding and analyzing algorithms easier.
 <p>Why do we return the estimate <span class="math inline">\(\hat{D} = \frac{1}{S}- 1\)</span>? Intuitively, when <span class="math inline">\(D\)</span> is larger, <span class="math inline">\(S\)</span> will be smaller because we get more chances to get small values. But the reason behind the exact estimate is that</p>
 <p><strong>Lemma:</strong> <span class="math inline">\(\mathbb{E}[S] = \frac{1}{D+1}\)</span>.</p>
 <p>We’ll see two proofs.</p>
-<p><strong>Calculus Proof:</strong> We’ll use the identity that <span class="math display">\[
+<div class="proof-block">
+<details closed="">
+<summary>
+Calculus Proof
+</summary>
+<p>We’ll use the identity that <span class="math display">\[
 \mathbb{E}[X] = \int \Pr(X \geq x) dx
 \]</span> for a continuous and non-negative random variable <span class="math inline">\(X\)</span>. To see this, notice that <span class="math display">\[
 X = \int_{x=0}^X dx = \int_{x=0}^\infty \mathbb{1}[X \geq x] dx.
 \]</span> Taking expectation yields the identity. There are other ways to prove this identity described in notes <a href="https://stat.uiowa.edu/sites/stat.uiowa.edu/files/cae/Lo_Expectation.pdf">here</a>.</p>
-<p>Now let’s deploy the identity for the continuous random variable <span class="math inline">\(S\)</span>: <span class="math display">\[
+Now let’s deploy the identity for the continuous random variable <span class="math inline">\(S\)</span>: <span class="math display">\[
 \mathbb{E}[S] = \int_{s=0}^1 \Pr(S \geq s) ds
 = \int_{s=0}^1 (1-s)^D d s
 \]</span> <span class="math display">\[
 = \left. \frac{-(1-s)^{D+1}}{D+1} \right|_{s=0}^1 = \frac{1}{D+1}.
-\]</span> In the second equality, we used the observation that the minimum <span class="math inline">\(S\)</span> is greater than a value <span class="math inline">\(s\)</span> if and only if all <span class="math inline">\(D\)</span> hashed values are greater than <span class="math inline">\(s\)</span>.</p>
+\]</span> In the second equality, we used the observation that the minimum <span class="math inline">\(S\)</span> is greater than a value <span class="math inline">\(s\)</span> if and only if all <span class="math inline">\(D\)</span> hashed values are greater than <span class="math inline">\(s\)</span>.
+</details>
+</div>
 <p>We can understand every step of the calculus proof but it doesn’t give us a deeper understanding for <em>why</em> the lemma is true. Let’s turn to another proof “from the book”. This phrase comes from Paul Erdős, a prolific Hungarian mathematician, who believed that there are proofs so simple and elegant that they were written in a divine book.</p>
-<p><strong>Proof from the Book:</strong> We’ll use the following observation: For any event <span class="math inline">\(A\)</span> and random variable <span class="math inline">\(x\)</span>, <span class="math display">\[\begin{align}
+<div class="proof-block">
+<details closed="">
+<summary>
+Proof from the Book
+</summary>
+<p>We’ll use the following observation: For any event <span class="math inline">\(A\)</span> and random variable <span class="math inline">\(x\)</span>, <span class="math display">\[\begin{align}
     \mathbb{E}_x[\Pr[A|x]]
     = \mathbb{E}_x[\mathbb{E}[\mathbb{1}[A] \mid x]]
     = \mathbb{E}[\mathbb{1}[A]]
@@ -304,6 +323,8 @@ X = \int_{x=0}^X dx = \int_{x=0}^\infty \mathbb{1}[X \geq x] dx.
     &amp;= \Pr_{h_1,\ldots,h_{D+1}}[h_{D+1} \leq \min_{i\in[D]} h_i] \\
     &amp;= \frac1{D+1}.
 \end{align*}\]</span> The first equality follows by our alternative definition of <span class="math inline">\(S\)</span>, the second equality follows by the first observation in the proof, the final equality follows because each <span class="math inline">\(h_i\)</span> is equally likely to be the minimum of all <span class="math inline">\(D+1\)</span>.</p>
+</details>
+</div>
 <!--
 Consider a particular set of hashed values $h_1, \ldots, h_D$.
 Then the random variable $S$ is the minimum of these values.
@@ -332,15 +353,28 @@ $$
 \]</span></p>
 <p>We know <span class="math inline">\(\mathbb{E}[S]\)</span> but we don’t yet know <span class="math inline">\(\mathbb{E}[S^2]\)</span>.</p>
 <p><strong>Lemma:</strong> <span class="math inline">\(\mathbb{E}[S^2] = \frac{2}{(D+1)(D+2)}\)</span>.</p>
-<p><strong>Calculus Proof:</strong> Using a calculus proof similar to the one for the expectation, we know <span class="math display">\[
+<p>We’ll again see two proofs.</p>
+<div class="proof-block">
+<details closed="">
+<summary>
+Calculus Proof
+</summary>
+<p>Using a calculus proof similar to the one for the expectation, we know <span class="math display">\[
 \mathbb{E}[S^2] = \int_{s=0}^1 \Pr(S^2 \geq s) ds
 = \int_{s=0}^1 \Pr(S \geq \sqrt{s}) ds
 = \int_{s=0}^1 (1-\sqrt{s})^D d s.
 \]</span> Using the WolframAlpha query <a href="https://www.wolframalpha.com/input/?i=integral+from+0+to+1+of+%281-sqrt%28x%29%29%5ED">here</a>, we can find that the last equality is <span class="math display">\[
 \frac{2}{(D+1)(D+2)}.
 \]</span></p>
+</details>
+</div>
 <p>Again, the calculus proof is correct but it doesn’t give us a deeper understanding.</p>
-<p><strong>Proof from the Book:</strong> We can apply the same machinery that we used in the prior proof from the book. The key observation now is that <span class="math inline">\(S^2\)</span> is the probability that the next <em>two</em> hashed values are both less than the minimum of the first <span class="math inline">\(D\)</span> hashed values. Formally, <span class="math display">\[
+<div class="proof-block">
+<details closed="">
+<summary>
+Proof from the Book
+</summary>
+<p>We can apply the same machinery that we used in the prior proof from the book. The key observation now is that <span class="math inline">\(S^2\)</span> is the probability that the next <em>two</em> hashed values are both less than the minimum of the first <span class="math inline">\(D\)</span> hashed values. Formally, <span class="math display">\[
 S^2 = \Pr(\max(h_{D+1}, h_{D+2}) \leq \min(h_1, \ldots, h_D) | h_1, \ldots, h_D).
 \]</span> What’s the probability that both of the next hashed values are less the minimum of the first <span class="math inline">\(D\)</span> hashed values? Well, that’s the probability that <em>either</em> the first hashed value is less than the minimum of the first <span class="math inline">\(D+1\)</span> hashed values and the second hashed value is less than all <span class="math inline">\(D+2\)</span> hashed values <em>or</em> the second hashed value is less than the minimum of the first <span class="math inline">\(D+1\)</span> hashed values and the first hashed value is less than all <span class="math inline">\(D+2\)</span> hashed values. The probability of the first event is <span class="math inline">\(\frac{1}{(D+1)(D+2)}\)</span> and the probability of the second event is <span class="math inline">\(\frac{1}{(D+1)(D+2)}\)</span>.</p>
 <p>Using the same analysis from the prior proof from the book, we know that <span class="math display">\[\begin{align}
@@ -348,6 +382,8 @@ S^2 = \Pr(\max(h_{D+1}, h_{D+2}) \leq \min(h_1, \ldots, h_D) | h_1, \ldots, h_D)
 &amp;= \Pr_{h_1, \ldots, h_{D+2}}(\max(h_{D+1}, h_{D+2}) \leq \min(h_1, \ldots, h_D)) \\
 &amp;= \frac{2}{(D+1)(D+2)}.
 \end{align}\]</span></p>
+</details>
+</div>
 <!--
 Consider a particular set of hashed values $h_1, \ldots, h_D$.
 Then the random variable $S$ is the minimum of these values.

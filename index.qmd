@@ -58,35 +58,35 @@ output:
   </tr>
   <tr>
     <td>Week 2 (1/27 and 1/29)</td>
-    <td><a href="notes/01_set_size.html">Set Size Estimation</a></td>
+    <td><a href="notes/02_frequent_items.html">Frequent Items</a></td>
     <td><a href="notes/02_frequent_items.html">Frequent Items</a></td>
     <td><a href="slides/Week02.pdf">Slides</a></td>
     <td><a href="https://colab.research.google.com/drive/1gaNqPQmEDnXKQVemAYGs1sATgQe2xpHK?usp=sharing">Problem 2</a></td>
   </tr>
   <tr>
     <td>Week 3 (2/3 and 2/5)</td>
-    <td><a href="notes/02_frequent_items.html">Frequent Items</a></td>
+    <td><a href="notes/03_distinct_elements.html">Distinct Elements</a></td>
     <td><a href="notes/03_distinct_elements.html">Distinct Elements</a></td>
     <td></td>
     <td></td>
   </tr>
   <tr>
     <td>Week 4 (2/10 and 2/12)</td>
-    <td><a href="notes/03_distinct_elements.html">Distinct Elements</a></td>
+    <td><a href="notes/04_load_balancing.html">Load Balancing</a></td>
     <td><a href="notes/04_load_balancing.html">Load Balancing</a></td>
     <td></td>
     <td></td>
   </tr>
   <tr>
     <td>Week 5 (2/17 and 2/19)</td>
-    <td><a href="notes/04_load_balancing.html">Load Balancing</a></td>
+    <td><a href="notes/05_concentration_inequalities.html">Concentration Inequalities</a></td>
     <td><a href="notes/05_concentration_inequalities.html">Concentration Inequalities</a></td>
     <td></td>
     <td></td>
   </tr>
   <tr>
     <td>Week 6 (2/24 and 2/26)</td>
-    <td><a href="notes/05_concentration_inequalities.html">Concentration Inequalities</a></td>
+    <td><a href="notes/06_high_dimensional_geometry.html">High-Dimensional Geometry</a></td>
     <td><a href="notes/06_high_dimensional_geometry.html">High-Dimensional Geometry</a></td>
     <td></td>
     <td></td>
