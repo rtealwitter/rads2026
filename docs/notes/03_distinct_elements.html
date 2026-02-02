@@ -266,7 +266,7 @@ Proof of Chebyshev’s Inequality
 \]</span> but only uses <span class="math inline">\(O(1/\epsilon^2)\)</span> space. This should be surprising: We can use space that is (basically) independent of the number of distinct elements!</p>
 <p>The algorithm we’ll use to accomplish this is surprisingly simple. Choose a random hash function <span class="math inline">\(h: U \rightarrow [0,1]\)</span>. We’ll initialize an estimate <span class="math inline">\(S\)</span>. For every item we see in the stream, we’ll set <span class="math display">\[
 S \gets \min(S, h(x_i)).
-\]</span> Once we processed the stream, return <span class="math inline">\(\frac{1}{S} - 1\)</span>.</p>
+\]</span> Once we process the stream, return <span class="math inline">\(\frac{1}{S} - 1\)</span>.</p>
 <p>The figure below describes the algorithm. Elements arrive in a stream and we hash each item to the real number line between <span class="math inline">\(0\)</span> and <span class="math inline">\(1\)</span>. By the definition of the hash function, each repeated item hashes to the same point. We maintain a value <span class="math inline">\(S\)</span>, the minimum hashed value we’ve seen so far.</p>
 <center>
 <img src="images/min_hash.png" width="800">

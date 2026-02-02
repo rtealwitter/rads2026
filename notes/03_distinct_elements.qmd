@@ -142,7 +142,7 @@ For every item we see in the stream, we'll set
 $$
 S \gets \min(S, h(x_i)).
 $$
-Once we processed the stream, return $\frac{1}{S} - 1$.
+Once we process the stream, return $\frac{1}{S} - 1$.
 
 The figure below describes the algorithm.
 Elements arrive in a stream and we hash each item to the
