@@ -44,7 +44,7 @@ An indicator random variable is 1 if the event happens and 0 otherwise.
 Our goal is to return an estimate $\hat{f}(v)$ so that
 $f(v) \leq \hat{f}(v) \leq f(v) + \frac{\epsilon}{k} n$
 with high probability.
-If we have these estimates, observe that we can can solve the frequent items
+If we have these estimates, observe that we can solve the frequent items
 estimation problem simply by returning all items for which 
 $\hat{f}(v) \geq \frac{n}{k}$.
 
@@ -140,7 +140,7 @@ using the respective hash function.
 So the update on item $x_i$ for every array $j \in \{1, \ldots, t\}$ is
 $A_j[h_j(x_i)] = A_j[h_j(x_i)] + 1$.
 
-Then, when we're computing our estimate for the frequnecy of an item,
+Then, when we're computing our estimate for the frequency of an item,
 we look at each cell it appears in and take the minimum.
 Formally, $\hat{f}(v) = \min A_j[h_j(v)]$.
 We take the minimum because each array only has one-sided error;

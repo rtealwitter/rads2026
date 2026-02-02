@@ -113,7 +113,7 @@ of independence is $\Pr(A \cap B) = \Pr(A) \Pr(B)$.
 
 Let's figure out whether the event $A$ that the dice shows 1 or 2
 is independent of the event $B$ that the dice shows an odd number.
-Well, $\Pr(A \cap B) = \frac{1}{6}$ since the only outcome that satisfy
+Well, $\Pr(A \cap B) = \frac{1}{6}$ since the only outcome that satisfies
 both events is when the dice shows a 1.
 We also know that $\Pr(A) \Pr(B) = \frac{2}{6} \times \frac{3}{6} = \frac{1}{6}$.
 So, by the second definition of independence, we can conclude that
@@ -183,7 +183,7 @@ where the first equality is by definition,
 the second equality is by foiling, and
 the third equality is by linearity of expectation
 and the observation that $\mathbb{E}[X]$
-is a scaler.
+is a scalar.
 
 **Fact 3:** When $X$ and $Y$ are independent, $\textrm{Var}(X+Y) = \textrm{Var}(X) + \textrm{Var}(Y)$.
 
@@ -191,7 +191,7 @@ is a scaler.
 
 \begin{align*}
 \textrm{Var}(X+Y) &= \mathbb{E}\left[(X + Y - \mathbb{E}[X] - \mathbb{E}[Y])^2\right] \\
-&= \mathbb{E}\left[(X- \mathbb{E}[X])^2 + 2(X-\mathbb{E}[X])(Y-\mathbb{E}[Y]) + (Y-\mathbb{E})^2\right] \\
+&= \mathbb{E}\left[(X- \mathbb{E}[X])^2 + 2(X-\mathbb{E}[X])(Y-\mathbb{E}[Y]) + (Y-\mathbb{E}[Y])^2\right] \\
 &= \textrm{Var}(X) + 2\mathbb{E}[(X-\mathbb{E}[X])(Y-\mathbb{E}[Y])]+ \textrm{Var}(Y).
 \end{align*}
 Then, when $X$ and $Y$ are independent,
@@ -218,7 +218,7 @@ Here's our problem:
 How many queries $m$ do we need to make to their API until we can
 independently verify that they do in fact have a million CAPTCHAs?
 
-An obvious approach is to keep calling ther API until we find a million
+An obvious approach is to keep calling their API until we find a million
 unique CAPTCHAs.
 Of course, the issue is that we have to make at least a million API calls.
 That's not so good if we care about efficiency, they charge us per call,
@@ -305,7 +305,7 @@ Rearranging the above inequality gives Markov's.
 Can you see where we used that all outcomes $x$ are non-negative?
 
 Now let's apply Markov's inequality to our set size estimation problem.
-Since the number of duplicates $D$ is always positive, we satisfy the assumption
+Since the number of duplicates $D$ is always non-negative, we satisfy the assumption
 of the inequality.
 $$
 \Pr(D \geq 10 ) \leq \frac{\mathbb{E}[D]}{10} = \frac{.4995}{10} = .04995

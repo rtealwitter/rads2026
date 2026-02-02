@@ -12,7 +12,7 @@ This class, we will learn and use linearity of variance and Chebyshev's inequali
 
 ## Chebyshev's Inequality
 
-**Lemma:** Let $X$ be a random variable expectation $\mathbb{E}[X]$
+**Lemma:** Let $X$ be a random variable with expectation $\mathbb{E}[X]$
 and variance $\sigma^2 = \textrm{Var}[X]$. Then for any $k > 0$,
 
 $$
@@ -22,7 +22,7 @@ $$
 When the variance is smaller, we expect $X$ to concentrate more closely around its expectation.
 Chebyshev's inequality is one way to formalize this intuition.
 
-There are two main benefits of Chebyshev's over Markov's :
+There are two main benefits of Chebyshev's over Markov's:
 
 * Chebyshev's applies to any random variable $X$. In contrast, Markov's requires that the random variable $X$ is non-negative.
 
@@ -30,7 +30,7 @@ There are two main benefits of Chebyshev's over Markov's :
 
 While Chebyshev's gives a more general bound, it also needs a bound on the variance of $X$. In general, bounding the variance is harder than bounding the expectation.
 
-Note: There's no hard rule for which to apply! Both Markov's and Chebyshev's are useful in different settings.
+Note: There's no hard rule for which one to apply! Both Markov's and Chebyshev's are useful in different settings.
 
 ::: {.proof-block}
 <details closed>
@@ -76,7 +76,7 @@ $$
 
 **Question:** Can you think of three random variables that are pairwise independent but not 3-wise independent?
 
-Here's one answer: Let $X_1$ be a random variable that is equally likely to be $1$ and $-1$, let $X_2$ be another random variable that is equally to be $1$ and $-1$, and let $X_3 = X_1 X_2$.
+Here's one answer: Let $X_1$ be a random variable that is equally likely to be $1$ and $-1$, let $X_2$ be another random variable that is equally likely to be $1$ and $-1$, and let $X_3 = X_1 X_2$.
 If we only look at two of the random variables, they appear independent.
 But if we look at all three of them, the values of two give us the value of the third.
 
@@ -120,7 +120,7 @@ The input to the distinct elements problem is $x_1, \ldots, x_n$ where each item
 The output is the number of *distinct* inputs $D$.
 For example, if the input is $1, 10, 2, 4, 9, 2, 10, 4$ then the output is $D=5$.
 
-The distinct elements problem has many applications: Distinct users visiting a webpage. Distinct values in a database columns. Distinct queries to a search engine. Distinct motifs in a DNA sequence.
+The distinct elements problem has many applications: Distinct users visiting a webpage. Distinct values in a database column. Distinct queries to a search engine. Distinct motifs in a DNA sequence.
 Because the problem is so general, implementations of the algorithm we'll describe today (and several refinements of it) are deployed in practice at companies like Google, Yahoo, Twitter, Facebook, and many more.
 
 The naive approach to solve the problem is to build a dictionary of all items seen so far.
@@ -149,7 +149,7 @@ Elements arrive in a stream and we hash each item to the
 real number line between $0$ and $1$.
 By the definition of the hash function, each repeated item
 hashes to the same point.
-We maintain a value $S$ hashed value we've seen so far.
+We maintain a value $S$, the minimum hashed value we've seen so far.
 
 <center><img src="images/min_hash.png" width="800"></center>
 
@@ -207,7 +207,7 @@ We can understand every step of the calculus proof but it doesn't give
 us a deeper understanding for *why* the lemma is true.
 Let's turn to another proof "from the book".
 This phrase comes from
-Paul Erd&odblac;s, a prolific Hungarian mathematician, who believed that
+Paul Erdős, a prolific Hungarian mathematician, who believed that
 there are proofs so simple and elegant that they were written in a divine book.
 
 ::: {.proof-block}
@@ -253,7 +253,7 @@ the final equality follows because each $h_i$ is equally likely to be the minimu
 <!--
 Consider a particular set of hashed values $h_1, \ldots, h_D$.
 Then the random variable $S$ is the minimum of these values.
-Equivalently, because the hashed values are on the inverval 0 to 1,
+Equivalently, because the hashed values are on the interval 0 to 1,
 $S$ is the probability that the next hashed value is less than the minimum value.
 Since the hashed values are independent and uniformly random,
 the probability that the next hashed value is the minimum is $\frac{1}{D+1}$.
@@ -333,7 +333,7 @@ Using the same analysis from the prior proof from the book, we know that
 <!--
 Consider a particular set of hashed values $h_1, \ldots, h_D$.
 Then the random variable $S$ is the minimum of these values.
-Equivalently, because the hashed values are on the inverval 0 to 1, $S$ is the probability that the next hashed value is less than the minimum value.
+Equivalently, because the hashed values are on the interval 0 to 1, $S$ is the probability that the next hashed value is less than the minimum value.
 Similarly, $S^2$ is the probability that the next *two* hashed values are both less than the minimum value.
 
 So far, we know
@@ -375,7 +375,7 @@ But $\epsilon$ is a number less than $1$ so the bound is vacuous!!
 
 ### Variance Reduction
 
-Just as we repeated the core subroutine in the count-min algorithm, we'll repeat core subroutine in this algorithm.
+Just as we repeated the core subroutine in the count-min algorithm, we'll repeat the core subroutine in this algorithm.
 The new algorithm is to choose $k$ random hash functions $h_1, \ldots, h_k: \mathcal{U} \rightarrow [0, 1]$.
 We'll keep $k$ independent sketches of the minimum value
 $S_1, \ldots, S_k$ that are all initialized to $1$.
@@ -433,8 +433,8 @@ Inverting gives,
 $$
 \frac{1}{(1+\epsilon) \mathbb{E}[S]} \leq \frac{1}{S} \leq \frac{1}{(1-\epsilon) \mathbb{E}[S]}.
 $$
-We can use the fact (easily verified on a graphing calculator like [Desmos](https://www.desmos.com/calculator/5u3kwrwq7p)) that $\frac{1}{1+\epsilon} \leq 1 - 2\epsilon$
-and $\frac{1}{1-\epsilon} \geq 1 + 2\epsilon$.
+We can use the fact (easily verified on a graphing calculator like [Desmos](https://www.desmos.com/calculator/5u3kwrwq7p)) that $\frac{1}{1+\epsilon} \geq 1 - 2\epsilon$
+and $\frac{1}{1-\epsilon} \leq 1 + 2\epsilon$.
 We subtract 1 from each term to get
 $$
 (1-2\epsilon) \frac{1}{\mathbb{E}[S]} - 1 

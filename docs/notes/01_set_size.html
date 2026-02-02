@@ -232,7 +232,7 @@ window.Quarto = {
 \Pr(A | B) = \frac{\Pr(A \cap B)}{\Pr(B)}.
 \]</span></p>
 <p>If information about event <span class="math inline">\(B\)</span> does not give us information about event <span class="math inline">\(A\)</span>, we say that <span class="math inline">\(A\)</span> and <span class="math inline">\(B\)</span> are independent. Formally, events <span class="math inline">\(A\)</span> and <span class="math inline">\(B\)</span> are independent if <span class="math inline">\(\Pr(A|B) = \Pr(A)\)</span>. By the definition of conditional probability, an equivalent definition of independence is <span class="math inline">\(\Pr(A \cap B) = \Pr(A) \Pr(B)\)</span>.</p>
-<p>Let’s figure out whether the event <span class="math inline">\(A\)</span> that the dice shows 1 or 2 is independent of the event <span class="math inline">\(B\)</span> that the dice shows an odd number. Well, <span class="math inline">\(\Pr(A \cap B) = \frac{1}{6}\)</span> since the only outcome that satisfy both events is when the dice shows a 1. We also know that <span class="math inline">\(\Pr(A) \Pr(B) = \frac{2}{6} \times \frac{3}{6} = \frac{1}{6}\)</span>. So, by the second definition of independence, we can conclude that <span class="math inline">\(A\)</span> and <span class="math inline">\(B\)</span> are independent.</p>
+<p>Let’s figure out whether the event <span class="math inline">\(A\)</span> that the dice shows 1 or 2 is independent of the event <span class="math inline">\(B\)</span> that the dice shows an odd number. Well, <span class="math inline">\(\Pr(A \cap B) = \frac{1}{6}\)</span> since the only outcome that satisfies both events is when the dice shows a 1. We also know that <span class="math inline">\(\Pr(A) \Pr(B) = \frac{2}{6} \times \frac{3}{6} = \frac{1}{6}\)</span>. So, by the second definition of independence, we can conclude that <span class="math inline">\(A\)</span> and <span class="math inline">\(B\)</span> are independent.</p>
 <p>We’ve been talking about events defined on random variables, but we’ll also be interested in when random variables are independent. Consider random variables <span class="math inline">\(X\)</span> and <span class="math inline">\(Y\)</span>. We say that <span class="math inline">\(X\)</span> and <span class="math inline">\(Y\)</span> are independent if, for all outcomes <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span>, <span class="math inline">\(\Pr(X=x \cap Y=y) = \Pr(X=x) \Pr(Y=y)\)</span>.</p>
 </section>
 <section id="linearity-of-expectation" class="level3">
@@ -266,12 +266,12 @@ window.Quarto = {
 \]</span> <span class="math display">\[
 = \mathbb{E}[X^2 - 2 X \mathbb{E}[X] + \mathbb{E}[X]^2]
 = \mathbb{E}[X^2] - \mathbb{E}[X]^2
-\]</span> where the first equality is by definition, the second equality is by foiling, and the third equality is by linearity of expectation and the observation that <span class="math inline">\(\mathbb{E}[X]\)</span> is a scaler.</p>
+\]</span> where the first equality is by definition, the second equality is by foiling, and the third equality is by linearity of expectation and the observation that <span class="math inline">\(\mathbb{E}[X]\)</span> is a scalar.</p>
 <p><strong>Fact 3:</strong> When <span class="math inline">\(X\)</span> and <span class="math inline">\(Y\)</span> are independent, <span class="math inline">\(\textrm{Var}(X+Y) = \textrm{Var}(X) + \textrm{Var}(Y)\)</span>.</p>
 <p><strong>Proof:</strong> Observe that</p>
 <p><span class="math display">\[\begin{align*}
 \textrm{Var}(X+Y) &amp;= \mathbb{E}\left[(X + Y - \mathbb{E}[X] - \mathbb{E}[Y])^2\right] \\
-&amp;= \mathbb{E}\left[(X- \mathbb{E}[X])^2 + 2(X-\mathbb{E}[X])(Y-\mathbb{E}[Y]) + (Y-\mathbb{E})^2\right] \\
+&amp;= \mathbb{E}\left[(X- \mathbb{E}[X])^2 + 2(X-\mathbb{E}[X])(Y-\mathbb{E}[Y]) + (Y-\mathbb{E}[Y])^2\right] \\
 &amp;= \textrm{Var}(X) + 2\mathbb{E}[(X-\mathbb{E}[X])(Y-\mathbb{E}[Y])]+ \textrm{Var}(Y).
 \end{align*}\]</span> Then, when <span class="math inline">\(X\)</span> and <span class="math inline">\(Y\)</span> are independent, <span class="math display">\[
 \mathbb{E}[(X-\mathbb{E}[X])(Y-\mathbb{E}[Y])]
@@ -283,7 +283,7 @@ window.Quarto = {
 <h2 class="anchored" data-anchor-id="set-size-estimation">Set Size Estimation</h2>
 <p>We’ll pose a problem that has applications in ecology, social networks, and internet indexing. However, while efficiently solving the problem is useful, our purpose is really to gain familiarity with linearity of expectation and learn Markov’s inequality.</p>
 <p>Suppose you run a website that is considering contracting with a company to provide CAPTCHAs for login verification. The company claims to have a database with <span class="math inline">\(n=1000000\)</span> unique CAPTCHAs. For each API call, they’ll return a CAPTCHA chosen uniformly at random from their database. Here’s our problem: How many queries <span class="math inline">\(m\)</span> do we need to make to their API until we can independently verify that they do in fact have a million CAPTCHAs?</p>
-<p>An obvious approach is to keep calling ther API until we find a million unique CAPTCHAs. Of course, the issue is that we have to make at least a million API calls. That’s not so good if we care about efficiency, they charge us per call, or the size they claim to have in their database is much bigger than a million.</p>
+<p>An obvious approach is to keep calling their API until we find a million unique CAPTCHAs. Of course, the issue is that we have to make at least a million API calls. That’s not so good if we care about efficiency, they charge us per call, or the size they claim to have in their database is much bigger than a million.</p>
 <p>A more clever approach is to call their API and count duplicates. Intuitively, the larger their database, the fewer duplicates we expect to see. Define a random variable <span class="math inline">\(D_{i,j}\)</span> which is 1 if the <span class="math inline">\(i\)</span>th and <span class="math inline">\(j\)</span>th calls return the same CAPTCHA and 0 otherwise. (To avoid double counting, we’ll assume <span class="math inline">\(i &lt; j\)</span>.) For example, in the figure below, the <span class="math inline">\(5\)</span>th, <span class="math inline">\(6\)</span>th, and <span class="math inline">\(7\)</span>th calls returned the same CAPTCHA so <span class="math inline">\(D_{5,6}\)</span>, <span class="math inline">\(D_{5,7}\)</span>, and <span class="math inline">\(D_{6,7}\)</span> are all 1.</p>
 <center>
 <img src="images/duplicates.png" width="800">
@@ -318,7 +318,7 @@ D = \sum_{\substack{i, j \in \{1, \ldots, m\} \\ i &lt; j }} D_{i,j}
 \geq \sum_{\substack{x \\ x \geq t}} t \Pr(X=x) + 0
 = t \Pr(X \geq t).
 \]</span> Rearranging the above inequality gives Markov’s. Can you see where we used that all outcomes <span class="math inline">\(x\)</span> are non-negative?</p>
-<p>Now let’s apply Markov’s inequality to our set size estimation problem. Since the number of duplicates <span class="math inline">\(D\)</span> is always positive, we satisfy the assumption of the inequality. <span class="math display">\[
+<p>Now let’s apply Markov’s inequality to our set size estimation problem. Since the number of duplicates <span class="math inline">\(D\)</span> is always non-negative, we satisfy the assumption of the inequality. <span class="math display">\[
 \Pr(D \geq 10 ) \leq \frac{\mathbb{E}[D]}{10} = \frac{.4995}{10} = .04995
 \]</span> The probability of observing the 10 duplicates is less than <span class="math inline">\(5\%\)</span>! We should probably start asking the CAPTCHA company some questions.</p>
 <p>In practice, many of the set size estimation problems are slightly different. Instead of checking a claim about the set size, we want to estimate the set size directly. Notice that we computed <span class="math inline">\(\mathbb{E}[D] = \frac{m(m-1)}{2n}\)</span>. Rearranging, we see that <span class="math inline">\(n = \frac{m(m-1)}{2\mathbb{E}[D]}\)</span>. Given <span class="math inline">\(m\)</span> samples, we can naturally build an estimator for the whole set size using the empirical number of duplicates we found in the sample. With a little more work, we can show the following.</p>

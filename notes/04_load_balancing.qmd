@@ -138,7 +138,7 @@ where the second inequality follows by the union bound.
 
 It should look hard to prove $\Pr(s_i \geq C) \leq \frac{1}{10n}$.
 This implies that $s_i < C$ for a particular server $i$ with
-*very high* probabiity $1- \frac{1}{10n}$.
+*very high* probability $1- \frac{1}{10n}$.
 Unfortunately, Markov's inequality is too weak for this.
 We'll instead use Chebyshev's inequality but we'll first have to understand the variance
 $\textrm{Var}(s_i) = \sigma^2$.

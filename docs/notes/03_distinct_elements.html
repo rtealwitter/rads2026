@@ -197,18 +197,18 @@ window.Quarto = {
 <p>We’ve seen the power of linearity of expectation, Markov’s inequality, and the union bound. This class, we will learn and use linearity of variance and Chebyshev’s inequality.</p>
 <section id="chebyshevs-inequality" class="level2">
 <h2 class="anchored" data-anchor-id="chebyshevs-inequality">Chebyshev’s Inequality</h2>
-<p><strong>Lemma:</strong> Let <span class="math inline">\(X\)</span> be a random variable expectation <span class="math inline">\(\mathbb{E}[X]\)</span> and variance <span class="math inline">\(\sigma^2 = \textrm{Var}[X]\)</span>. Then for any <span class="math inline">\(k &gt; 0\)</span>,</p>
+<p><strong>Lemma:</strong> Let <span class="math inline">\(X\)</span> be a random variable with expectation <span class="math inline">\(\mathbb{E}[X]\)</span> and variance <span class="math inline">\(\sigma^2 = \textrm{Var}[X]\)</span>. Then for any <span class="math inline">\(k &gt; 0\)</span>,</p>
 <p><span class="math display">\[
 \Pr(|X - \mathbb{E}[X]| &gt; k \sigma) \leq \frac{1}{k^2}.
 \]</span></p>
 <p>When the variance is smaller, we expect <span class="math inline">\(X\)</span> to concentrate more closely around its expectation. Chebyshev’s inequality is one way to formalize this intuition.</p>
-<p>There are two main benefits of Chebyshev’s over Markov’s :</p>
+<p>There are two main benefits of Chebyshev’s over Markov’s:</p>
 <ul>
 <li><p>Chebyshev’s applies to any random variable <span class="math inline">\(X\)</span>. In contrast, Markov’s requires that the random variable <span class="math inline">\(X\)</span> is non-negative.</p></li>
 <li><p>Chebyshev’s gives a two-sided bound: we bound the probability that <span class="math inline">\(|X - \mathbb{E}[X]|\)</span> is large, which means that <span class="math inline">\(X\)</span> isn’t too far above <em>or</em> below its expectation. In contrast, Markov’s only bounds the probability that <span class="math inline">\(X\)</span> is larger than <span class="math inline">\(\mathbb{E}[X]\)</span>.</p></li>
 </ul>
 <p>While Chebyshev’s gives a more general bound, it also needs a bound on the variance of <span class="math inline">\(X\)</span>. In general, bounding the variance is harder than bounding the expectation.</p>
-<p>Note: There’s no hard rule for which to apply! Both Markov’s and Chebyshev’s are useful in different settings.</p>
+<p>Note: There’s no hard rule for which one to apply! Both Markov’s and Chebyshev’s are useful in different settings.</p>
 <div class="proof-block">
 <details closed="">
 <summary>
@@ -239,7 +239,7 @@ Proof of Chebyshev’s Inequality
 \Pr(X_1 = v_1, \ldots, X_k=v_k) = \Pr(X_1=v_1) \cdot \ldots \cdot \Pr(X_k = v_k).
 \]</span></p>
 <p><strong>Question:</strong> Can you think of three random variables that are pairwise independent but not 3-wise independent?</p>
-<p>Here’s one answer: Let <span class="math inline">\(X_1\)</span> be a random variable that is equally likely to be <span class="math inline">\(1\)</span> and <span class="math inline">\(-1\)</span>, let <span class="math inline">\(X_2\)</span> be another random variable that is equally to be <span class="math inline">\(1\)</span> and <span class="math inline">\(-1\)</span>, and let <span class="math inline">\(X_3 = X_1 X_2\)</span>. If we only look at two of the random variables, they appear independent. But if we look at all three of them, the values of two give us the value of the third.</p>
+<p>Here’s one answer: Let <span class="math inline">\(X_1\)</span> be a random variable that is equally likely to be <span class="math inline">\(1\)</span> and <span class="math inline">\(-1\)</span>, let <span class="math inline">\(X_2\)</span> be another random variable that is equally likely to be <span class="math inline">\(1\)</span> and <span class="math inline">\(-1\)</span>, and let <span class="math inline">\(X_3 = X_1 X_2\)</span>. If we only look at two of the random variables, they appear independent. But if we look at all three of them, the values of two give us the value of the third.</p>
 <section id="coin-example" class="level3">
 <h3 class="anchored" data-anchor-id="coin-example">Coin Example</h3>
 <p>In order to gain familiarity with Chebyshev’s inequality and linearity of variance, let’s go through an example with coin flips. Let <span class="math inline">\(C_1, \ldots, C_{100}\)</span> be independent random variables that are <span class="math inline">\(1\)</span> with probability <span class="math inline">\(\frac{1}{2}\)</span> and <span class="math inline">\(0\)</span> otherwise.</p>
@@ -259,7 +259,7 @@ Proof of Chebyshev’s Inequality
 <h2 class="anchored" data-anchor-id="distinct-elements">Distinct Elements</h2>
 <p>The first problem that we’ll consider is estimating distinct elements. The problem, like many we’ll see in this class (e.g.&nbsp;frequent items estimation), is posed in the streaming model. In this model, we have a massive data set that arrives in a sequential stream. There is far too much data to store or process in a single location but we still want to analyze the data. To do this, we must compress the data on the fly, storing some smaller data structure which still contains useful information.</p>
 <p>The input to the distinct elements problem is <span class="math inline">\(x_1, \ldots, x_n\)</span> where each item is in a huge universe of items <span class="math inline">\(\mathcal{U}\)</span>. The output is the number of <em>distinct</em> inputs <span class="math inline">\(D\)</span>. For example, if the input is <span class="math inline">\(1, 10, 2, 4, 9, 2, 10, 4\)</span> then the output is <span class="math inline">\(D=5\)</span>.</p>
-<p>The distinct elements problem has many applications: Distinct users visiting a webpage. Distinct values in a database columns. Distinct queries to a search engine. Distinct motifs in a DNA sequence. Because the problem is so general, implementations of the algorithm we’ll describe today (and several refinements of it) are deployed in practice at companies like Google, Yahoo, Twitter, Facebook, and many more.</p>
+<p>The distinct elements problem has many applications: Distinct users visiting a webpage. Distinct values in a database column. Distinct queries to a search engine. Distinct motifs in a DNA sequence. Because the problem is so general, implementations of the algorithm we’ll describe today (and several refinements of it) are deployed in practice at companies like Google, Yahoo, Twitter, Facebook, and many more.</p>
 <p>The naive approach to solve the problem is to build a dictionary of all items seen so far. Every time we see an element, we hash it and check if we already have it in the dictionary. Unfortunately, the space complexity is <span class="math inline">\(O(D)\)</span> and, if we have millions or billions of distinct elements, this naive approach is infeasible.</p>
 <p>Our goal is to return an estimate <span class="math inline">\(\hat{D}\)</span> that satisfies <span class="math display">\[
 (1-\epsilon) D \leq \hat{D} \leq (1+\epsilon) D
@@ -267,7 +267,7 @@ Proof of Chebyshev’s Inequality
 <p>The algorithm we’ll use to accomplish this is surprisingly simple. Choose a random hash function <span class="math inline">\(h: U \rightarrow [0,1]\)</span>. We’ll initialize an estimate <span class="math inline">\(S\)</span>. For every item we see in the stream, we’ll set <span class="math display">\[
 S \gets \min(S, h(x_i)).
 \]</span> Once we processed the stream, return <span class="math inline">\(\frac{1}{S} - 1\)</span>.</p>
-<p>The figure below describes the algorithm. Elements arrive in a stream and we hash each item to the real number line between <span class="math inline">\(0\)</span> and <span class="math inline">\(1\)</span>. By the definition of the hash function, each repeated item hashes to the same point. We maintain a value <span class="math inline">\(S\)</span> hashed value we’ve seen so far.</p>
+<p>The figure below describes the algorithm. Elements arrive in a stream and we hash each item to the real number line between <span class="math inline">\(0\)</span> and <span class="math inline">\(1\)</span>. By the definition of the hash function, each repeated item hashes to the same point. We maintain a value <span class="math inline">\(S\)</span>, the minimum hashed value we’ve seen so far.</p>
 <center>
 <img src="images/min_hash.png" width="800">
 </center>
@@ -328,7 +328,7 @@ Proof from the Book
 <!--
 Consider a particular set of hashed values $h_1, \ldots, h_D$.
 Then the random variable $S$ is the minimum of these values.
-Equivalently, because the hashed values are on the inverval 0 to 1,
+Equivalently, because the hashed values are on the interval 0 to 1,
 $S$ is the probability that the next hashed value is less than the minimum value.
 Since the hashed values are independent and uniformly random,
 the probability that the next hashed value is the minimum is $\frac{1}{D+1}$.
@@ -387,7 +387,7 @@ S^2 = \Pr(\max(h_{D+1}, h_{D+2}) \leq \min(h_1, \ldots, h_D) | h_1, \ldots, h_D)
 <!--
 Consider a particular set of hashed values $h_1, \ldots, h_D$.
 Then the random variable $S$ is the minimum of these values.
-Equivalently, because the hashed values are on the inverval 0 to 1, $S$ is the probability that the next hashed value is less than the minimum value.
+Equivalently, because the hashed values are on the interval 0 to 1, $S$ is the probability that the next hashed value is less than the minimum value.
 Similarly, $S^2$ is the probability that the next *two* hashed values are both less than the minimum value.
 
 So far, we know
@@ -417,7 +417,7 @@ $$
 \]</span> But <span class="math inline">\(\epsilon\)</span> is a number less than <span class="math inline">\(1\)</span> so the bound is vacuous!!</p>
 <section id="variance-reduction" class="level3">
 <h3 class="anchored" data-anchor-id="variance-reduction">Variance Reduction</h3>
-<p>Just as we repeated the core subroutine in the count-min algorithm, we’ll repeat core subroutine in this algorithm. The new algorithm is to choose <span class="math inline">\(k\)</span> random hash functions <span class="math inline">\(h_1, \ldots, h_k: \mathcal{U} \rightarrow [0, 1]\)</span>. We’ll keep <span class="math inline">\(k\)</span> independent sketches of the minimum value <span class="math inline">\(S_1, \ldots, S_k\)</span> that are all initialized to <span class="math inline">\(1\)</span>. Then, when we see item <span class="math inline">\(x_i\)</span>, we update <span class="math display">\[S_j \gets \min(S_j, h_j(x_i))\]</span> for every <span class="math inline">\(j \in \{1, \ldots, k\}\)</span>. At the end of the stream, we take the average <span class="math inline">\(S = (S_1 + \ldots + S_k)/k\)</span> and return the estimate <span class="math inline">\(\hat{D} = \frac{1}{S} - 1\)</span>.</p>
+<p>Just as we repeated the core subroutine in the count-min algorithm, we’ll repeat the core subroutine in this algorithm. The new algorithm is to choose <span class="math inline">\(k\)</span> random hash functions <span class="math inline">\(h_1, \ldots, h_k: \mathcal{U} \rightarrow [0, 1]\)</span>. We’ll keep <span class="math inline">\(k\)</span> independent sketches of the minimum value <span class="math inline">\(S_1, \ldots, S_k\)</span> that are all initialized to <span class="math inline">\(1\)</span>. Then, when we see item <span class="math inline">\(x_i\)</span>, we update <span class="math display">\[S_j \gets \min(S_j, h_j(x_i))\]</span> for every <span class="math inline">\(j \in \{1, \ldots, k\}\)</span>. At the end of the stream, we take the average <span class="math inline">\(S = (S_1 + \ldots + S_k)/k\)</span> and return the estimate <span class="math inline">\(\hat{D} = \frac{1}{S} - 1\)</span>.</p>
 <p>Our new algorithm is an example of a general strategy for variance reduction. We repeat many independent trials and take the mean. Given i.i.d. (independent, identically distributed) random variables, <span class="math inline">\(X_1, \ldots, X_k\)</span> with mean <span class="math inline">\(\mu\)</span> and variance <span class="math inline">\(\sigma^2\)</span>, we know that</p>
 <p><span class="math display">\[
 \mathbb{E} \left[ \frac{1}{k} \sum_{i=1}^k X_i \right]
@@ -441,7 +441,7 @@ $$
 \leq S \leq (1+\epsilon) \mathbb{E}[S].
 \]</span> Inverting gives, <span class="math display">\[
 \frac{1}{(1+\epsilon) \mathbb{E}[S]} \leq \frac{1}{S} \leq \frac{1}{(1-\epsilon) \mathbb{E}[S]}.
-\]</span> We can use the fact (easily verified on a graphing calculator like <a href="https://www.desmos.com/calculator/5u3kwrwq7p">Desmos</a>) that <span class="math inline">\(\frac{1}{1+\epsilon} \leq 1 - 2\epsilon\)</span> and <span class="math inline">\(\frac{1}{1-\epsilon} \geq 1 + 2\epsilon\)</span>. We subtract 1 from each term to get <span class="math display">\[
+\]</span> We can use the fact (easily verified on a graphing calculator like <a href="https://www.desmos.com/calculator/5u3kwrwq7p">Desmos</a>) that <span class="math inline">\(\frac{1}{1+\epsilon} \geq 1 - 2\epsilon\)</span> and <span class="math inline">\(\frac{1}{1-\epsilon} \leq 1 + 2\epsilon\)</span>. We subtract 1 from each term to get <span class="math display">\[
 (1-2\epsilon) \frac{1}{\mathbb{E}[S]} - 1
 \leq \frac{1}{S} - 1 \leq (1+2\epsilon)
 \frac{1}{\mathbb{E}[S]} - 1.
