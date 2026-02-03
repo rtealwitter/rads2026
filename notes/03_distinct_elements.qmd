@@ -153,7 +153,7 @@ We maintain a value $S$, the minimum hashed value we've seen so far.
 
 <center><img src="images/min_hash.png" width="800"></center>
 
-<!---
+<!--
 Note: 
 We pretend that we can hash to real numbers.
 However, it is impossible to implement such an $h(x)$ in practice.
@@ -161,8 +161,7 @@ Instead, we replace it with $\frac{g(x)}{k}$ where $g$ is a hash function that
 maps to $\{0, 1, \ldots k \}$ for a sufficiently large $k$.
 All the results hold if this "discrete" hash function is used instead,
 but the analysis is simpler if we assume access to $h$.
-Just like when we assumed uniform random hash functions, this is a useful
-abstraction which makes understanding and analyzing algorithms easier.
+Just like when we assumed uniform random hash functions, this is a useful abstraction which makes understanding and analyzing algorithms easier.
 -->
 
 Why do we return the estimate $\hat{D} = \frac{1}{S}- 1$?
@@ -296,7 +295,7 @@ $$
 = \int_{s=0}^1 \Pr(S \geq \sqrt{s}) ds
 = \int_{s=0}^1 (1-\sqrt{s})^D d s.
 $$
-Using the WolframAlpha query [here](https://www.wolframalpha.com/input/?i=integral+from+0+to+1+of+%281-sqrt%28x%29%29%5ED), we can find that the last equality is
+After a $u$-substitution with $u=1-\sqrt{s}$, we have that the last equality is
 $$
 \frac{2}{(D+1)(D+2)}.
 $$

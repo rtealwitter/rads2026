@@ -271,7 +271,7 @@ S \gets \min(S, h(x_i)).
 <center>
 <img src="images/min_hash.png" width="800">
 </center>
-<!---
+<!--
 Note: 
 We pretend that we can hash to real numbers.
 However, it is impossible to implement such an $h(x)$ in practice.
@@ -279,8 +279,7 @@ Instead, we replace it with $\frac{g(x)}{k}$ where $g$ is a hash function that
 maps to $\{0, 1, \ldots k \}$ for a sufficiently large $k$.
 All the results hold if this "discrete" hash function is used instead,
 but the analysis is simpler if we assume access to $h$.
-Just like when we assumed uniform random hash functions, this is a useful
-abstraction which makes understanding and analyzing algorithms easier.
+Just like when we assumed uniform random hash functions, this is a useful abstraction which makes understanding and analyzing algorithms easier.
 -->
 <p>Why do we return the estimate <span class="math inline">\(\hat{D} = \frac{1}{S}- 1\)</span>? Intuitively, when <span class="math inline">\(D\)</span> is larger, <span class="math inline">\(S\)</span> will be smaller because we get more chances to get small values. But the reason behind the exact estimate is that</p>
 <p><strong>Lemma:</strong> <span class="math inline">\(\mathbb{E}[S] = \frac{1}{D+1}\)</span>.</p>
@@ -363,7 +362,7 @@ Calculus Proof
 \mathbb{E}[S^2] = \int_{s=0}^1 \Pr(S^2 \geq s) ds
 = \int_{s=0}^1 \Pr(S \geq \sqrt{s}) ds
 = \int_{s=0}^1 (1-\sqrt{s})^D d s.
-\]</span> Using the WolframAlpha query <a href="https://www.wolframalpha.com/input/?i=integral+from+0+to+1+of+%281-sqrt%28x%29%29%5ED">here</a>, we can find that the last equality is <span class="math display">\[
+\]</span> After a <span class="math inline">\(u\)</span>-substitution with <span class="math inline">\(u=1-\sqrt{s}\)</span>, we have that the last equality is <span class="math display">\[
 \frac{2}{(D+1)(D+2)}.
 \]</span></p>
 </details>
