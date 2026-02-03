@@ -68,7 +68,7 @@ output:
     <td><a href="notes/03_distinct_elements.html">Distinct Elements</a></td>
     <td><a href="notes/03_distinct_elements.html">Distinct Elements</a></td>
     <td><a href="slides/Week03.pdf">Slides</a></td>
-    <td></td>
+    <td><a href="https://colab.research.google.com/drive/15L8Zi3LBvVXGeJOSaEmQKpPSaBQnjleI?usp=sharing">Problem 4</a>, <a href="https://colab.research.google.com/drive/1LuRvgAY3ruIoxXY4w99kkiT-8luiVyo9?usp=sharing">Problem 5</a></td>
   </tr>
   <tr>
     <td>Week 4 (2/10 and 2/12)</td>
