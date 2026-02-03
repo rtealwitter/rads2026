@@ -67,7 +67,7 @@ output:
     <td>Week 3 (2/3 and 2/5)</td>
     <td><a href="notes/03_distinct_elements.html">Distinct Elements</a></td>
     <td><a href="notes/03_distinct_elements.html">Distinct Elements</a></td>
-    <td></td>
+    <td><a href="slides/Week03.pdf">Slides</a></td>
     <td></td>
   </tr>
   <tr>
