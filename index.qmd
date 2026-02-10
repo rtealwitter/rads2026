@@ -74,7 +74,7 @@ output:
     <td>Week 4 (2/10 and 2/12)</td>
     <td><a href="notes/04_load_balancing.html">Load Balancing</a></td>
     <td><a href="notes/04_load_balancing.html">Load Balancing</a></td>
-    <td></td>
+    <td><a href="slides/Week04.pdf">Slides</a></td>
     <td></td>
   </tr>
   <tr>
