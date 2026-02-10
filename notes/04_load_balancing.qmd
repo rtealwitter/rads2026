@@ -16,7 +16,7 @@ Suppose Google answers map search queries using $n$ servers
 $A_1, \ldots, A_n$.
 Given a query like "New York to Rhode Island",
 a common practice is to choose a random hash function
-$h: \mathcal{U} \rightarrow \{1, \ldots, q\}$ and
+$h: \mathcal{U} \rightarrow \{1, \ldots, n\}$ and
 to route this query to the server corresponding
 to its hashed value.
 
@@ -31,8 +31,9 @@ on different servers.
 
 ### Problem Statement
 
-Suppose we have $n$ servers and $m$ requests
-$x_1, \ldots, x_m$.
+Suppose we have $n$ servers and $m$ requests $x_1, \ldots, x_m$.
+Without loss of generality, we can assume that the requests are distinct.
+(We assume that redundant queries are handled by caching, so we focus on $m$ unique requests.)
 Let $s_i$ be the number of requests sent to 
 server $i \in \{1, \ldots, n\}$.
 Formally,
@@ -50,7 +51,7 @@ think about expectations.
 If we have $n$ servers and $m$ requests,
 for any $i \in \{1, \ldots, n\}$,
 $$
-\mathbb{E}[s_i] = \sum_{j=1}^m \mathbb{E}\left[\mathbb{1}[h(x_j)=1]\right]
+\mathbb{E}[s_i] = \sum_{j=1}^m \mathbb{E}\left[\mathbb{1}[h(x_j)=i]\right]
 = \frac{m}{n}.
 $$
 But it's very unclear what the expectation of $S$ is.
@@ -65,7 +66,7 @@ let's assume that $m=n$. That is, we assume that we have
 exactly the same number of servers and requests.
 As we did in the last problem, we'll continue to assume we have
 access to a uniformly random hash function $h$ so that
-$\Pr(h(x) = h(y))=\frac{1}{m}$.
+$\Pr(h(x) = h(y))=\frac{1}{n}$ when $x \neq y$ and $\Pr(h(x)=h(x))=1$ for all $x$.
 
 We can visualize the load balancing problem in the following figure:
 Each request is placed in a server uniformly and at random.
@@ -108,7 +109,7 @@ $$
 
 We saw the proof by picture last class.
 This time, we'll prove the union bound using Markov's inequality.
-Ironically, three of the tools that we've used so far (Markov's inequality, Chebyshev's inequality, and the union bound) are all Markov's inequality.
+Ironically, three of the tools that we've used so far (Markov's inequality, Chebyshev's inequality, and the union bound) are all Markov's inequality in disguise.
 
 **Proof**:
 Let $\mathbb{1}[E_i]$ be the indicator random variable that event $E_i$ occurs.
@@ -146,16 +147,16 @@ Let $s_{i,j}$ be the indicator random variable that
 the $j$th request goes to the $i$th server.
 We have
 $$
-s_i = \sum_{j=1}^n s_{i,j}.
+s_i = \sum_{j=1}^m s_{i,j}.
 $$
 Since each $s_{i,j}$ and $s_{i,j'}$ are independent, we can apply
 linearity of variance and get
 $$
 \textrm{Var}(s_i)
-=\sum_{j=1}^n \textrm{Var}(s_{i,j}).
+=\sum_{j=1}^m \textrm{Var}(s_{i,j}).
 $$
 We know that server $i$ gets request $j$ with probability $\frac{1}{n}$
-so $s_i = 1$ with probability $\frac{1}{n}$ and $s_i=0$ otherwise.
+so $s_{i,j} = 1$ with probability $\frac{1}{n}$ and $s_{i,j}=0$ otherwise.
 This tells us that $\mathbb{E}[s_{i,j}] = \frac{1}{n}$
 and $\mathbb{E}[s_{i,j}^2] = \frac{1}{n}$.
 Then
@@ -193,7 +194,7 @@ $$
 
 In words, we proved that when hashing $n$ requests into
 $n$ servers, the server with the maximum number of requests
-contains no more than $\sqrt{10n} + 1$ requests with probability
+contains strictly less than $\sqrt{10n} + 1$ requests with probability
 $\frac{9}{10}$.
 
 We analyzed and solved the load balancing problem which is important and widely applicable.
@@ -201,6 +202,6 @@ But the real value of what we did today is not the specific problem we solved bu
 
 * We used the union bound to control the maximum of many random variables.
 
-* We used Chebyshev's inequality to bound a variable whose variance we could can compute.
+* We used Chebyshev's inequality to bound a variable whose variance we can compute.
 
 * In order to compute the variance, we took a random variable and decomposed it into a sum of independent random variables so that we could apply linearity of variance.

@@ -194,22 +194,22 @@ window.Quarto = {
 <section id="load-balancing" class="level2">
 <h2 class="anchored" data-anchor-id="load-balancing">Load Balancing</h2>
 <p>We’ve seen how to apply linearity of variance and Chebyshev’s inequality to the distinct elements problem. In this class, we will see how to apply these tools to the load balancing problem.</p>
-<p>Suppose Google answers map search queries using <span class="math inline">\(n\)</span> servers <span class="math inline">\(A_1, \ldots, A_n\)</span>. Given a query like “New York to Rhode Island”, a common practice is to choose a random hash function <span class="math inline">\(h: \mathcal{U} \rightarrow \{1, \ldots, q\}\)</span> and to route this query to the server corresponding to its hashed value.</p>
+<p>Suppose Google answers map search queries using <span class="math inline">\(n\)</span> servers <span class="math inline">\(A_1, \ldots, A_n\)</span>. Given a query like “New York to Rhode Island”, a common practice is to choose a random hash function <span class="math inline">\(h: \mathcal{U} \rightarrow \{1, \ldots, n\}\)</span> and to route this query to the server corresponding to its hashed value.</p>
 <p>Our goal is to ensure that requests are distributed evenly, so no one server gets loaded with too many requests. We want to avoid downtime and slow responses to clients.</p>
 <p>Why should we use a hash function instead of just distributing requests randomly? Well, if a query has already been answered on a server, we want to direct the same query to it again so we don’t have to recompute the same answer on different servers.</p>
 <section id="problem-statement" class="level3">
 <h3 class="anchored" data-anchor-id="problem-statement">Problem Statement</h3>
-<p>Suppose we have <span class="math inline">\(n\)</span> servers and <span class="math inline">\(m\)</span> requests <span class="math inline">\(x_1, \ldots, x_m\)</span>. Let <span class="math inline">\(s_i\)</span> be the number of requests sent to server <span class="math inline">\(i \in \{1, \ldots, n\}\)</span>. Formally, <span class="math display">\[
+<p>Suppose we have <span class="math inline">\(n\)</span> servers and <span class="math inline">\(m\)</span> requests <span class="math inline">\(x_1, \ldots, x_m\)</span>. Without loss of generality, we can assume that the requests are distinct. (We assume that redundant queries are handled by caching, so we focus on <span class="math inline">\(m\)</span> unique requests.) Let <span class="math inline">\(s_i\)</span> be the number of requests sent to server <span class="math inline">\(i \in \{1, \ldots, n\}\)</span>. Formally, <span class="math display">\[
 s_i = \sum_{j=1}^m \mathbb{1}[h(x_j)=i].
 \]</span> Our goal is to understand the value of the maximum load on any server, which can be written as the random variable <span class="math display">\[
 S = \max_{i \in \{1, \ldots, n\}} s_i.
 \]</span></p>
 <p>A good first step in any analysis of random variables is to think about expectations. If we have <span class="math inline">\(n\)</span> servers and <span class="math inline">\(m\)</span> requests, for any <span class="math inline">\(i \in \{1, \ldots, n\}\)</span>, <span class="math display">\[
-\mathbb{E}[s_i] = \sum_{j=1}^m \mathbb{E}\left[\mathbb{1}[h(x_j)=1]\right]
+\mathbb{E}[s_i] = \sum_{j=1}^m \mathbb{E}\left[\mathbb{1}[h(x_j)=i]\right]
 = \frac{m}{n}.
 \]</span> But it’s very unclear what the expectation of <span class="math inline">\(S\)</span> is. In particular, <span class="math inline">\(\mathbb{E}[S] \neq \max_{i \in \{1, \ldots, n\}} \mathbb{E}[s_i]\)</span>.</p>
 <p>Can you convince yourself that for two random variables <span class="math inline">\(A\)</span> and <span class="math inline">\(B\)</span>, <span class="math inline">\(\mathbb{E}[\max(A,B)] \neq \max(\mathbb{E}[A], \mathbb{E}[B])\)</span>? One example to think about is when <span class="math inline">\(A\)</span> and <span class="math inline">\(B\)</span> are independent variables that are each equally likely to be <span class="math inline">\(1\)</span> and <span class="math inline">\(0\)</span>.</p>
-<p>In order to reduce notation and keep the math simple, let’s assume that <span class="math inline">\(m=n\)</span>. That is, we assume that we have exactly the same number of servers and requests. As we did in the last problem, we’ll continue to assume we have access to a uniformly random hash function <span class="math inline">\(h\)</span> so that <span class="math inline">\(\Pr(h(x) = h(y))=\frac{1}{m}\)</span>.</p>
+<p>In order to reduce notation and keep the math simple, let’s assume that <span class="math inline">\(m=n\)</span>. That is, we assume that we have exactly the same number of servers and requests. As we did in the last problem, we’ll continue to assume we have access to a uniformly random hash function <span class="math inline">\(h\)</span> so that <span class="math inline">\(\Pr(h(x) = h(y))=\frac{1}{n}\)</span> when <span class="math inline">\(x \neq y\)</span> and <span class="math inline">\(\Pr(h(x)=h(x))=1\)</span> for all <span class="math inline">\(x\)</span>.</p>
 <p>We can visualize the load balancing problem in the following figure: Each request is placed in a server uniformly and at random.</p>
 <center>
 <img src="images/balls.png" width="800">
@@ -232,7 +232,7 @@ S = \max_{i \in \{1, \ldots, n\}} s_i.
 <center>
 <img src="images/union.png" width="600">
 </center>
-<p>We saw the proof by picture last class. This time, we’ll prove the union bound using Markov’s inequality. Ironically, three of the tools that we’ve used so far (Markov’s inequality, Chebyshev’s inequality, and the union bound) are all Markov’s inequality.</p>
+<p>We saw the proof by picture last class. This time, we’ll prove the union bound using Markov’s inequality. Ironically, three of the tools that we’ve used so far (Markov’s inequality, Chebyshev’s inequality, and the union bound) are all Markov’s inequality in disguise.</p>
 <p><strong>Proof</strong>: Let <span class="math inline">\(\mathbb{1}[E_i]\)</span> be the indicator random variable that event <span class="math inline">\(E_i\)</span> occurs. Define <span class="math inline">\(X= \sum_{i=1}^n \mathbb{1}[E_i]\)</span> as the number of events that occur. Markov’s inequality tells us that <span class="math display">\[
 \Pr \left( E_1 \cup \ldots \cup E_n \right)
 = \Pr \left( \sum_{i=1}^n \mathbb{1}[E_i] \geq 1 \right)
@@ -249,11 +249,11 @@ S = \max_{i \in \{1, \ldots, n\}} s_i.
 \leq \sum_{i=1}^n \frac{1}{10n} = \frac{1}{10}
 \]</span> where the second inequality follows by the union bound.</p>
 <p>It should look hard to prove <span class="math inline">\(\Pr(s_i \geq C) \leq \frac{1}{10n}\)</span>. This implies that <span class="math inline">\(s_i &lt; C\)</span> for a particular server <span class="math inline">\(i\)</span> with <em>very high</em> probability <span class="math inline">\(1- \frac{1}{10n}\)</span>. Unfortunately, Markov’s inequality is too weak for this. We’ll instead use Chebyshev’s inequality but we’ll first have to understand the variance <span class="math inline">\(\textrm{Var}(s_i) = \sigma^2\)</span>. Let <span class="math inline">\(s_{i,j}\)</span> be the indicator random variable that the <span class="math inline">\(j\)</span>th request goes to the <span class="math inline">\(i\)</span>th server. We have <span class="math display">\[
-s_i = \sum_{j=1}^n s_{i,j}.
+s_i = \sum_{j=1}^m s_{i,j}.
 \]</span> Since each <span class="math inline">\(s_{i,j}\)</span> and <span class="math inline">\(s_{i,j'}\)</span> are independent, we can apply linearity of variance and get <span class="math display">\[
 \textrm{Var}(s_i)
-=\sum_{j=1}^n \textrm{Var}(s_{i,j}).
-\]</span> We know that server <span class="math inline">\(i\)</span> gets request <span class="math inline">\(j\)</span> with probability <span class="math inline">\(\frac{1}{n}\)</span> so <span class="math inline">\(s_i = 1\)</span> with probability <span class="math inline">\(\frac{1}{n}\)</span> and <span class="math inline">\(s_i=0\)</span> otherwise. This tells us that <span class="math inline">\(\mathbb{E}[s_{i,j}] = \frac{1}{n}\)</span> and <span class="math inline">\(\mathbb{E}[s_{i,j}^2] = \frac{1}{n}\)</span>. Then <span class="math display">\[
+=\sum_{j=1}^m \textrm{Var}(s_{i,j}).
+\]</span> We know that server <span class="math inline">\(i\)</span> gets request <span class="math inline">\(j\)</span> with probability <span class="math inline">\(\frac{1}{n}\)</span> so <span class="math inline">\(s_{i,j} = 1\)</span> with probability <span class="math inline">\(\frac{1}{n}\)</span> and <span class="math inline">\(s_{i,j}=0\)</span> otherwise. This tells us that <span class="math inline">\(\mathbb{E}[s_{i,j}] = \frac{1}{n}\)</span> and <span class="math inline">\(\mathbb{E}[s_{i,j}^2] = \frac{1}{n}\)</span>. Then <span class="math display">\[
 \textrm{Var}(s_{i,j}) = \frac{1}{n} - \frac{1}{n^2} \leq \frac{1}{n}
 \]</span> and <span class="math display">\[
 \textrm{Var}(s_i) \leq n \frac{1}{n} = 1.
@@ -274,11 +274,11 @@ s_i = \sum_{j=1}^n s_{i,j}.
 \right)
 \leq \frac{1}{10}.
 \]</span></p>
-<p>In words, we proved that when hashing <span class="math inline">\(n\)</span> requests into <span class="math inline">\(n\)</span> servers, the server with the maximum number of requests contains no more than <span class="math inline">\(\sqrt{10n} + 1\)</span> requests with probability <span class="math inline">\(\frac{9}{10}\)</span>.</p>
+<p>In words, we proved that when hashing <span class="math inline">\(n\)</span> requests into <span class="math inline">\(n\)</span> servers, the server with the maximum number of requests contains strictly less than <span class="math inline">\(\sqrt{10n} + 1\)</span> requests with probability <span class="math inline">\(\frac{9}{10}\)</span>.</p>
 <p>We analyzed and solved the load balancing problem which is important and widely applicable. But the real value of what we did today is not the specific problem we solved but the techniques we used to solve them:</p>
 <ul>
 <li><p>We used the union bound to control the maximum of many random variables.</p></li>
-<li><p>We used Chebyshev’s inequality to bound a variable whose variance we could can compute.</p></li>
+<li><p>We used Chebyshev’s inequality to bound a variable whose variance we can compute.</p></li>
 <li><p>In order to compute the variance, we took a random variable and decomposed it into a sum of independent random variables so that we could apply linearity of variance.</p></li>
 </ul>
 
