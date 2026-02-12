@@ -202,7 +202,7 @@ window.Quarto = {
 \Pr(|X - \mu| &gt; k \sigma) \leq \frac{1}{k^2}.
 \]</span></p>
 <p>Last time, we applied Chebyshev’s inequality to the load balancing problem. In particular, we showed if we assign <span class="math inline">\(n\)</span> requests to <span class="math inline">\(n\)</span> servers, the server with the maximum load has <span class="math inline">\(O(\sqrt{n})\)</span> requests with high probability. We proved this result by applying Chebyshev’s to a particular server and then applying the union bound to get a bound on the maximum load across all servers. Recall that we proved both Chebyshev’s inequality and the union bound with Markov’s inequality. So, if you squint, we just used Markov’s inequality twice.</p>
-<p>Today, we’ll prove a stronger result that the server with the maximum load has <span class="math inline">\(O(\log n)\)</span> requests with high probability. For this result, we’ll need a stronger concentration inquality than Chebyshev’s.</p>
+<p>Today, we’ll prove a stronger result that the server with the maximum load has <span class="math inline">\(O(\log n)\)</span> requests with high probability. For this result, we’ll need a stronger concentration inequality than Chebyshev’s.</p>
 <section id="improving-chebyshevs-inequality" class="level2">
 <h2 class="anchored" data-anchor-id="improving-chebyshevs-inequality">Improving Chebyshev’s Inequality</h2>
 <p>We’ll see that Chebyshev’s inequality is accurate for <em>some</em> random variables. But, for many other random variables, the inequality is loose.</p>
@@ -211,10 +211,10 @@ window.Quarto = {
 \Pr \left( | X - \mu | \geq k \sigma \right)
 \leq 2 e^{-k^2/2}.
 \]</span></p>
-<p>Comparing the Gaussian tail bound to Chebyshev’s inequality, we see that the Gaussian Tail Bound is <em>exponentially</em> better. Let’s see the difference graphically in the figure below. (Notice that the vertical access is on a logarithmic scale.) By <span class="math inline">\(10\)</span> standard deviations above the mean, the Gaussian tail bound gives a bound that is 18 orders of magnitude smaller than the bound from Chebyshev’s inequality!</p>
+<p>Comparing the Gaussian tail bound to Chebyshev’s inequality, we see that the Gaussian Tail Bound is <em>exponentially</em> better. Let’s see the difference graphically in the figure below. (Notice that the vertical axis is on a logarithmic scale.) By <span class="math inline">\(10\)</span> standard deviations above the mean, the Gaussian tail bound gives a bound that is 18 orders of magnitude smaller than the bound from Chebyshev’s inequality!</p>
 <p><img src="images/gaussian_vs_chebyshev.png" class="img-fluid"></p>
-<p>Based on how loosely Chebyshev’s inequality bounds the Gaussian distribution, we might suspect that Chebyshev’s inequality is loose in general. But, there are examples of random variables where Chebyshev’s inequality gives the exactly the right probabilities.</p>
-<p><strong>Example Random Variable:</strong> Fix a particular value <span class="math inline">\(k\)</span>. We’ll construct a random variable <span class="math inline">\(X\)</span> with mean <span class="math inline">\(0\)</span> and variance <span class="math inline">\(1\)</span>. In particular, let</p>
+<p>Based on how loosely Chebyshev’s inequality bounds the Gaussian distribution, we might suspect that Chebyshev’s inequality is loose in general. But, there are examples of random variables where Chebyshev’s inequality gives exactly the right probabilities.</p>
+<p><strong>Example Random Variable:</strong> Fix a particular value <span class="math inline">\(k &gt; 1\)</span>. We’ll construct a random variable <span class="math inline">\(X\)</span> with mean <span class="math inline">\(0\)</span> and variance <span class="math inline">\(1\)</span>. In particular, let</p>
 <p><span class="math display">\[
 X = \begin{cases}
 -k &amp; \textrm{with probability } \frac{1}{2k^2} \\
@@ -229,7 +229,7 @@ k &amp; \textrm{with probability } \frac{1}{2k^2}.
 \Pr(|X| \geq k) \leq \frac{1}{k^2}.
 \]</span> This is exactly true for our random variable <span class="math inline">\(X\)</span> so Chebyshev’s inequality is tight for this random variable. Notice that we constructed the random variable after fixing the value <span class="math inline">\(k\)</span>. Do you think there’s one random variable that is tight for <em>all</em> values of <span class="math inline">\(k\)</span>?</p>
 <p>While Chebyshev’s inequality is tight for some random variables, it is loose for many other random variables. We may therefore suspect that if we make stronger assumptions on the random variables, we can get better concentration inequalities. The central limit theorem gives us a hint about what type of random variables we should consider.</p>
-<p><strong>Central Limit Theorem:</strong> Any sum of <em>mutually independent</em> and identically distributed random variables <span class="math inline">\(X_1, \ldots, X_n\)</span> with mean <span class="math inline">\(\mu\)</span> and finite variance <span class="math inline">\(\sigma^2\)</span> converges to a Gaussian random variable with mean <span class="math inline">\(n \cdot \mu\)</span> and variance <span class="math inline">\(n \cdot \sigma^2\)</span> as <span class="math inline">\(k\)</span> goes to infinity. Formally, <span class="math display">\[
+<p><strong>Central Limit Theorem:</strong> Any sum of <em>mutually independent</em> and identically distributed random variables <span class="math inline">\(X_1, \ldots, X_n\)</span> with mean <span class="math inline">\(\mu\)</span> and finite variance <span class="math inline">\(\sigma^2\)</span> converges to a Gaussian random variable with mean <span class="math inline">\(n \cdot \mu\)</span> and variance <span class="math inline">\(n \cdot \sigma^2\)</span> as <span class="math inline">\(n\)</span> goes to infinity. Formally, <span class="math display">\[
 \lim_{n \rightarrow \infty}
 \sum_{i=1}^n X_i \sim \mathcal{N}(n \mu, n \sigma^2).
 \]</span></p>
@@ -259,8 +259,8 @@ k &amp; \textrm{with probability } \frac{1}{2k^2}.
 \Pr( S \leq (1-\epsilon) \mu)
 \leq \exp\left(\frac{-\epsilon^2 \mu}{2}\right).
 \]</span></p>
-<p>Notice that the first inequality gives an upper bound on the pobability that <span class="math inline">\(S\)</span> exceeds is expectation by a factor of <span class="math inline">\(1+\epsilon\)</span> while the second inequality gives an upper bound on the probability that <span class="math inline">\(S\)</span> falls below its expectation by a factor of <span class="math inline">\(1-\epsilon\)</span>.</p>
-<p>Using union bound, we can combine them into a single inequality.</p>
+<p>Notice that the first inequality gives an upper bound on the probability that <span class="math inline">\(S\)</span> exceeds its expectation by a factor of <span class="math inline">\(1+\epsilon\)</span> while the second inequality gives an upper bound on the probability that <span class="math inline">\(S\)</span> falls below its expectation by a factor of <span class="math inline">\(1-\epsilon\)</span>.</p>
+<p>Using the union bound, we can combine them into a single inequality when <span class="math inline">\(0 &lt; \epsilon &lt; 1\)</span>,</p>
 <p><span class="math display">\[
 \Pr(|S - \mu| \geq \epsilon \mu) \leq 2 \exp\left(\frac{-\epsilon^2 \mu}{3}\right).
 \]</span></p>
@@ -287,14 +287,14 @@ $$
 $$
 Notice this is basically the same as the Gaussian tail bound but with a *slightly* worse constant in the exponent.
 --->
-<p>The Chernoff bound may seem overly restrictive because we require that each variable is binary. The Bernstein inequality relaxes the assumption so that we can consider random variables defined on the inverval from <span class="math inline">\(-1\)</span> to <span class="math inline">\(1\)</span>.</p>
+<p>The Chernoff bound may seem overly restrictive because we require that each variable is binary. The Bernstein inequality relaxes the assumption so that we can consider random variables defined on the interval from <span class="math inline">\(-1\)</span> to <span class="math inline">\(1\)</span>.</p>
 <p><strong>Bernstein Inequality:</strong> Let <span class="math inline">\(X_1, \ldots, X_n\)</span> be independent random variables with each <span class="math inline">\(X_i \in [-1, 1]\)</span>. Let <span class="math inline">\(\mu = \sum_{i=1}^n \mathbb{E}[X_i]\)</span> and <span class="math inline">\(\sigma^2 = \sum_{i=1}^n \textrm{Var}[X_i]\)</span>. Then, for any <span class="math inline">\(k \leq \frac{\sigma}{2}\)</span>, the sum <span class="math inline">\(S = \sum_{i=1}^n X_i\)</span> satisfies <span class="math display">\[
 \Pr(|S - \mu| &gt; k \sigma) \leq 2 \exp\left(\frac{-k^2}{4}\right).
 \]</span> Notice that the bound is similar to the Chernoff bound but the denominator in the exponent is larger. As we weaken the assumptions on the random variables, we get weaker bounds.</p>
 <p>Of course, while weaker than Chernoff bound, the assumption in the Bernstein bound is still not very general. Hoeffding’s inequality relaxes it further.</p>
 <p><strong>Hoeffding’s Inequality:</strong> Let <span class="math inline">\(X_1, \ldots, X_n\)</span> be independent random variables with each <span class="math inline">\(X_i \in [a_i, b_i]\)</span>. Let <span class="math inline">\(\mu= \sum_{i=1}^n \mathbb{E}[X_i]\)</span>. Then, for any <span class="math inline">\(k &gt;0\)</span>, the sum <span class="math inline">\(S = \sum_{i=1}^n X_i\)</span> satisfies <span class="math display">\[
 \Pr( | S - \mu | &gt; k )
-\leq 2 \exp\left(\frac{-k^2}{\sum_{i=1}^n (b_i - a_i)^2}\right).
+\leq 2 \exp\left(\frac{-2k^2}{\sum_{i=1}^n (b_i - a_i)^2}\right).
 \]</span></p>
 <p>Notice that <span class="math inline">\(\sigma\)</span> no longer appears in the bound. In some sense, the sum of the intervals in the denominator of the exponent is a measure of the variance of the random variables.</p>
 <p>We won’t see the proofs of these concentration inequalities. The general techniques are to apply Markov’s inequality to cleverly chosen random variables. Recall that we proved Chebyshev’s inequality by applying Markov’s inequality to the random variable <span class="math inline">\((X-\mathbb{E}[X])^2\)</span>. Similarly, many exponential concentration inequalities are proved by defining <span class="math inline">\(q\)</span>th central moments <span class="math display">\[\mathbb{E}[(X-\mathbb{E}[X])^q]\]</span> or functions like <span class="math inline">\(\exp(X - \mathbb{E}[X])\)</span> and applying Markov’s inequality.</p>
@@ -303,7 +303,7 @@ Notice this is basically the same as the Gaussian tail bound but with a *slightl
 <h3 class="anchored" data-anchor-id="coin-flips">Coin Flips</h3>
 <p>Now that we have rigorous exponential concentration inequalities, let’s apply them to the coin flip problem.</p>
 <p><strong>Biased Coin Bound:</strong> Let the probability that a coin lands heads be <span class="math inline">\(b\)</span>. Choose <span class="math inline">\(n \geq \frac{3\log(2/\delta)}{\epsilon^2}\)</span>. If we flip a biased coin <span class="math inline">\(n\)</span> times, let <span class="math inline">\(S\)</span> be the number of heads. Notice that <span class="math inline">\(\mu = bn\)</span>. Then <span class="math display">\[
-\Pr(| S - b k | \geq \epsilon n) \leq \delta.
+\Pr(| S - b n | \geq \epsilon n) \leq \delta.
 \]</span></p>
 <p><strong>Proof:</strong> We use the Chernoff bound because the number of heads is a sum of binary random variables. From the Chernoff bound, we know that for any <span class="math inline">\(\epsilon'\)</span>, <span class="math display">\[
 \Pr( | S - bn | \geq \epsilon' bn ) \leq 2 \exp\left(\frac{-\epsilon'^2 bn}{3}\right).
@@ -337,7 +337,7 @@ n \geq \frac{3 \log(2/\delta)}{\epsilon^2}.
 <p>Consider a single server <span class="math inline">\(i\)</span>. Let <span class="math inline">\(X_j\)</span> be the indicator random variable that job <span class="math inline">\(j\)</span> is assigned to server <span class="math inline">\(i\)</span>. Then the number of jobs assigned to server <span class="math inline">\(i\)</span> is <span class="math inline">\(S_i = \sum_{j=1}^n X_j\)</span>. Since the probability job <span class="math inline">\(j\)</span> goes to server <span class="math inline">\(i\)</span> is <span class="math inline">\(\frac{1}{n}\)</span>, we have <span class="math inline">\(\mathbb{E}[X_j] = \frac{1}{n}\)</span> and so <span class="math inline">\(\mathbb{E}[S_i] = \sum_{j=1}^n \frac{1}{n} = 1\)</span>. Recall the first Chernoff bound tells us that <span class="math display">\[
 \Pr(S_i \geq 1+\epsilon)
 \leq \exp\left(\frac{-\epsilon^2}{2+\epsilon}\right)
-\]</span> where we plugged in <span class="math inline">\(\mu=1\)</span>. We know the probability has to be at most <span class="math inline">\(\frac{1}{10n}\)</span>. We upper bound the probability to avoid the addition in the denominator of the exponent then we set the upperbound to be at most <span class="math inline">\(\frac{1}{10n}\)</span>. Doing this, we get <span class="math display">\[
+\]</span> where we plugged in <span class="math inline">\(\mu=1\)</span>. We know the probability has to be at most <span class="math inline">\(\frac{1}{10n}\)</span>. We upper bound the probability to avoid the addition in the denominator of the exponent then we set the upper bound to be at most <span class="math inline">\(\frac{1}{10n}\)</span>. Doing this, we get <span class="math display">\[
 \exp\left(\frac{-\epsilon^2}{2+\epsilon}\right)
 \leq \exp\left(\frac{-\epsilon^2}{2\epsilon}\right) \leq \frac{1}{10n}
 \]</span> as long as <span class="math inline">\(\epsilon \geq 2\)</span>. Then <span class="math display">\[
@@ -350,7 +350,7 @@ n \geq \frac{3 \log(2/\delta)}{\epsilon^2}.
 \leq \frac{1}{10n}.
 \]</span></p>
 <p>So the server with the maximum load has at most <span class="math inline">\(O(\log n)\)</span> jobs with high probability. This is much better than the <span class="math inline">\(O(\sqrt{n})\)</span> bound we proved with Chebyshev’s inequality.</p>
-<p>In practice, there’s another strategy for assigning jobs to servers that works surprisingly well. The idea is called the <em>power of two choices</em>. Instead of assigning a job to a random server, we choose two random servers and assign the job to the least loaded server. With probability <span class="math inline">\(1/10\)</span>, the maximum loaded server is <span class="math inline">\(O(\log \log n)\)</span>. This is amazing! We barely changed the algorithm and we got an <em>exponentially</em> better bound. We may suspect that if we choose three random servers and assign the job to the least loaded server, then the maximum loaded server is <span class="math inline">\(O(\log \log \log n)\)</span>. But, this is not the case. The bound stays asymptotatically the same. The analysis is notoriously tricky and we won’t cover it in this class. But, if you’re interested, you can find it in Section 2 of the notes <a href="https://www.eecs.harvard.edu/~michaelm/postscripts/handbook2001.pdf">here</a>.</p>
+<p>In practice, there’s another strategy for assigning jobs to servers that works surprisingly well. The idea is called the <em>power of two choices</em>. Instead of assigning a job to a random server, we choose two random servers and assign the job to the least loaded server. With probability <span class="math inline">\(1/10\)</span>, the maximum loaded server is <span class="math inline">\(O(\log \log n)\)</span>. This is amazing! We barely changed the algorithm and we got an <em>exponentially</em> better bound. We may suspect that if we choose three random servers and assign the job to the least loaded server, then the maximum loaded server is <span class="math inline">\(O(\log \log \log n)\)</span>. But, this is not the case. The bound stays asymptotically the same. The analysis is notoriously tricky and we won’t cover it in this class. But, if you’re interested, you can find it in Section 2 of the notes <a href="https://www.eecs.harvard.edu/~michaelm/postscripts/handbook2001.pdf">here</a>.</p>
 </section>
 </section>
 <section id="fingerprinting" class="level2">
@@ -369,7 +369,7 @@ h(x) = [(ax + b) \mod p] \mod m
 <p>Finding a prime number seems pretty tough so let’s consider the simpler problem of checking whether a number is prime. Given a number <span class="math inline">\(x\)</span>, how can we efficiently check that <span class="math inline">\(x\)</span> is prime? Recall a number is prime if it is larger than 1 and can only be divided evenly by <span class="math inline">\(1\)</span> and itself. The first few primes are <span class="math inline">\(2,3,5,7,11,13,17,19,\ldots\)</span>. Is 2023 prime? What about 2342098230982509? How can we check in general?</p>
 <p>Suppose we have an integer represented as a length <span class="math inline">\(n\)</span> binary string. For example, <span class="math display">\[
 x = 011100100110011111\ldots0101011.
-\]</span> The naive prime checking algorithm of simply dividing <span class="math inline">\(x\)</span> by all integers less than <span class="math inline">\(x\)</span> runs in <span class="math inline">\(O(2^{n})\)</span>. The NYU Greene super computing cluster has 2 petaflops of throughput. When <span class="math inline">\(n=128\)</span>, we would need 1 million Greene clusters running for 1 million years to check if <span class="math inline">\(x\)</span> is prime.</p>
+\]</span> The naive prime checking algorithm of simply dividing <span class="math inline">\(x\)</span> by all integers less than <span class="math inline">\(x\)</span> runs in <span class="math inline">\(O(2^{n})\)</span>. The NYU Greene supercomputing cluster has 2 petaflops of throughput. When <span class="math inline">\(n=128\)</span>, we would need 1 million Greene clusters running for 1 million years to check if <span class="math inline">\(x\)</span> is prime.</p>
 <p>Fortunately, there is a much faster algorithm. In papers published in 1976 and 1980, Miller and Rabin presented a randomized algorithm that runs in time <span class="math inline">\(O(n^3 \log(1/\delta))\)</span>. With probability <span class="math inline">\(1-\delta\)</span>, the algorithm determines if an <span class="math inline">\(n\)</span>-bit integer is prime. If <span class="math inline">\(n = 128\)</span> and <span class="math inline">\(\delta = 10^{-9}\)</span>, then <span class="math inline">\(n^3 \log(1/\delta) \approx 60\)</span> million operations. We can run this in less than a tenth of a second on a modern computer! In addition to the practical applications, the Miller-Rabin algorithm was a big breakthrough that popularized randomized algorithms.</p>
 <!--
 For decades, it was not clear how to get an algorithm that runs in polynomial time *deterministically*.
@@ -388,7 +388,7 @@ The algorithm itself is much slower than the randomized algorithms but it was a 
 \leq \frac{x}{\log x - 4}.
 \]</span></p>
 <p>This is somewhat surprising because as numbers get larger, there are more smaller numbers that could be their factors.</p>
-<p>Let’s plot the number of primes and the bound in the prime number thoerem. (Note the upper bound only makes sense for <span class="math inline">\(x \geq 55\)</span>.)</p>
+<p>Let’s plot the number of primes and the bound in the prime number theorem. (Note the upper bound only makes sense for <span class="math inline">\(x \geq 55\)</span>.)</p>
 <p><img src="images/primes.png" class="img-fluid"></p>
 <p>The prime number theorem tells us that if we select a random 128 bit number <span class="math inline">\(x\)</span>, the chance that it is prime is greater than <span class="math display">\[
 \frac{1}{\log(2^{128})} \geq 1/90.
@@ -406,8 +406,8 @@ The algorithm itself is much slower than the randomized algorithms but it was a 
 <p><img src="images/fingerprint.png" class="img-fluid"></p>
 <p>Fingerprinting is useful for quickly checking if two versions of the same file are identical. This is quite helpful for version control on systems like Git. The advantage is that we do not need to communicate the entire file between the server and local computer to perform the check; we only need to communicate the small fingerprint.</p>
 <p>Another application is to check if two images are identical. This is useful in contexts where we want to remove duplicate pictures. However, if the images are changed at all (e.g.&nbsp;compressed or converted to a different format), the fingerprints will be different. In a later class, we’ll see a method which is robust to these changes.</p>
-<p>The approach for we’ll learn about today is called a Rabin fingerprint. Let the file <span class="math inline">\(f=010\ldots100\)</span> be represented as <span class="math inline">\(n\)</span> bits. We’ll interpret <span class="math inline">\(f\)</span> as a number between 0 and <span class="math inline">\(2^n\)</span>.</p>
-<p>We’ll construct the fingerprint function <span class="math inline">\(h\)</span> as follows. We choose a random prime number <span class="math inline">\(p\)</span> between <span class="math inline">\(2\)</span> and <span class="math inline">\(t n \log(2n)\)</span> for some constant <span class="math inline">\(t\)</span>. Then <span class="math display">\[
+<p>The approach we’ll learn about today is called a Rabin fingerprint. Let the file <span class="math inline">\(f=010\ldots100\)</span> be represented as <span class="math inline">\(n\)</span> bits. We’ll interpret <span class="math inline">\(f\)</span> as a number between 0 and <span class="math inline">\(2^n\)</span>.</p>
+<p>We’ll construct the fingerprint function <span class="math inline">\(h\)</span> as follows. We choose a random prime number <span class="math inline">\(p\)</span> between <span class="math inline">\(2\)</span> and <span class="math inline">\(t n \log(tn)\)</span> for some constant <span class="math inline">\(t\)</span>. Then <span class="math display">\[
 h(f) = f \mod p.
 \]</span> Notice that we can store <span class="math inline">\(h(f)\)</span> in <span class="math inline">\(\log p\)</span>. This is at most <span class="math display">\[
 \log (tn \log tn) \leq \log((tn)^2)
@@ -427,7 +427,7 @@ f_1 - f_2 \mod p = 0.
 = \frac{\log(tn \log(tn))}{t \log(tn)}
 \leq \frac{2 \log(tn)}{t \log(tn)} = \frac{2}{t}.
 \]</span> So, for two files <span class="math inline">\(f_1 \neq f_2\)</span>, the chance that <span class="math inline">\(h(f_1) = h(f_2)\)</span> is at most <span class="math inline">\(\frac{2}{t}\)</span>.</p>
-<p>Let’s see how much space we need for the fingerprint in practice. Set <span class="math inline">\(t\)</span> to be <span class="math inline">\(10^{18}\)</span>. (For context, <span class="math inline">\(10^{-18}\)</span> is the chance you win the Powerball lottery twice in a row.) Then the fingerprint size is at most <span class="math inline">\(2 \log_2(nt) = 2 \log_2(n) + 2 \log_2(10^{18})\)</span> bits. Suppose we are finger printing 1 megabyte image files so <span class="math inline">\(n \approx 8 \times 10^6\)</span>. Then the fingerprint size is <span class="math inline">\(166\)</span> bits. This amounts to a 50,000 time reduction in space compared to sending the original file!</p>
+<p>Let’s see how much space we need for the fingerprint in practice. Set <span class="math inline">\(t\)</span> to be <span class="math inline">\(10^{18}\)</span>. (For context, <span class="math inline">\(10^{-18}\)</span> is the chance you win the Powerball lottery twice in a row.) Then the fingerprint size is at most <span class="math inline">\(2 \log_2(nt) = 2 \log_2(n) + 2 \log_2(10^{18})\)</span> bits. Suppose we are fingerprinting 1 megabyte image files so <span class="math inline">\(n \approx 8 \times 10^6\)</span>. Then the fingerprint size is <span class="math inline">\(166\)</span> bits. This amounts to a 50,000-fold reduction in space compared to sending the original file!</p>
 
 
 

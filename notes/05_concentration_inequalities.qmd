@@ -23,7 +23,7 @@ Recall that we proved both Chebyshev's inequality and the union bound with Marko
 So, if you squint, we just used Markov's inequality twice.
 
 Today, we'll prove a stronger result that the server with the maximum load has $O(\log n)$ requests with high probability.
-For this result, we'll need a stronger concentration inquality than Chebyshev's.
+For this result, we'll need a stronger concentration inequality than Chebyshev's.
 
 ## Improving Chebyshev's Inequality
 
@@ -42,16 +42,16 @@ $$
 
 Comparing the Gaussian tail bound to Chebyshev's inequality, we see that the Gaussian Tail Bound is *exponentially* better.
 Let's see the difference graphically in the figure below.
-(Notice that the vertical access is on a logarithmic scale.)
+(Notice that the vertical axis is on a logarithmic scale.)
 By $10$ standard deviations above the mean, the Gaussian tail bound gives a bound that is 18 orders of magnitude smaller than the bound from Chebyshev's inequality!
 
 ![](images/gaussian_vs_chebyshev.png)
 
 Based on how loosely Chebyshev's inequality bounds the Gaussian distribution, we might suspect that Chebyshev's inequality is loose in general.
-But, there are examples of random variables where Chebyshev's inequality gives the exactly the right probabilities.
+But, there are examples of random variables where Chebyshev's inequality gives exactly the right probabilities.
 
 **Example Random Variable:**
-Fix a particular value $k$.
+Fix a particular value $k > 1$.
 We'll construct a random variable $X$ with mean $0$ and variance $1$.
 In particular, let
 
@@ -83,7 +83,7 @@ We may therefore suspect that if we make stronger assumptions on the random vari
 The central limit theorem gives us a hint about what type of random variables we should consider.
 
 **Central Limit Theorem:**
-Any sum of *mutually independent* and identically distributed random variables $X_1, \ldots, X_n$ with mean $\mu$ and finite variance $\sigma^2$ converges to a Gaussian random variable with mean $n \cdot \mu$ and variance $n \cdot \sigma^2$ as $k$ goes to infinity.
+Any sum of *mutually independent* and identically distributed random variables $X_1, \ldots, X_n$ with mean $\mu$ and finite variance $\sigma^2$ converges to a Gaussian random variable with mean $n \cdot \mu$ and variance $n \cdot \sigma^2$ as $n$ goes to infinity.
 Formally,
 $$
 \lim_{n \rightarrow \infty}
@@ -155,9 +155,9 @@ $$
 \leq \exp\left(\frac{-\epsilon^2 \mu}{2}\right).
 $$
 
-Notice that the first inequality gives an upper bound on the pobability that $S$ exceeds is expectation by a factor of $1+\epsilon$ while the second inequality gives an upper bound on the probability that $S$ falls below its expectation by a factor of $1-\epsilon$.
+Notice that the first inequality gives an upper bound on the probability that $S$ exceeds its expectation by a factor of $1+\epsilon$ while the second inequality gives an upper bound on the probability that $S$ falls below its expectation by a factor of $1-\epsilon$.
 
-Using union bound, we can combine them into a single inequality.
+Using the union bound, we can combine them into a single inequality when $0 < \epsilon < 1$,
 
 $$
 \Pr(|S - \mu| \geq \epsilon \mu) \leq 2 \exp\left(\frac{-\epsilon^2 \mu}{3}\right).
@@ -188,7 +188,7 @@ Notice this is basically the same as the Gaussian tail bound but with a *slightl
 --->
 
 The Chernoff bound may seem overly restrictive because we require that each variable is binary.
-The Bernstein inequality relaxes the assumption so that we can consider random variables defined on the inverval from $-1$ to $1$.
+The Bernstein inequality relaxes the assumption so that we can consider random variables defined on the interval from $-1$ to $1$.
 
 **Bernstein Inequality:**
 Let $X_1, \ldots, X_n$ be independent random variables with each $X_i \in [-1, 1]$.
@@ -212,7 +212,7 @@ Then, for any $k >0$,
 the sum $S = \sum_{i=1}^n X_i$ satisfies
 $$
 \Pr( | S - \mu | > k )
-\leq 2 \exp\left(\frac{-k^2}{\sum_{i=1}^n (b_i - a_i)^2}\right).
+\leq 2 \exp\left(\frac{-2k^2}{\sum_{i=1}^n (b_i - a_i)^2}\right).
 $$
 
 Notice that $\sigma$ no longer appears in the bound.
@@ -237,7 +237,7 @@ If we flip a biased coin $n$ times, let $S$ be the number of heads.
 Notice that $\mu = bn$.
 Then
 $$
-\Pr(| S - b k | \geq \epsilon n) \leq \delta.
+\Pr(| S - b n | \geq \epsilon n) \leq \delta.
 $$
 
 **Proof:**
@@ -306,7 +306,7 @@ $$
 $$
 where we plugged in $\mu=1$.
 We know the probability has to be at most $\frac{1}{10n}$.
-We upper bound the probability to avoid the addition in the denominator of the exponent then we set the upperbound to be at most $\frac{1}{10n}$.
+We upper bound the probability to avoid the addition in the denominator of the exponent then we set the upper bound to be at most $\frac{1}{10n}$.
 Doing this, we get
 $$
 \exp\left(\frac{-\epsilon^2}{2+\epsilon}\right) 
@@ -336,7 +336,7 @@ With probability $1/10$, the maximum loaded server is $O(\log \log n)$.
 This is amazing! We barely changed the algorithm and we got an *exponentially* better bound.
 We may suspect that if we choose three random servers and assign the job to the least loaded server, then the maximum loaded server is $O(\log \log \log n)$.
 But, this is not the case.
-The bound stays asymptotatically the same.
+The bound stays asymptotically the same.
 The analysis is notoriously tricky and we won't cover it in this class.
 But, if you're interested, you can find it in Section 2 of the notes [here](https://www.eecs.harvard.edu/~michaelm/postscripts/handbook2001.pdf).
 
@@ -383,7 +383,7 @@ $$
 x = 011100100110011111\ldots0101011.
 $$
 The naive prime checking algorithm of simply dividing $x$ by all integers less than $x$ runs in $O(2^{n})$.
-The NYU Greene super computing cluster has 2 petaflops of throughput. 
+The NYU Greene supercomputing cluster has 2 petaflops of throughput. 
 When $n=128$, we would need 1 million Greene clusters running for 1 million years to check if $x$ is prime.
 
 Fortunately, there is a much faster algorithm.
@@ -442,7 +442,7 @@ $$
 
 This is somewhat surprising because as numbers get larger, there are more smaller numbers that could be their factors.
 
-Let's plot the number of primes and the bound in the prime number thoerem. (Note the upper bound only makes sense for $x \geq 55$.)
+Let's plot the number of primes and the bound in the prime number theorem. (Note the upper bound only makes sense for $x \geq 55$.)
 
 ![](images/primes.png)
 
@@ -476,13 +476,13 @@ Another application is to check if two images are identical. This is useful in c
 However, if the images are changed at all (e.g. compressed or converted to a different format), the fingerprints will be different.
 In a later class, we'll see a method which is robust to these changes.
 
-The approach for we'll learn about today is called a Rabin fingerprint.
+The approach we'll learn about today is called a Rabin fingerprint.
 Let the file $f=010\ldots100$ be represented as $n$ bits.
 We'll interpret $f$ as a number between 0 and $2^n$.
 
 We'll construct the fingerprint function $h$ as follows.
 We choose a random prime number $p$ between $2$
-and $t n \log(2n)$ for some constant $t$.
+and $t n \log(tn)$ for some constant $t$.
 Then
 $$
 h(f) = f \mod p.
@@ -530,6 +530,6 @@ Let's see how much space we need for the fingerprint in practice.
 Set $t$ to be $10^{18}$.
 (For context, $10^{-18}$ is the chance you win the Powerball lottery twice in a row.)
 Then the fingerprint size is at most $2 \log_2(nt) = 2 \log_2(n) + 2 \log_2(10^{18})$ bits.
-Suppose we are finger printing 1 megabyte image files so $n \approx 8 \times 10^6$.
+Suppose we are fingerprinting 1 megabyte image files so $n \approx 8 \times 10^6$.
 Then the fingerprint size is $166$ bits.
-This amounts to a 50,000 time reduction in space compared to sending the original file!
+This amounts to a 50,000-fold reduction in space compared to sending the original file!
