@@ -166,11 +166,6 @@ window.Quarto = {
   <li><a href="#coin-flips" id="toc-coin-flips" class="nav-link" data-scroll-target="#coin-flips">Coin Flips</a></li>
   <li><a href="#load-balancing-problem" id="toc-load-balancing-problem" class="nav-link" data-scroll-target="#load-balancing-problem">Load Balancing Problem</a></li>
   </ul></li>
-  <li><a href="#fingerprinting" id="toc-fingerprinting" class="nav-link" data-scroll-target="#fingerprinting">Fingerprinting</a>
-  <ul class="collapse">
-  <li><a href="#finding-prime-numbers" id="toc-finding-prime-numbers" class="nav-link" data-scroll-target="#finding-prime-numbers">Finding Prime Numbers</a></li>
-  <li><a href="#algorithm" id="toc-algorithm" class="nav-link" data-scroll-target="#algorithm">Algorithm</a></li>
-  </ul></li>
   </ul>
 </nav>
     </div>
@@ -351,83 +346,6 @@ n \geq \frac{3 \log(2/\delta)}{\epsilon^2}.
 \]</span></p>
 <p>So the server with the maximum load has at most <span class="math inline">\(O(\log n)\)</span> jobs with high probability. This is much better than the <span class="math inline">\(O(\sqrt{n})\)</span> bound we proved with Chebyshev’s inequality.</p>
 <p>In practice, there’s another strategy for assigning jobs to servers that works surprisingly well. The idea is called the <em>power of two choices</em>. Instead of assigning a job to a random server, we choose two random servers and assign the job to the least loaded server. With probability <span class="math inline">\(1/10\)</span>, the maximum loaded server is <span class="math inline">\(O(\log \log n)\)</span>. This is amazing! We barely changed the algorithm and we got an <em>exponentially</em> better bound. We may suspect that if we choose three random servers and assign the job to the least loaded server, then the maximum loaded server is <span class="math inline">\(O(\log \log \log n)\)</span>. But, this is not the case. The bound stays asymptotically the same. The analysis is notoriously tricky and we won’t cover it in this class. But, if you’re interested, you can find it in Section 2 of the notes <a href="https://www.eecs.harvard.edu/~michaelm/postscripts/handbook2001.pdf">here</a>.</p>
-</section>
-</section>
-<section id="fingerprinting" class="level2">
-<h2 class="anchored" data-anchor-id="fingerprinting">Fingerprinting</h2>
-<p>In the rest of the class, we’ll discuss a randomized algorithm called <em>fingerprinting</em>. But first, we’ll revisit universal hash functions and explore prime numbers.</p>
-<p><strong>Universal Hash Functions:</strong> Consider a random hash function <span class="math inline">\(h: \mathcal{U} \rightarrow \{1, \ldots, m\}\)</span>. We say <span class="math inline">\(h\)</span> is universal if, for any fixed <span class="math inline">\(x,y \in \mathcal{U}\)</span>, <span class="math display">\[
-\Pr(h(x) = h(y)) \leq \frac{1}{m}.
-\]</span></p>
-<p>Recall that we can efficiently construct a universal hash function with the following approach. Let <span class="math inline">\(p\)</span> be a prime number between <span class="math inline">\(|\mathcal{U}|\)</span> and <span class="math inline">\(2|\mathcal{U}|\)</span>. Let <span class="math inline">\(a\)</span> and <span class="math inline">\(b\)</span> be random numbers in <span class="math inline">\(0, \ldots, p\)</span> and make sure <span class="math inline">\(a \neq 0\)</span>. Then the hash function <span class="math display">\[
-h(x) = [(ax + b) \mod p] \mod m
-\]</span> is universal.</p>
-<p>We won’t prove that <span class="math inline">\(h\)</span> is universal but we will get a flavor for what tools are used in the proof.</p>
-<p>Notice that once we have a prime number, we only have to store <span class="math inline">\(a\)</span>, <span class="math inline">\(b\)</span>, <span class="math inline">\(p\)</span>, and <span class="math inline">\(m\)</span>. Then computing the hash function only requires a few arithmetic operations. This hash function seems easy to implement <em>except</em> for the challenge of finding a large prime number to use.</p>
-<section id="finding-prime-numbers" class="level3">
-<h3 class="anchored" data-anchor-id="finding-prime-numbers">Finding Prime Numbers</h3>
-<p>Finding a prime number seems pretty tough so let’s consider the simpler problem of checking whether a number is prime. Given a number <span class="math inline">\(x\)</span>, how can we efficiently check that <span class="math inline">\(x\)</span> is prime? Recall a number is prime if it is larger than 1 and can only be divided evenly by <span class="math inline">\(1\)</span> and itself. The first few primes are <span class="math inline">\(2,3,5,7,11,13,17,19,\ldots\)</span>. Is 2023 prime? What about 2342098230982509? How can we check in general?</p>
-<p>Suppose we have an integer represented as a length <span class="math inline">\(n\)</span> binary string. For example, <span class="math display">\[
-x = 011100100110011111\ldots0101011.
-\]</span> The naive prime checking algorithm of simply dividing <span class="math inline">\(x\)</span> by all integers less than <span class="math inline">\(x\)</span> runs in <span class="math inline">\(O(2^{n})\)</span>. The NYU Greene supercomputing cluster has 2 petaflops of throughput. When <span class="math inline">\(n=128\)</span>, we would need 1 million Greene clusters running for 1 million years to check if <span class="math inline">\(x\)</span> is prime.</p>
-<p>Fortunately, there is a much faster algorithm. In papers published in 1976 and 1980, Miller and Rabin presented a randomized algorithm that runs in time <span class="math inline">\(O(n^3 \log(1/\delta))\)</span>. With probability <span class="math inline">\(1-\delta\)</span>, the algorithm determines if an <span class="math inline">\(n\)</span>-bit integer is prime. If <span class="math inline">\(n = 128\)</span> and <span class="math inline">\(\delta = 10^{-9}\)</span>, then <span class="math inline">\(n^3 \log(1/\delta) \approx 60\)</span> million operations. We can run this in less than a tenth of a second on a modern computer! In addition to the practical applications, the Miller-Rabin algorithm was a big breakthrough that popularized randomized algorithms.</p>
-<!--
-For decades, it was not clear how to get an algorithm that runs in polynomial time *deterministically*.
-In 2004, Agrawal, Kayal, and Saxena published a deterministic algorithm that runs in polynomial time.
-The algorithm itself is much slower than the randomized algorithms but it was a big breakthrough.
--->
-<p>Why was it such a big deal to get an efficient algorithm for checking if a number is prime? Well, one big reason is that prime numbers form the basis for modern public key cryptography. In cryptography, we imagine there are two parties, Alice and Bob, that communicate with each other. Bob wants to send Alice a message so that only Alice can read it. If someone else intercepts it, the message should be unreadable.</p>
-<p><img src="images/encrypted_message.png" class="img-fluid"></p>
-<p>The obvious way for Alice and Bob to communicate securely is to share a secret key in advance. This is the approach that persisted for centuries. However, physically meeting to share a secret key is impractical if there are many senders and receivers.</p>
-<p>A more clever way for Alice and Bob to communicate securely is to use a <em>lock box</em>. The lock box has the property that anyone can deliver mail but only Alice can read the mail.</p>
-<p>The way we implement the lock box in practice is with RSA encryption. The idea is to have a private key and a public key. The private key consists of two very large prime numbers <span class="math inline">\(p\)</span> and <span class="math inline">\(q\)</span>. The public key is the product <span class="math inline">\(pq\)</span>. Even though checking if a number is prime can be done quickly, we still do not have efficient algorithms for factoring numbers. (In fact, one of the reasons that quantum computers are so exciting is that they can factor numbers efficiently. But, alas, we don’t know how to build a quantum computer large enough to factor any interesting number.)</p>
-<p>The challenge of RSA encryption is to find two large primes. This is the same problem we faced when we wanted to construct a hash function!</p>
-<p>Here’s a naive algorithm for finding primes: Pick a random large number <span class="math inline">\(x\)</span> and check if it is prime. If it’s not prime, we repeat. Surprisingly, this algorithm works! The reason it works is because there are lots of primes even among large numbers. The prime number theorem formalizes this statement.</p>
-<p><strong>Prime Number Theorem:</strong> Let <span class="math inline">\(\pi(x)\)</span> denote the number of primes less than some integer <span class="math inline">\(x\)</span>. For <span class="math inline">\(x &gt; 55\)</span>, <span class="math display">\[
-\frac{x}{\log x} \leq \pi(x)
-\leq \frac{x}{\log x - 4}.
-\]</span></p>
-<p>This is somewhat surprising because as numbers get larger, there are more smaller numbers that could be their factors.</p>
-<p>Let’s plot the number of primes and the bound in the prime number theorem. (Note the upper bound only makes sense for <span class="math inline">\(x \geq 55\)</span>.)</p>
-<p><img src="images/primes.png" class="img-fluid"></p>
-<p>The prime number theorem tells us that if we select a random 128 bit number <span class="math inline">\(x\)</span>, the chance that it is prime is greater than <span class="math display">\[
-\frac{1}{\log(2^{128})} \geq 1/90.
-\]</span></p>
-<p>After a few hundred tries, we will almost definitely find a prime number. In general, we need <span class="math inline">\(O(n)\)</span> tries to find an <span class="math inline">\(n\)</span>-bit prime number.</p>
-<p>In the remainder of the class, we’ll discuss a simple but important application of prime numbers to hashing.</p>
-</section>
-<section id="algorithm" class="level3">
-<h3 class="anchored" data-anchor-id="algorithm">Algorithm</h3>
-<p>Our goal is to construct a compact “fingerprint” <span class="math inline">\(h(f)\)</span> for any given file <span class="math inline">\(f\)</span> with two properties:</p>
-<ol type="1">
-<li><p>The fingerprints <span class="math inline">\(h(f_1)\)</span> and <span class="math inline">\(h(f_2)\)</span> should be different with high probability if the contents of <span class="math inline">\(f_1\)</span> and <span class="math inline">\(f_2\)</span> differ <em>at all.</em></p></li>
-<li><p>If the contents of <span class="math inline">\(f_1\)</span> and <span class="math inline">\(f_2\)</span> are identical, we should have <span class="math inline">\(h(f_1) = h(f_2)\)</span>.</p></li>
-</ol>
-<p><img src="images/fingerprint.png" class="img-fluid"></p>
-<p>Fingerprinting is useful for quickly checking if two versions of the same file are identical. This is quite helpful for version control on systems like Git. The advantage is that we do not need to communicate the entire file between the server and local computer to perform the check; we only need to communicate the small fingerprint.</p>
-<p>Another application is to check if two images are identical. This is useful in contexts where we want to remove duplicate pictures. However, if the images are changed at all (e.g.&nbsp;compressed or converted to a different format), the fingerprints will be different. In a later class, we’ll see a method which is robust to these changes.</p>
-<p>The approach we’ll learn about today is called a Rabin fingerprint. Let the file <span class="math inline">\(f=010\ldots100\)</span> be represented as <span class="math inline">\(n\)</span> bits. We’ll interpret <span class="math inline">\(f\)</span> as a number between 0 and <span class="math inline">\(2^n\)</span>.</p>
-<p>We’ll construct the fingerprint function <span class="math inline">\(h\)</span> as follows. We choose a random prime number <span class="math inline">\(p\)</span> between <span class="math inline">\(2\)</span> and <span class="math inline">\(t n \log(tn)\)</span> for some constant <span class="math inline">\(t\)</span>. Then <span class="math display">\[
-h(f) = f \mod p.
-\]</span> Notice that we can store <span class="math inline">\(h(f)\)</span> in <span class="math inline">\(\log p\)</span>. This is at most <span class="math display">\[
-\log (tn \log tn) \leq \log((tn)^2)
-\]</span> <span class="math display">\[
-= O(\log( tn)) = O(\log n + \log t)
-\]</span> bits.</p>
-<p>Let’s analyze this fingerprint function.</p>
-<p><strong>Claim:</strong> If <span class="math inline">\(f_1 \neq f_2\)</span>, then <span class="math inline">\(h(f_1) = h(f_2)\)</span> with probability at most <span class="math inline">\(\frac{2}{t}\)</span>.</p>
-<p>Since our fingerprint only takes <span class="math inline">\(O(\log n + \log t)\)</span> space, we can set <span class="math inline">\(t\)</span> to be <em>super large</em>. Then, effectively, the probability of <span class="math inline">\(h(f_1)\)</span> and <span class="math inline">\(h(f_2)\)</span> colliding is negligible for all practical purposes.</p>
-<p>Observe that if <span class="math inline">\(h(f_1) = h(f_2)\)</span>, then <span class="math display">\[
-f_1 - f_2 \mod p = 0.
-\]</span> In other words, we only fail if <span class="math inline">\(d = f_1 - f_2\)</span> is divisible by <span class="math inline">\(p\)</span>.</p>
-<p>We’ll analyze the chance that <span class="math inline">\(d\)</span>, which is an integer less than <span class="math inline">\(2^n\)</span>, is divisible by a random prime <span class="math inline">\(p \in \{2, \ldots, tn \log(tn)\}\)</span>.</p>
-<p>The first step is to upper bound the number of distinct prime factors of <span class="math inline">\(d\)</span>. Since each prime factor is at least <span class="math inline">\(2\)</span> and <span class="math inline">\(d\)</span> is at most <span class="math inline">\(2^n\)</span>, there can be at most <span class="math inline">\(n\)</span> distinct prime factors of <span class="math inline">\(d\)</span>.</p>
-<p>The second step is to lower bound the number of primes less than <span class="math inline">\(tn \log(tn)\)</span>. By the prime number theorem, there are at least <span class="math inline">\(\frac{tn \log(tn)}{\log(tn \log(tn))}\)</span> primes in this range. So the chance that a random prime <span class="math inline">\(p\)</span> is a factor of <span class="math inline">\(d\)</span> is at most <span class="math display">\[
-\frac{n}{\frac{tn \log(tn)}{\log(tn \log(tn))}}
-= \frac{\log(tn \log(tn))}{t \log(tn)}
-\leq \frac{2 \log(tn)}{t \log(tn)} = \frac{2}{t}.
-\]</span> So, for two files <span class="math inline">\(f_1 \neq f_2\)</span>, the chance that <span class="math inline">\(h(f_1) = h(f_2)\)</span> is at most <span class="math inline">\(\frac{2}{t}\)</span>.</p>
-<p>Let’s see how much space we need for the fingerprint in practice. Set <span class="math inline">\(t\)</span> to be <span class="math inline">\(10^{18}\)</span>. (For context, <span class="math inline">\(10^{-18}\)</span> is the chance you win the Powerball lottery twice in a row.) Then the fingerprint size is at most <span class="math inline">\(2 \log_2(nt) = 2 \log_2(n) + 2 \log_2(10^{18})\)</span> bits. Suppose we are fingerprinting 1 megabyte image files so <span class="math inline">\(n \approx 8 \times 10^6\)</span>. Then the fingerprint size is <span class="math inline">\(166\)</span> bits. This amounts to a 50,000-fold reduction in space compared to sending the original file!</p>
 
 
 

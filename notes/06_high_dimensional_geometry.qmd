@@ -12,8 +12,6 @@ We'll see how to use:
 
 * Locality sensitive hashing to find similar items in high dimensions.
 
-* Iterative methods for optimizing function that depend on many variables.
-
 * Low-rank approximations (like singular value decomposition) to find and visualize low-dimensional structure.
 
 * High-dimensional representations of large graphs.
@@ -26,20 +24,20 @@ After establishing the weirdness of high-dimensional space, we'll happily ignore
 ## High-Dimensional Geometry is Weird
 
 Recall the inner product between two $d$-dimensional vectors $\mathbf{x}, \mathbf{y} \in \mathbb{R}^d$.
-We'll use bolded notation like $\mathbf{x}$ to denote vectors and non-bolded notation like $x[i]$ to denote scalars.
+We'll use bolded notation like $\mathbf{x}$ or $\mathbf{x}_j$ to denote vectors and non-bolded notation like $x[i]$ or $x_i$ to denote scalars.
 Depending on the context, we'll use $x[i]$ or $x_i$ to refer to the $i$th entry of the vector $\mathbf{x}$.
 We can write the inner product in several equivalent ways:
 \begin{align}
 \langle \mathbf{x}, \mathbf{y} \rangle
 = \mathbf{x}^\top \mathbf{y}
 = \mathbf{y}^\top \mathbf{x}
-= \sum_{i=1}^d x[i] y[i].
+= \sum_{i=1}^d x_i y_i.
 \end{align}
 When we take the inner product between a vector and itself, we get the squared norm:
 \begin{align}
 \langle \mathbf{x}, \mathbf{x} \rangle
 = \mathbf{x}^\top \mathbf{x}
-= \sum_{i=1}^d x[i]^2
+= \sum_{i=1}^d x_i^2
 = \|\mathbf{x}\|_2^2.
 \end{align}
 As we know from linear algebra, the inner product is a measure of how similar two vectors are.
@@ -103,7 +101,7 @@ The expected inner product between vectors $i\neq j$ is 0:
 \begin{align}
 \mathbb{E}[\mathbf{x}_i^\top \mathbf{x}_j]
 = \sum_{k=1}^d \mathbb{E}\left[x_i[k] x_j[k]\right]
-= \sum_{k=1}^d \mathbb{E}\left[x_i[k]] \mathbb{E}[x_j[k]\right] = 0.
+= \sum_{k=1}^d \mathbb{E}[x_i[k]] \mathbb{E}[x_j[k]] = 0.
 \end{align}
 The penultimate equality is because each entry is independent.
 The last equality is because the expected value of each entry is 0.
@@ -128,9 +126,9 @@ If $Z$ *were* a Gaussian, then
 \end{align}
 Then we'd be done by setting $\alpha = \epsilon \sqrt{d}$.
 
-But, since $Z$ is only approximates a Gaussian, we need to be a bit more careful.
+But, since $Z$ only approximates a Gaussian, we need to be a bit more careful.
 We'd like to apply Chernoff's bound.
-However, Chernoff's bound requires that the random variable be binary.
+However, (our version of) Chernoff's bound requires that the random variable be binary.
 With some clever algebra, we can write $Z$ as a sum of binary random variables.
 \begin{align}
 Z &= \sum_{k=1}^d C_k = \frac2{d} \sum_{k=1}^d \frac{d}{2} C_k \\
@@ -157,12 +155,12 @@ Putting these last three observations together, we have that
 \Pr( | Z | \geq \epsilon)
 &= \Pr( B \geq (1+\epsilon) \mathbb{E}[B] )
 + \Pr(B \leq (1-\epsilon) \mathbb{E}[B] ) \\
-&= \Pr(| B - \mathbb{E}[B] | \geq \epsilon \mathbb{E}[B]) = (*)
+&= \Pr(| B - \mathbb{E}[B] | \geq \epsilon \mathbb{E}[B]).
 \end{align}
 Notice this is exactly in the right form for Chernoff's bound.
 Then Chernoff's bound gives
 \begin{align}
-(*) \leq 2 \exp\left(\frac{-\epsilon^2 \mathbb{E}[B]}{3}\right)
+\Pr( | Z | \geq \epsilon) \leq 2 \exp\left(\frac{-\epsilon^2 \mathbb{E}[B]}{3}\right)
 = 2 \exp\left(\frac{-\epsilon^2 d}{6}\right).
 \end{align}
 
@@ -188,7 +186,7 @@ Since the probability that any pair of vectors has an inner product larger than 
 A corollary of the proof that we just saw is that random vectors tend to be far apart in high dimensions.
 This means that, if our data distribution is random, we typically need an exponential amount of data to learn a pattern.
 Nonetheless, we often get away with a much smaller amount of data in practice.
-The reason is that the there generally exists a lower dimensional structure in our data that we can learn.
+The reason is that there generally exists a lower dimensional structure in our data that we can learn.
 For example, data may lie in a low-dimensional subspace (or it does so after a transformation).
 Alternatively, the pattern we're learning can come from a specific class of functions that we can learn with a small amount of data.
 
@@ -209,9 +207,9 @@ What fraction of the volume of the unit ball $\mathcal{B}_d$ falls within $\epsi
 
 Well we know that the volume of a radius $R$ ball in $d$ dimensions is $\frac{\pi^{d/2}}{(d/2)!} R^d$.
 (Here, we assume that $d$ is even but there is a similar expression for odd $d$.)
-Then the volume of the ball within $\epsilon$ of the surface is
+Then the fraction of the volume within $\epsilon$ of the surface is
 \begin{align}
-\frac{\textrm{Vol}(\mathcal{B_d}) - \textrm{Vol}(\mathcal{B_d}(1-\epsilon))}{\textrm{Vol}(\mathcal{B_d})}
+\frac{\textrm{Vol}(\mathcal{B}_d) - \textrm{Vol}(\mathcal{B}_d(1-\epsilon))}{\textrm{Vol}(\mathcal{B}_d)}
 &= 1- \frac{\frac{\pi^{d/2}}{(d/2)!} (1-\epsilon)^d}{\frac{\pi^{d/2}}{(d/2)!} 1^d}
 = 1 - (1-\epsilon)^d \\
 &= 1- \left((1-\epsilon)^{1/\epsilon}\right)^{\epsilon d}
@@ -232,7 +230,7 @@ Let's see this intuition for cubes.
 Consider the cubes with side length $10$ in the figure above.
 In one dimension, the ratio of the cubes on the surface to the total number of cubes is $\frac{2}{10}=.2$.
 In two dimensions, the ratio is $\frac{10^2 - 8^2}{10^2} = .36$.
-In two dimensions, the ratio is $\frac{10^3 - 8^3}{10^3} = .488$.
+In three dimensions, the ratio is $\frac{10^3 - 8^3}{10^3} = .488$.
 As we increase the dimension, the ratio approaches 1.
 
 Now let's consider a slightly different question about the sphere.
@@ -281,18 +279,17 @@ Let's consider how to generate a random vector $\mathbf{w}$ from the surface of 
 Let $\mathbf{g} \in \mathbb{R}^d$ be a random Gaussian vector with each entry drawn from the standard normal distribution $\mathcal{N}(0,1)$.
 Then $\mathbf{w} = \frac{\mathbf{g}}{\|\mathbf{g}\|_2}$ is uniformly distributed on the surface of the unit ball.
 
-To see why, consider $p: \mathbb{R}^d \rightarrow \mathbb{R}$ the probability density function of the surface of the unit ball.
-There are two key properties of $p$:
+To see why, consider a probability density function $p: \mathbb{R}^d \rightarrow \mathbb{R}$, with two key properties:
 
-1. Each point on the surface of the unit ball is equally likely.
+* Independence: The distributions of the individual coordinates are independent.
 
-2. The distribution of each dimension is the same.
+* Rotational Invariance: The joint density depends only on the distance from the origin (i.e., $p(\mathbf{x})$ is a function of $\|\mathbf{x}\|_2$).
 
 These two properties are enough to show that $p = \exp( -\|\mathbf{w}\|_2^2)$, at least up to constants.
-For a phenomenal explanation, check out [this](https://www.youtube.com/watch?v=cy8r7WSuT1I&ab_channel=3Blue1Brown) 3Blue1Brown video.
+For a phenomenal explanation of this derivation (often called the Herschel-Maxwell derivation), check out [this](https://www.youtube.com/watch?v=cy8r7WSuT1I&ab_channel=3Blue1Brown) 3Blue1Brown video.
 
 In order to analyze $\mathbf{w}$, we'll first analyze $\mathbf{g}$.
-The expectation of $\|\mathbf{g}\|_2^2$ is 0:
+The expectation of $\|\mathbf{g}\|_2^2$ is d:
 \begin{align}
 \mathbb{E}[ \|\mathbf{g}\|_2^2 ]
 = \sum_{i=1}^d \mathbb{E}[g_i^2]
@@ -308,7 +305,7 @@ We will use the following inequality:
 \leq \frac{1}{2^{c d}}
 \end{align}
 for some constant $c$.
-The proof uses the Johnson-Lindenstrauss lemma which we'll introduce shortly.
+The proof uses a concentration inequality for Chi-squared variables and is left as an exercise.
 
 We will condition on the event that $\| \mathbf{g} \|_2 \geq \sqrt{d/2}$ for the next inequality.
 Then
@@ -342,7 +339,7 @@ The ratio of the volume of the unit cube to the unit ball is
 \begin{align}
 \frac{\textrm{Vol}(\mathcal{C}_d)}{\textrm{Vol}(\mathcal{B}_d)}
 = \frac{2^d (d/2)!}{\pi^{d/2}}
-\approx d^d.
+\approx \sqrt{d}^d.
 \end{align}
 The cube has way way more volume!
 

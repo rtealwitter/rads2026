@@ -195,22 +195,21 @@ window.Quarto = {
 <p>A unifying theme of this course is how we deal with data in high dimensions. We’ll see how to use:</p>
 <ul>
 <li><p>Locality sensitive hashing to find similar items in high dimensions.</p></li>
-<li><p>Iterative methods for optimizing function that depend on many variables.</p></li>
 <li><p>Low-rank approximations (like singular value decomposition) to find and visualize low-dimensional structure.</p></li>
 <li><p>High-dimensional representations of large graphs.</p></li>
 </ul>
 <p>We often visualize data and algorithms in one, two, or three dimensions. Today, we’ll prove that high-dimensional space looks fundamentally <em>different</em> from low-dimensional space. In particular, we’ll see how our understanding and intuition from low-dimensional space quickly breaks in higher dimensions. After establishing the weirdness of high-dimensional space, we’ll happily ignore the weirdness and see how to reduce the dimension of high-dimensional data.</p>
 <section id="high-dimensional-geometry-is-weird" class="level2">
 <h2 class="anchored" data-anchor-id="high-dimensional-geometry-is-weird">High-Dimensional Geometry is Weird</h2>
-<p>Recall the inner product between two <span class="math inline">\(d\)</span>-dimensional vectors <span class="math inline">\(\mathbf{x}, \mathbf{y} \in \mathbb{R}^d\)</span>. We’ll use bolded notation like <span class="math inline">\(\mathbf{x}\)</span> to denote vectors and non-bolded notation like <span class="math inline">\(x[i]\)</span> to denote scalars. Depending on the context, we’ll use <span class="math inline">\(x[i]\)</span> or <span class="math inline">\(x_i\)</span> to refer to the <span class="math inline">\(i\)</span>th entry of the vector <span class="math inline">\(\mathbf{x}\)</span>. We can write the inner product in several equivalent ways: <span class="math display">\[\begin{align}
+<p>Recall the inner product between two <span class="math inline">\(d\)</span>-dimensional vectors <span class="math inline">\(\mathbf{x}, \mathbf{y} \in \mathbb{R}^d\)</span>. We’ll use bolded notation like <span class="math inline">\(\mathbf{x}\)</span> or <span class="math inline">\(\mathbf{x}_j\)</span> to denote vectors and non-bolded notation like <span class="math inline">\(x[i]\)</span> or <span class="math inline">\(x_i\)</span> to denote scalars. Depending on the context, we’ll use <span class="math inline">\(x[i]\)</span> or <span class="math inline">\(x_i\)</span> to refer to the <span class="math inline">\(i\)</span>th entry of the vector <span class="math inline">\(\mathbf{x}\)</span>. We can write the inner product in several equivalent ways: <span class="math display">\[\begin{align}
 \langle \mathbf{x}, \mathbf{y} \rangle
 = \mathbf{x}^\top \mathbf{y}
 = \mathbf{y}^\top \mathbf{x}
-= \sum_{i=1}^d x[i] y[i].
+= \sum_{i=1}^d x_i y_i.
 \end{align}\]</span> When we take the inner product between a vector and itself, we get the squared norm: <span class="math display">\[\begin{align}
 \langle \mathbf{x}, \mathbf{x} \rangle
 = \mathbf{x}^\top \mathbf{x}
-= \sum_{i=1}^d x[i]^2
+= \sum_{i=1}^d x_i^2
 = \|\mathbf{x}\|_2^2.
 \end{align}\]</span> As we know from linear algebra, the inner product is a measure of how similar two vectors are. In particular, we can write <span class="math display">\[\begin{align}
 \langle \mathbf{x}, \mathbf{y} \rangle
@@ -238,7 +237,7 @@ window.Quarto = {
 \end{align}\]</span> The expected inner product between vectors <span class="math inline">\(i\neq j\)</span> is 0: <span class="math display">\[\begin{align}
 \mathbb{E}[\mathbf{x}_i^\top \mathbf{x}_j]
 = \sum_{k=1}^d \mathbb{E}\left[x_i[k] x_j[k]\right]
-= \sum_{k=1}^d \mathbb{E}\left[x_i[k]] \mathbb{E}[x_j[k]\right] = 0.
+= \sum_{k=1}^d \mathbb{E}[x_i[k]] \mathbb{E}[x_j[k]] = 0.
 \end{align}\]</span> The penultimate equality is because each entry is independent. The last equality is because the expected value of each entry is 0. The next observation we can make is that the variance of the inner product is <span class="math inline">\(\frac1{d}\)</span>: <span class="math display">\[\begin{align}
 \textrm{Var}[\mathbf{x}_i^\top \mathbf{x}_j]
 &amp;= \sum_{k=1}^d \textrm{Var}[x_i[k] x_j[k]]\\
@@ -251,7 +250,7 @@ window.Quarto = {
 \Pr\left( | Z - \mathbb{E}[Z] | \geq \alpha \sigma\right)
 \leq O(e^{-\alpha^2}).
 \end{align}\]</span> Then we’d be done by setting <span class="math inline">\(\alpha = \epsilon \sqrt{d}\)</span>.</p>
-<p>But, since <span class="math inline">\(Z\)</span> is only approximates a Gaussian, we need to be a bit more careful. We’d like to apply Chernoff’s bound. However, Chernoff’s bound requires that the random variable be binary. With some clever algebra, we can write <span class="math inline">\(Z\)</span> as a sum of binary random variables. <span class="math display">\[\begin{align}
+<p>But, since <span class="math inline">\(Z\)</span> only approximates a Gaussian, we need to be a bit more careful. We’d like to apply Chernoff’s bound. However, (our version of) Chernoff’s bound requires that the random variable be binary. With some clever algebra, we can write <span class="math inline">\(Z\)</span> as a sum of binary random variables. <span class="math display">\[\begin{align}
 Z &amp;= \sum_{k=1}^d C_k = \frac2{d} \sum_{k=1}^d \frac{d}{2} C_k \\
 &amp;= \frac2{d} \sum_{k=1}^d \left( -\frac1{2} + B_k \right) \\
 &amp;= \frac2{d} \left( - \frac{d}{2} + \sum_{k=1}^d B_k \right).
@@ -264,9 +263,9 @@ Z &amp;= \sum_{k=1}^d C_k = \frac2{d} \sum_{k=1}^d \frac{d}{2} C_k \\
 \Pr( | Z | \geq \epsilon)
 &amp;= \Pr( B \geq (1+\epsilon) \mathbb{E}[B] )
 + \Pr(B \leq (1-\epsilon) \mathbb{E}[B] ) \\
-&amp;= \Pr(| B - \mathbb{E}[B] | \geq \epsilon \mathbb{E}[B]) = (*)
+&amp;= \Pr(| B - \mathbb{E}[B] | \geq \epsilon \mathbb{E}[B]).
 \end{align}\]</span> Notice this is exactly in the right form for Chernoff’s bound. Then Chernoff’s bound gives <span class="math display">\[\begin{align}
-(*) \leq 2 \exp\left(\frac{-\epsilon^2 \mathbb{E}[B]}{3}\right)
+\Pr( | Z | \geq \epsilon) \leq 2 \exp\left(\frac{-\epsilon^2 \mathbb{E}[B]}{3}\right)
 = 2 \exp\left(\frac{-\epsilon^2 d}{6}\right).
 \end{align}\]</span></p>
 <p>By the union bound, the probability that <em>any</em> pair of vectors has an inner product larger than <span class="math inline">\(\epsilon\)</span> is at most the number of pairs times the probability that a particular pair has an inner product larger than <span class="math inline">\(\epsilon\)</span>. That is, <span class="math display">\[\begin{align}
@@ -279,7 +278,7 @@ t(t-1) &lt; \exp\left( \frac{\epsilon^2d}{6} \right) \\
 &amp;\Leftarrow t = \exp\left( \frac{\epsilon^2d}{12} \right)
 = 2^{c \epsilon^2 d}
 \end{align}\]</span> for <span class="math inline">\(c = \frac{\log_2(e)}{12} \approx 0.12\)</span>. Since the probability that any pair of vectors has an inner product larger than <span class="math inline">\(\epsilon\)</span> is strictly less than 1, there must exist some set of <span class="math inline">\(t\)</span> vectors with all inner products less than <span class="math inline">\(\epsilon\)</span>.</p>
-<p>A corollary of the proof that we just saw is that random vectors tend to be far apart in high dimensions. This means that, if our data distribution is random, we typically need an exponential amount of data to learn a pattern. Nonetheless, we often get away with a much smaller amount of data in practice. The reason is that the there generally exists a lower dimensional structure in our data that we can learn. For example, data may lie in a low-dimensional subspace (or it does so after a transformation). Alternatively, the pattern we’re learning can come from a specific class of functions that we can learn with a small amount of data.</p>
+<p>A corollary of the proof that we just saw is that random vectors tend to be far apart in high dimensions. This means that, if our data distribution is random, we typically need an exponential amount of data to learn a pattern. Nonetheless, we often get away with a much smaller amount of data in practice. The reason is that there generally exists a lower dimensional structure in our data that we can learn. For example, data may lie in a low-dimensional subspace (or it does so after a transformation). Alternatively, the pattern we’re learning can come from a specific class of functions that we can learn with a small amount of data.</p>
 <p>Before we discuss how to learn low-dimensional structure, let’s see how high-dimensional geometry is so different from what our intuition tells us.</p>
 </section>
 <section id="where-points-live" class="level3">
@@ -290,8 +289,8 @@ t(t-1) &lt; \exp\left( \frac{\epsilon^2d}{6} \right) \\
 <p align="center">
 <img src="images/unit_ball.png" width="400">
 </p>
-<p>Well we know that the volume of a radius <span class="math inline">\(R\)</span> ball in <span class="math inline">\(d\)</span> dimensions is <span class="math inline">\(\frac{\pi^{d/2}}{(d/2)!} R^d\)</span>. (Here, we assume that <span class="math inline">\(d\)</span> is even but there is a similar expression for odd <span class="math inline">\(d\)</span>.) Then the volume of the ball within <span class="math inline">\(\epsilon\)</span> of the surface is <span class="math display">\[\begin{align}
-\frac{\textrm{Vol}(\mathcal{B_d}) - \textrm{Vol}(\mathcal{B_d}(1-\epsilon))}{\textrm{Vol}(\mathcal{B_d})}
+<p>Well we know that the volume of a radius <span class="math inline">\(R\)</span> ball in <span class="math inline">\(d\)</span> dimensions is <span class="math inline">\(\frac{\pi^{d/2}}{(d/2)!} R^d\)</span>. (Here, we assume that <span class="math inline">\(d\)</span> is even but there is a similar expression for odd <span class="math inline">\(d\)</span>.) Then the fraction of the volume within <span class="math inline">\(\epsilon\)</span> of the surface is <span class="math display">\[\begin{align}
+\frac{\textrm{Vol}(\mathcal{B}_d) - \textrm{Vol}(\mathcal{B}_d(1-\epsilon))}{\textrm{Vol}(\mathcal{B}_d)}
 &amp;= 1- \frac{\frac{\pi^{d/2}}{(d/2)!} (1-\epsilon)^d}{\frac{\pi^{d/2}}{(d/2)!} 1^d}
 = 1 - (1-\epsilon)^d \\
 &amp;= 1- \left((1-\epsilon)^{1/\epsilon}\right)^{\epsilon d}
@@ -301,7 +300,7 @@ t(t-1) &lt; \exp\left( \frac{\epsilon^2d}{6} \right) \\
 <p align="center">
 <img src="images/cubes.png" width="400">
 </p>
-<p>Consider the cubes with side length <span class="math inline">\(10\)</span> in the figure above. In one dimension, the ratio of the cubes on the surface to the total number of cubes is <span class="math inline">\(\frac{2}{10}=.2\)</span>. In two dimensions, the ratio is <span class="math inline">\(\frac{10^2 - 8^2}{10^2} = .36\)</span>. In two dimensions, the ratio is <span class="math inline">\(\frac{10^3 - 8^3}{10^3} = .488\)</span>. As we increase the dimension, the ratio approaches 1.</p>
+<p>Consider the cubes with side length <span class="math inline">\(10\)</span> in the figure above. In one dimension, the ratio of the cubes on the surface to the total number of cubes is <span class="math inline">\(\frac{2}{10}=.2\)</span>. In two dimensions, the ratio is <span class="math inline">\(\frac{10^2 - 8^2}{10^2} = .36\)</span>. In three dimensions, the ratio is <span class="math inline">\(\frac{10^3 - 8^3}{10^3} = .488\)</span>. As we increase the dimension, the ratio approaches 1.</p>
 <p>Now let’s consider a slightly different question about the sphere. What fraction of the volume of the unit ball falls within <span class="math inline">\(\epsilon\)</span> of its equator?</p>
 <p align="center">
 <img src="images/equator.png" width="400">
@@ -327,13 +326,13 @@ S = \{ \mathbf{x} \in \mathcal{B}_d : |x_1| \leq \epsilon \}.
 <section id="rotational-invariance-of-the-gaussian" class="level3">
 <h3 class="anchored" data-anchor-id="rotational-invariance-of-the-gaussian">Rotational Invariance of the Gaussian</h3>
 <p>Let <span class="math inline">\(\mathbf{g} \in \mathbb{R}^d\)</span> be a random Gaussian vector with each entry drawn from the standard normal distribution <span class="math inline">\(\mathcal{N}(0,1)\)</span>. Then <span class="math inline">\(\mathbf{w} = \frac{\mathbf{g}}{\|\mathbf{g}\|_2}\)</span> is uniformly distributed on the surface of the unit ball.</p>
-<p>To see why, consider <span class="math inline">\(p: \mathbb{R}^d \rightarrow \mathbb{R}\)</span> the probability density function of the surface of the unit ball. There are two key properties of <span class="math inline">\(p\)</span>:</p>
-<ol type="1">
-<li><p>Each point on the surface of the unit ball is equally likely.</p></li>
-<li><p>The distribution of each dimension is the same.</p></li>
-</ol>
-<p>These two properties are enough to show that <span class="math inline">\(p = \exp( -\|\mathbf{w}\|_2^2)\)</span>, at least up to constants. For a phenomenal explanation, check out <a href="https://www.youtube.com/watch?v=cy8r7WSuT1I&amp;ab_channel=3Blue1Brown">this</a> 3Blue1Brown video.</p>
-<p>In order to analyze <span class="math inline">\(\mathbf{w}\)</span>, we’ll first analyze <span class="math inline">\(\mathbf{g}\)</span>. The expectation of <span class="math inline">\(\|\mathbf{g}\|_2^2\)</span> is 0: <span class="math display">\[\begin{align}
+<p>To see why, consider a probability density function <span class="math inline">\(p: \mathbb{R}^d \rightarrow \mathbb{R}\)</span>, with two key properties:</p>
+<ul>
+<li><p>Independence: The distributions of the individual coordinates are independent.</p></li>
+<li><p>Rotational Invariance: The joint density depends only on the distance from the origin (i.e., <span class="math inline">\(p(\mathbf{x})\)</span> is a function of <span class="math inline">\(\|\mathbf{x}\|_2\)</span>).</p></li>
+</ul>
+<p>These two properties are enough to show that <span class="math inline">\(p = \exp( -\|\mathbf{w}\|_2^2)\)</span>, at least up to constants. For a phenomenal explanation of this derivation (often called the Herschel-Maxwell derivation), check out <a href="https://www.youtube.com/watch?v=cy8r7WSuT1I&amp;ab_channel=3Blue1Brown">this</a> 3Blue1Brown video.</p>
+<p>In order to analyze <span class="math inline">\(\mathbf{w}\)</span>, we’ll first analyze <span class="math inline">\(\mathbf{g}\)</span>. The expectation of <span class="math inline">\(\|\mathbf{g}\|_2^2\)</span> is d: <span class="math display">\[\begin{align}
 \mathbb{E}[ \|\mathbf{g}\|_2^2 ]
 = \sum_{i=1}^d \mathbb{E}[g_i^2]
 = \sum_{i=1}^d \textrm{Var}(g_i) = d.
@@ -343,7 +342,7 @@ S = \{ \mathbf{x} \in \mathcal{B}_d : |x_1| \leq \epsilon \}.
 \| \mathbf{g} \|_2^2 \leq \frac{d}{2}
 \right)
 \leq \frac{1}{2^{c d}}
-\end{align}\]</span> for some constant <span class="math inline">\(c\)</span>. The proof uses the Johnson-Lindenstrauss lemma which we’ll introduce shortly.</p>
+\end{align}\]</span> for some constant <span class="math inline">\(c\)</span>. The proof uses a concentration inequality for Chi-squared variables and is left as an exercise.</p>
 <p>We will condition on the event that <span class="math inline">\(\| \mathbf{g} \|_2 \geq \sqrt{d/2}\)</span> for the next inequality. Then <span class="math display">\[\begin{align}
 \Pr\left( |w_1| \leq \epsilon \mid \| \mathbf{g} \|_2 \geq \sqrt{d/2}\right)
 &amp;= \Pr\left( |w_1| \sqrt{d/2} \leq \epsilon \sqrt{d/2} \mid \| \mathbf{g} \|_2 \geq \sqrt{d/2}\right) \\
@@ -361,7 +360,7 @@ S = \{ \mathbf{x} \in \mathcal{B}_d : |x_1| \leq \epsilon \}.
 <p>But in high dimensions, the cube is very different from the ball. The volume of the unit cube is <span class="math inline">\(2^d\)</span> while the volume of the unit ball is <span class="math inline">\(\frac{\pi^{d/2}}{(d/2)!}\)</span>. The ratio of the volume of the unit cube to the unit ball is <span class="math display">\[\begin{align}
 \frac{\textrm{Vol}(\mathcal{C}_d)}{\textrm{Vol}(\mathcal{B}_d)}
 = \frac{2^d (d/2)!}{\pi^{d/2}}
-\approx d^d.
+\approx \sqrt{d}^d.
 \end{align}\]</span> The cube has way way more volume!</p>
 <p>There are some other ways to see that these shapes are very different. We have <span class="math display">\[\begin{align}
 \max_{\mathbf{x} \in \mathcal{B}_d} \|\mathbf{x}\|_2^2 = 1
