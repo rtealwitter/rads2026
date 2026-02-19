@@ -233,7 +233,12 @@ S = \max_{i \in \{1, \ldots, n\}} s_i.
 <img src="images/union.png" width="600">
 </center>
 <p>We saw the proof by picture last class. This time, we’ll prove the union bound using Markov’s inequality. Ironically, three of the tools that we’ve used so far (Markov’s inequality, Chebyshev’s inequality, and the union bound) are all Markov’s inequality in disguise.</p>
-<p><strong>Proof</strong>: Let <span class="math inline">\(\mathbb{1}[E_i]\)</span> be the indicator random variable that event <span class="math inline">\(E_i\)</span> occurs. Define <span class="math inline">\(X= \sum_{i=1}^n \mathbb{1}[E_i]\)</span> as the number of events that occur. Markov’s inequality tells us that <span class="math display">\[
+<div class="proof-block">
+<details open="">
+<summary>
+Proof
+</summary>
+<p>Let <span class="math inline">\(\mathbb{1}[E_i]\)</span> be the indicator random variable that event <span class="math inline">\(E_i\)</span> occurs. Define <span class="math inline">\(X= \sum_{i=1}^n \mathbb{1}[E_i]\)</span> as the number of events that occur. Markov’s inequality tells us that <span class="math display">\[
 \Pr \left( E_1 \cup \ldots \cup E_n \right)
 = \Pr \left( \sum_{i=1}^n \mathbb{1}[E_i] \geq 1 \right)
 \leq \mathbb{E}[X]
@@ -241,6 +246,8 @@ S = \max_{i \in \{1, \ldots, n\}} s_i.
 = \sum_{i=1}^n \mathbb{E}[\mathbb{1}[E_i]]
 = \Pr(E_1) + \ldots + \Pr(E_n).
 \]</span></p>
+</details>
+</div>
 </section>
 <section id="analysis" class="level3">
 <h3 class="anchored" data-anchor-id="analysis">Analysis</h3>

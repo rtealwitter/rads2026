@@ -111,7 +111,10 @@ We saw the proof by picture last class.
 This time, we'll prove the union bound using Markov's inequality.
 Ironically, three of the tools that we've used so far (Markov's inequality, Chebyshev's inequality, and the union bound) are all Markov's inequality in disguise.
 
-**Proof**:
+::: {.proof-block}
+<details open>
+<summary>Proof</summary>
+
 Let $\mathbb{1}[E_i]$ be the indicator random variable that event $E_i$ occurs.
 Define $X= \sum_{i=1}^n \mathbb{1}[E_i]$ as the number of events that occur.
 Markov's inequality tells us that
@@ -124,6 +127,9 @@ $$
 = \sum_{i=1}^n \mathbb{E}[\mathbb{1}[E_i]]
 = \Pr(E_1) + \ldots + \Pr(E_n).
 $$
+
+</details>
+:::
 
 ### Analysis
 
