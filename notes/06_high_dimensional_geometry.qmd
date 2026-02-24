@@ -293,7 +293,9 @@ The second equality is because each entry has mean 0 and variance 1. We will use
 \begin{align}
 \Pr \left(\| \mathbf{g} \|_2^2 \leq \frac{d}{2}\right)\leq \frac{1}{2^{c d}}
 \end{align}
-for some constant $c$. The proof uses a concentration inequality for Chi-squared variables and is left as an exercise. To bound the probability that $|w_1| \leq \epsilon$, we will define two events:
+for some constant $c$. We'll see a proof of this inequality in the next lecture when we cover the Johnson-Lindenstrauss lemma.
+
+To bound the probability that $|w_1| \leq \epsilon$, we will define two events:
 
 1. The norm of the Gaussian vector is sufficiently large: $\| \mathbf{g} \|_2 \geq \sqrt{d/2}$.
 
@@ -308,7 +310,7 @@ Therefore, the probability that $|w_1| \leq \epsilon$ is at least the probabilit
 \Pr( |w_1| \leq \epsilon)&\geq \Pr\left( |g_1| \leq \epsilon \sqrt{d/2} \text{ and } \| \mathbf{g} \|_2 \geq \sqrt{d/2} \right) \\
 &\geq 1 - \Pr\left( |g_1| > \epsilon \sqrt{d/2} \right) - \Pr\left( \| \mathbf{g} \|_2 < \sqrt{d/2} \right).
 \end{align}
-Applying the standard Gaussian tail bound to the first probability, we get $\Pr\left( |g_1| > \epsilon \sqrt{d/2} \right) \leq \frac{1}{2^{\left(c \epsilon \sqrt{d/2}\right)^2}}$. The second probability is bounded by $\frac{1}{2^{c d}}$ from the Chi-squared inequality above. Substituting these in, we have:
+Applying the standard Gaussian tail bound to the first probability, we get $\Pr\left( |g_1| > \epsilon \sqrt{d/2} \right) \leq \frac{1}{2^{\left(c \epsilon \sqrt{d/2}\right)^2}}$. The second probability is bounded by $\frac{1}{2^{c d}}$ from the JL inequality above. Substituting these in, we have:
 \begin{align}
 \Pr( |w_1| \leq \epsilon)\geq 1 - \frac{1}{2^{\left(c \epsilon \sqrt{d/2}\right)^2}} - \frac{1}{2^{c d}}.
 \end{align}

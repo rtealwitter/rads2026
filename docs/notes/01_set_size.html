@@ -241,7 +241,12 @@ window.Quarto = {
 <p><strong>Theorem:</strong> Let <span class="math inline">\(X\)</span> and <span class="math inline">\(Y\)</span> be random variables. Then <span class="math display">\[
 \mathbb{E}[X+Y] = \mathbb{E}[X] + \mathbb{E}[Y].
 \]</span> The result is a powerful tool that requires <em>no assumptions</em> on the random variables.</p>
-<p><strong>Proof:</strong> Observe that <span class="math display">\[
+<div class="proof-block">
+<details open="">
+<summary>
+Proof
+</summary>
+<p>Observe that <span class="math display">\[
 \mathbb{E}[X+Y] = \sum_{x,y}(x+y) \Pr(X=x \cap Y=y)
 \]</span> Now, we’ll separate the equation into two terms and factor out the <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span> terms, respectively. <span class="math display">\[
 = \sum_x x \sum_y \Pr(X=x \cap Y=y)
@@ -249,9 +254,16 @@ window.Quarto = {
 \]</span> Finally, using the law of total probability, we have <span class="math display">\[
 = \sum_x x \Pr(X=x) + \sum_y y \Pr(Y=y) = \mathbb{E}[X] + \mathbb{E}[Y].
 \]</span></p>
+</details>
+</div>
 <p>There are also several other useful facts about the expected value and variance.</p>
 <p><strong>Fact 1:</strong> When <span class="math inline">\(X\)</span> and <span class="math inline">\(Y\)</span> are independent, <span class="math inline">\(\mathbb{E}[XY] = \mathbb{E}[X] \mathbb{E}[Y]\)</span>.</p>
-<p><strong>Proof:</strong> Observe that <span class="math display">\[
+<div class="proof-block">
+<details open="">
+<summary>
+Proof
+</summary>
+<p>Observe that <span class="math display">\[
 \mathbb{E}[XY] = \sum_{x,y} xy \Pr(X=x \cap Y=y)
 = \sum_{x,y} xy \Pr(X=x) \Pr(Y=y)
 \]</span></p>
@@ -259,16 +271,30 @@ window.Quarto = {
 = \sum_x x \Pr(X=x) \sum_y y \Pr(Y=y)
 = \mathbb{E}[X] \mathbb{E}[Y]
 \]</span> where the second equality followed by the assumption that <span class="math inline">\(X\)</span> and <span class="math inline">\(Y\)</span> are independent.</p>
+</details>
+</div>
 <p><strong>Fact 2:</strong> Consider a random variable <span class="math inline">\(X\)</span>. Then <span class="math inline">\(\textrm{Var}(X) = \mathbb{E}[X^2] - \mathbb{E}[X]^2\)</span>.</p>
-<p><strong>Proof:</strong> Observe that <span class="math display">\[
+<div class="proof-block">
+<details open="">
+<summary>
+Proof
+</summary>
+<p>Observe that <span class="math display">\[
 \textrm{Var}(X) =
 \mathbb{E}[(X-\mathbb{E}[X])^2]
 \]</span> <span class="math display">\[
 = \mathbb{E}[X^2 - 2 X \mathbb{E}[X] + \mathbb{E}[X]^2]
 = \mathbb{E}[X^2] - \mathbb{E}[X]^2
 \]</span> where the first equality is by definition, the second equality is by foiling, and the third equality is by linearity of expectation and the observation that <span class="math inline">\(\mathbb{E}[X]\)</span> is a scalar.</p>
+</details>
+</div>
 <p><strong>Fact 3:</strong> When <span class="math inline">\(X\)</span> and <span class="math inline">\(Y\)</span> are independent, <span class="math inline">\(\textrm{Var}(X+Y) = \textrm{Var}(X) + \textrm{Var}(Y)\)</span>.</p>
-<p><strong>Proof:</strong> Observe that</p>
+<div class="proof-block">
+<details open="">
+<summary>
+Proof
+</summary>
+<p>Observe that</p>
 <p><span class="math display">\[\begin{align*}
 \textrm{Var}(X+Y) &amp;= \mathbb{E}\left[(X + Y - \mathbb{E}[X] - \mathbb{E}[Y])^2\right] \\
 &amp;= \mathbb{E}\left[(X- \mathbb{E}[X])^2 + 2(X-\mathbb{E}[X])(Y-\mathbb{E}[Y]) + (Y-\mathbb{E}[Y])^2\right] \\
@@ -277,6 +303,8 @@ window.Quarto = {
 \mathbb{E}[(X-\mathbb{E}[X])(Y-\mathbb{E}[Y])]
 = \mathbb{E}[XY - \mathbb{E}[X]Y - X\mathbb{E}[Y] + \mathbb{E}[X]\mathbb{E}[Y]] = 0
 \]</span> where the last equality follows by Fact 1 when <span class="math inline">\(X\)</span> and <span class="math inline">\(Y\)</span> are independent.</p>
+</details>
+</div>
 </section>
 </section>
 <section id="set-size-estimation" class="level2">
@@ -310,7 +338,12 @@ D = \sum_{\substack{i, j \in \{1, \ldots, m\} \\ i &lt; j }} D_{i,j}
 <p><strong>Theorem</strong>: For any non-negative random variable <span class="math inline">\(X\)</span> and any positive threshold <span class="math inline">\(t\)</span>, <span class="math display">\[
 \Pr(X \geq t) \leq \frac{\mathbb{E}[X]}{t}.
 \]</span></p>
-<p><strong>Proof:</strong> We’ll prove the inequality directly. By the definition of expectation, we have <span class="math display">\[
+<div class="proof-block">
+<details open="">
+<summary>
+Proof
+</summary>
+<p>We’ll prove the inequality directly. By the definition of expectation, we have <span class="math display">\[
 \mathbb{E}[X] = \sum_{x} x \Pr(X=x)
 = \sum_{\substack{x \\ x \geq t}} x \Pr(X=x) +
 \sum_{\substack{x \\ x &lt; t}} x \Pr(X=x)
@@ -318,6 +351,8 @@ D = \sum_{\substack{i, j \in \{1, \ldots, m\} \\ i &lt; j }} D_{i,j}
 \geq \sum_{\substack{x \\ x \geq t}} t \Pr(X=x) + 0
 = t \Pr(X \geq t).
 \]</span> Rearranging the above inequality gives Markov’s. Can you see where we used that all outcomes <span class="math inline">\(x\)</span> are non-negative?</p>
+</details>
+</div>
 <p>Now let’s apply Markov’s inequality to our set size estimation problem. Since the number of duplicates <span class="math inline">\(D\)</span> is always non-negative, we satisfy the assumption of the inequality. <span class="math display">\[
 \Pr(D \geq 10 ) \leq \frac{\mathbb{E}[D]}{10} = \frac{.4995}{10} = .04995
 \]</span> The probability of observing the 10 duplicates is less than <span class="math inline">\(5\%\)</span>! We should probably start asking the CAPTCHA company some questions.</p>

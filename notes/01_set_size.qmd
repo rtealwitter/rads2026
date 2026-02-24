@@ -137,7 +137,11 @@ $$
 $$
 The result is a powerful tool that requires *no assumptions* on the random variables.
 
-**Proof:** Observe that
+::: {.proof-block}
+<details open>
+<summary>Proof</summary>
+
+Observe that
 $$
 \mathbb{E}[X+Y] = \sum_{x,y}(x+y) \Pr(X=x \cap Y=y)
 $$
@@ -152,11 +156,18 @@ $$
 = \sum_x x \Pr(X=x) + \sum_y y \Pr(Y=y) = \mathbb{E}[X] + \mathbb{E}[Y].
 $$
 
+</details>
+:::
+
 There are also several other useful facts about the expected value and variance.
 
 **Fact 1:** When $X$ and $Y$ are independent, $\mathbb{E}[XY] = \mathbb{E}[X] \mathbb{E}[Y]$.
 
-**Proof:** Observe that 
+::: {.proof-block}
+<details open>
+<summary>Proof</summary>
+
+Observe that 
 $$
 \mathbb{E}[XY] = \sum_{x,y} xy \Pr(X=x \cap Y=y)
 = \sum_{x,y} xy \Pr(X=x) \Pr(Y=y)
@@ -168,9 +179,16 @@ $$
 $$
 where the second equality followed by the assumption that $X$ and $Y$ are independent.
 
+</details>
+:::
+
 **Fact 2:**  Consider a random variable $X$. Then $\textrm{Var}(X) = \mathbb{E}[X^2] - \mathbb{E}[X]^2$.
 
-**Proof:** Observe that 
+::: {.proof-block}
+<details open>
+<summary>Proof</summary>
+
+Observe that 
 $$
 \textrm{Var}(X) = 
 \mathbb{E}[(X-\mathbb{E}[X])^2]
@@ -185,9 +203,16 @@ the third equality is by linearity of expectation
 and the observation that $\mathbb{E}[X]$
 is a scalar.
 
+</details>
+:::
+
 **Fact 3:** When $X$ and $Y$ are independent, $\textrm{Var}(X+Y) = \textrm{Var}(X) + \textrm{Var}(Y)$.
 
-**Proof:** Observe that
+::: {.proof-block}
+<details open>
+<summary>Proof</summary>
+
+Observe that
 
 \begin{align*}
 \textrm{Var}(X+Y) &= \mathbb{E}\left[(X + Y - \mathbb{E}[X] - \mathbb{E}[Y])^2\right] \\
@@ -200,6 +225,9 @@ $$
 = \mathbb{E}[XY - \mathbb{E}[X]Y - X\mathbb{E}[Y] + \mathbb{E}[X]\mathbb{E}[Y]] = 0
 $$
 where the last equality follows by Fact 1 when $X$ and $Y$ are independent.
+
+</details>
+:::
 
 
 ## Set Size Estimation
@@ -290,7 +318,11 @@ $$
 \Pr(X \geq t) \leq \frac{\mathbb{E}[X]}{t}.
 $$
 
-**Proof:** We'll prove the inequality directly.
+::: {.proof-block}
+<details open>
+<summary>Proof</summary>
+
+We'll prove the inequality directly.
 By the definition of expectation, we have
 $$
 \mathbb{E}[X] = \sum_{x} x \Pr(X=x)
@@ -303,6 +335,9 @@ $$
 $$
 Rearranging the above inequality gives Markov's.
 Can you see where we used that all outcomes $x$ are non-negative?
+
+</details>
+:::
 
 Now let's apply Markov's inequality to our set size estimation problem.
 Since the number of duplicates $D$ is always non-negative, we satisfy the assumption

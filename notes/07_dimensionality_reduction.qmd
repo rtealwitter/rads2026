@@ -89,11 +89,21 @@ The reason the result holds for all clusterings is because the cost of each clus
 Suppose we use an $\alpha$-approximation algorithm to find clusters
 $C = \{C_1, \ldots, C_k \}$ such that
 \begin{align}
-\widetilde{Cost}(C) \leq (1+\alpha)
-\widetilde{Cost}(\widetilde{C}^*)
+\widetilde{\textrm{Cost}}(C) \leq (1+\alpha)
+\widetilde{\textrm{Cost}}(\widetilde{C}^*)
 \end{align}
 where $\widetilde{C}^*$ is the optimal clustering for the compressed data points.
-Notice that we can relate the optimal clustering for the compressed data points $\widetilde{C^*}$ to the optimal clustering for the original data points $C^*$.
+
+**Claim:** The clustering $C$ is a good approximation for the optimal clustering $C^*$ for the original data points:
+\begin{align}
+\textrm{Cost}(C) \leq (1+O(\alpha + \epsilon)) \textrm{Cost}(C^*).
+\end{align}
+
+::: {.proof-block}
+<details open>
+<summary>Proof</summary>
+
+Notice that we can relate the optimal clustering for the compressed data points $\widetilde{C}^*$ to the optimal clustering for the original data points $C^*$.
 We have
 \begin{align}
 \widetilde{\textrm{Cost}}(\widetilde{C}^*)
@@ -111,8 +121,11 @@ We have
 &= (1+O(\alpha + \epsilon)) \textrm{Cost}(C^*).
 \end{align}
 
+</details>
+:::
+
 This is just one of the many Johnson-Lindenstrauss applications.
-Another popular application is to reduce the dimension for support vector machines.
+Other applications include nearest neighbor search, compressed sensing, and dimensionality reduction for linear regression.
 
 ### Distributional Johnson-Lindenstrauss Lemma
 Notice that the Johnson-Lindenstrauss lemma is only helpful for us if we can efficiently compute the linear map $\mathbf{\Pi}$.
@@ -168,7 +181,7 @@ We claimed that:
 \Pr \left(
 \| \mathbf{g} \|_2^2 \leq \frac12 \mathbb{E}[ \| \mathbf{g} \|_2^2 ]
 \right)
-\leq \frac{1}{2^{c d}}
+\leq \frac{1}{2^{c k}}
 \end{align}
 for some constant $c$.
 
@@ -195,7 +208,7 @@ Then the distributional JL lemma gives
 \leq \delta.
 \end{align}
 We know $k = O(\log(1/\delta))$ so solving for $\delta$ gives
-$\delta = \frac1{2^{c d}}$ for some constant $c$.
+$\delta = \frac1{2^{c k}}$ for some constant $c$.
 
 ### Proving the Distributional JL Lemma
 We have now reduced proving the JL lemma to proving the distributional JL lemma.
@@ -217,7 +230,7 @@ We can then write
 \mathbb{E}[ \| \mathbf{\Pi} \mathbf{x} \|_2^2 ]
 = \sum_{i=1}^k \frac1{k} \mathbb{E}[ \langle \mathbf{\pi}_i, \mathbf{x}\rangle^2 ]
 = \frac1{k} \sum_{i=1}^k \mathbb{E}\left[
-\sum_{j=1}^d \left( \pi_{i}[j] \mathbf{x}[j] \right)^2
+\left( \sum_{j=1}^d  \pi_{i}[j] \mathbf{x}[j] \right)^2
 \right]
 \end{align*}
 where $\pi_{i}[j]$ is the $j$th entry of $\mathbf{\pi}_i$ and is drawn from the standard normal distribution.
@@ -234,10 +247,10 @@ The fact is intuitive but the [proofs](https://en.wikipedia.org/wiki/Sum_of_norm
 We can apply this fact to our sum above.
 In particular, let
 \begin{align*}
-Z_i = \sum_{j=1}^d \pi_{i,j} \mathbf{x}_j.
+Z_i = \sum_{j=1}^d \pi_{i}[j] \mathbf{x}[j].
 \end{align*}
-We will briefly argue that $\pi_{i}[j] \cdot \mathbf{x}_j \sim \mathcal{N}(0, \mathbf{x}_j^2)$.
-If we assume that $\pi_{i}[j] \cdot \mathbf{x}_j$ is still a Gaussian random variable then we know the expectation is $0$ by linearity of expectation and the variance is $\mathbf{x}_j^2$ since $\textrm{Var}(c X) = c^2 \textrm{Var}(X)$ for any random variable $X$ and constant $c$.
+We will briefly argue that $\pi_{i}[j] \cdot \mathbf{x}[j] \sim \mathcal{N}(0, \mathbf{x}[j]^2)$.
+If we assume that $\pi_{i}[j] \cdot \mathbf{x}[j]$ is still a Gaussian random variable then we know the expectation is $0$ by linearity of expectation and the variance is $\mathbf{x}[j]^2$ since $\textrm{Var}(c X) = c^2 \textrm{Var}(X)$ for any random variable $X$ and constant $c$.
 We will use this observation and apply the stability of Gaussian random variables to see that
 \begin{align*}
 Z_i \sim \mathcal{N}(0, \|\mathbf{x}\|_2^2).
@@ -251,11 +264,11 @@ Then we can write
 \end{align*}
 Here, we observed that $\textrm{Var}(Z_i) = \mathbb{E}[Z_i^2] - \mathbb{E}[Z_i]^2 = \mathbb{E}[Z_i^2] = \|\mathbf{x}\|_2^2$ since $\mathbb{E}[Z_i] = 0$.
 
-Now that we know the expectation of $\| \mathbf{\Pi} \mathbf{x} \|_2^2$, we will apply a concentration inquality to show that the random variable $\| \mathbf{\Pi} \mathbf{x} \|_2^2$.
+Now that we know the expectation of $\| \mathbf{\Pi} \mathbf{x} \|_2^2$, we will apply a concentration inequality to show that the random variable $\| \mathbf{\Pi} \mathbf{x} \|_2^2$ concentrates around its mean.
 We will use a specialized concentration inequality for chi-squared random variables with $k$ degrees of freedom which are simply sums of $k$ squared Gaussian random variables.
 
 **Concentration of Chi-squared Random Variables:**
-Let $Z$ be a chi-squared random variable with $k$ degrees of freedom.
+Let $Z$ be a scaled chi-squared random variable with $k$ degrees of freedom.
 Then
 \begin{align*}
 \Pr \left( |Z - \mathbb{E}[Z] | \geq \epsilon \mathbb{E}[Z] \right) \leq 2 e^{-\epsilon^2 k / 8}.
@@ -283,14 +296,14 @@ Solving for $k$, we have
 k = \frac{8}{\epsilon^2} \log \frac2{\delta}.
 \end{align*}
 
-We have now shown the distributonal JL lemma.
+We have now shown the distributional JL lemma.
 But we may find our result surprising because we previously saw how high-dimensional geometry differs wildly from low-dimensional geometry.
 
 In order to reconcile these two results,
 let's imagine the following hard case of $n$ mutually orthogonal unit vectors in $\mathbb{R}^d$.
 Let $\mathbf{x}_1, \ldots, \mathbf{x}_n \in \mathbb{R}^d$ be mutually orthogonal vectors so that
 \begin{align*}
-\| \mathbf{x}_i - \mathbf{x}_j \|_2 = 2.
+\| \mathbf{x}_i - \mathbf{x}_j \|_2^2 = 2.
 \end{align*}
 The JL lemma tells us we can compress these vectors to $k = O(\log n / \epsilon^2)$ dimensions while preserving the distances up to a factor of $1 \pm \epsilon$.
 From our result for *nearly* orthogonal vectors, we know that there are $2^{O(\epsilon^2 \log n /\epsilon^2)} \geq n$ vectors that are $\epsilon$ orthogonal in $O(\log n / \epsilon^2)$ dimensions.
