@@ -89,7 +89,7 @@ output:
     <td><a href="notes/07_dimensionality_reduction.html">Dimensionality Reduction</a></td>
     <td><a href="notes/07_dimensionality_reduction.html">Dimensionality Reduction</a></td>
     <td><a href="slides/Week06.pdf">Slides</a></td>
-    <td></td>
+    <td><a href="https://colab.research.google.com/drive/1fzNpF5fdn_7jALETy3NqZkmSRAnzqt1N?usp=sharing">Problem 10</a>, <a href="https://colab.research.google.com/drive/1aW6LjXEWIVPulxRxWJs0Q1rrR6k4pq4W?usp=sharing">Problem 11</a></td>
   </tr>
   <tr>
     <td>Week 7 (3/3 and 3/5)</td>
