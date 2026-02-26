@@ -352,8 +352,8 @@ k = \frac{8}{\epsilon^2} \log \frac2{\delta}.
 <p>In order to reconcile these two results, let’s imagine the following hard case of <span class="math inline">\(n\)</span> mutually orthogonal unit vectors in <span class="math inline">\(\mathbb{R}^d\)</span>. Let <span class="math inline">\(\mathbf{x}_1, \ldots, \mathbf{x}_n \in \mathbb{R}^d\)</span> be mutually orthogonal vectors so that <span class="math display">\[\begin{align*}
 \| \mathbf{x}_i - \mathbf{x}_j \|_2^2 = 2.
 \end{align*}\]</span> The JL lemma tells us we can compress these vectors to <span class="math inline">\(k = O(\log n / \epsilon^2)\)</span> dimensions while preserving the distances up to a factor of <span class="math inline">\(1 \pm \epsilon\)</span>. From our result for <em>nearly</em> orthogonal vectors, we know that there are <span class="math inline">\(2^{O(\epsilon^2 \log n /\epsilon^2)} \geq n\)</span> vectors that are <span class="math inline">\(\epsilon\)</span> orthogonal in <span class="math inline">\(O(\log n / \epsilon^2)\)</span> dimensions. So the JL lemma pushes us just to the limit of the dimension we can compress to while still approximately preserving inner products.</p>
-<p>An alternate view is that, without additional structure, we expect that learning in <span class="math inline">\(d\)</span> dimensions requires <span class="math inline">\(n=2^d\)</span> data points. If we really had a data set that large, then the JL lemma would be vacuous since <span class="math inline">\(\log n = d\)</span>.</p>
-<p>The JL lemma tells us how we can preserve <span class="math inline">\(\ell_2\)</span>-norm distances between points. We’ll next see how we can preserve <em>similarity</em> between points.</p>
+<p>Put another way: without additional structure, finding nearby points in <span class="math inline">\(d\)</span> dimensions can require <span class="math inline">\(n=2^d\)</span> data points. If we really had a data set that large, then the JL lemma would be vacuous since <span class="math inline">\(\log n = d\)</span>.</p>
+<p>Next, we’ll see how additional structure can allow us to get much better dimensionality reduction results.</p>
 
 
 

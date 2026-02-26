@@ -309,7 +309,6 @@ The JL lemma tells us we can compress these vectors to $k = O(\log n / \epsilon^
 From our result for *nearly* orthogonal vectors, we know that there are $2^{O(\epsilon^2 \log n /\epsilon^2)} \geq n$ vectors that are $\epsilon$ orthogonal in $O(\log n / \epsilon^2)$ dimensions.
 So the JL lemma pushes us just to the limit of the dimension we can compress to while still approximately preserving inner products.
 
-An alternate view is that, without additional structure, we expect that learning in $d$ dimensions requires $n=2^d$ data points. If we really had a data set that large, then the JL lemma would be vacuous since $\log n = d$.
+Put another way: without additional structure, finding nearby points in $d$ dimensions can require $n=2^d$ data points. If we really had a data set that large, then the JL lemma would be vacuous since $\log n = d$.
 
-The JL lemma tells us how we can preserve $\ell_2$-norm distances between points.
-We'll next see how we can preserve *similarity* between points.
+Next, we'll see how additional structure can allow us to get much better dimensionality reduction results.

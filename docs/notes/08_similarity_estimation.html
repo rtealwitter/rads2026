@@ -194,8 +194,8 @@ window.Quarto = {
 </header>
 
 
-<p>We saw how, without additional structure, we expect that learning in <span class="math inline">\(d\)</span> dimensions requires <span class="math inline">\(n=2^d\)</span> data points. If we really had a data set that large, then the JL lemma would be vacuous since <span class="math inline">\(\log n = d\)</span>.</p>
-<p>The JL lemma tells us how we can preserve <span class="math inline">\(\ell_2\)</span>-norm distances between points. Let’s see how we can preserve <em>similarity</em> between points.</p>
+<p>We saw how, without additional structure, finding nearby points in <span class="math inline">\(d\)</span> dimensions can require <span class="math inline">\(n=2^d\)</span> data points. If we really had a data set that large, then the JL lemma would be vacuous since <span class="math inline">\(\log n = d\)</span>.</p>
+<p>Today, we’ll see how additional structure can allow us to get much better dimensionality reduction results.</p>
 <section id="similarity-estimation" class="level2">
 <h2 class="anchored" data-anchor-id="similarity-estimation">Similarity Estimation</h2>
 <p>Let’s consider the following problem: How do services like Shazam match a song clip against a library of more than 11 million songs in a fraction of a second? To make the problem more challenging, the song clips we match generally have additional noise like background sound in a car.</p>

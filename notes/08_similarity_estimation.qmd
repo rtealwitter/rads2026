@@ -7,10 +7,9 @@ format:
     include-after-body: readtime.html
 ---
 
-We saw how, without additional structure, we expect that learning in $d$ dimensions requires $n=2^d$ data points. If we really had a data set that large, then the JL lemma would be vacuous since $\log n = d$.
+We saw how, without additional structure, finding nearby points in $d$ dimensions can require $n=2^d$ data points. If we really had a data set that large, then the JL lemma would be vacuous since $\log n = d$.
 
-The JL lemma tells us how we can preserve $\ell_2$-norm distances between points.
-Let's see how we can preserve *similarity* between points.
+Today, we'll see how additional structure can allow us to get much better dimensionality reduction results.
 
 ## Similarity Estimation
 
