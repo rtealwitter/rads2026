@@ -66,11 +66,11 @@ $h_i: \{0, \ldots, d\} \rightarrow [0,1]$ for $i \in [k]$.
 For each hash function $h_i$
 we'll compute
 \begin{align*}
-c_i = \min_{j \in \{1, \ldots, d\}: \mathbf{x}_j = 1} h_i(j).
+c_i(\mathbf{x}) = \min_{j \in \{1, \ldots, d\}: x_j = 1} h_i(j).
 \end{align*}
 In words, we hash each index where $\mathbf{x}$ is non-zero to a random value in $[0,1]$.
 Then we take the minimum value of the hash function over all the non-zero indices.
-We call the compression $C(\mathbf{x}) = (c_1, \ldots, c_k)$.
+We call the compression $C(\mathbf{x}) = (c_1(\mathbf{x}), \ldots, c_k(\mathbf{x}))$.
 We can see this process represented in the figure below.
 
 <p align="center">
@@ -93,6 +93,21 @@ Inspired by this observation, the MinHash algorithm returns an estimate for the 
 \tilde{J}(\mathbf{x}, \mathbf{y}) = \frac1{k}
 \sum_{i=1}^k \mathbb{1}[c_i(\mathbf{x}) = c_i(\mathbf{y})].
 \end{align*}
+
+Using Chebyshev's inequality, we can show that $\tilde{J}(\mathbf{x}, \mathbf{y})$ is a good estimate for $J(\mathbf{x}, \mathbf{y})$ with high probability.
+
+**Claim:** As long as $k=O(\frac1{\epsilon^2 \delta})$, then with probability $1-\delta$,
+\begin{align*}
+J(\mathbf{x}, \mathbf{y}) - \epsilon
+\leq \tilde{J} (\mathbf{x}, \mathbf{y})
+\leq J(\mathbf{x}, \mathbf{y}) + \epsilon.
+\end{align*}
+Notice that we only need $O(k)$ time to compute the estimate which is *independent* of the original fingerprint dimension $d$.
+
+::: {.proof-block}
+<details closed>
+<summary>Proof of Claim</summary>
+
 By linearity of expectation, we have
 \begin{align*}
 \mathbb{E}[\tilde{J}(\mathbf{x}, \mathbf{y})] = \frac1{k} \sum_{i=1}^k \Pr( c_i(\mathbf{x}) = c_i(\mathbf{y}))
@@ -120,13 +135,9 @@ The additive error is $\epsilon= \alpha \frac{1}{\sqrt{k}}$.
 Since $\alpha = 1/\sqrt{\delta}$, we have
 $k = \frac1{\epsilon^2 \delta}$.
 
-We have shown that as long as $k=O(\frac1{\epsilon^2 \delta})$, then with probability $1-\delta$,
-\begin{align*}
-J(\mathbf{x}, \mathbf{y}) - \epsilon
-\leq \tilde{J} (\mathbf{x}, \mathbf{y})
-\leq J(\mathbf{x}, \mathbf{y}) + \epsilon.
-\end{align*}
-Notice that we only need $O(k)$ time to compute the estimate which is *independent* of the original fingerprint dimension $d$.
+</details>
+:::
+
 
 We can improve the result to have a $\log(1/\delta)$ dependence using a Chernoff bound or the biased coin bound we showed in the concentration inequalities lecture.
 

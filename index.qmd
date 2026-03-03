@@ -95,7 +95,7 @@ output:
     <td>Week 7 (3/3 and 3/5)</td>
     <td><a href="notes/08_similarity_estimation.html">Similarity Estimation</a></td>
     <td><i>Midterm Exam</i></td>
-    <td></td>
+    <td><a href="slides/Week07.pdf">Slides</a></td>
     <td></td>
   </tr>
   <tr>
