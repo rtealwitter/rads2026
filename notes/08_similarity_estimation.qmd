@@ -40,12 +40,12 @@ As in the JL compressions, we want $C(\mathbf{x})$ and $C(\mathbf{y})$ to be clo
 
 We will use the notion of Jaccard similarity to measure the similarity between $\mathbf{x}$ and $\mathbf{y}$.
 
-**Jaccard Similary:**
+**Jaccard Similarity:**
 The Jaccard similarity between $\mathbf{x}$ and $\mathbf{y}$ is
 \begin{align*}
 J(\mathbf{x}, \mathbf{y})
 = \frac{|\mathbf{x} \cap \mathbf{y}|}{|\mathbf{x} \cup \mathbf{y}|}
-= \frac{\textrm{# non-zero entries in common}}{\textrm{# non-zero entries in total}}.
+= \frac{\text{\# non-zero entries in common}}{\text{\# non-zero entries in total}}.
 \end{align*}
 
 Jaccard similarity can be applied to any data which has a natural binary representation:
@@ -98,17 +98,17 @@ By linearity of expectation, we have
 \mathbb{E}[\tilde{J}(\mathbf{x}, \mathbf{y})] = \frac1{k} \sum_{i=1}^k \Pr( c_i(\mathbf{x}) = c_i(\mathbf{y}))
 = J(\mathbf{x}, \mathbf{y}).
 \end{align*}
-We can reduce the variance of the estimator by increasig the number of hash functions $k$.
+We can reduce the variance of the estimator by increasing the number of hash functions $k$.
 The variance of the estimator is
 \begin{align*}
 \textrm{Var}( \tilde{J}(\mathbf{x}, \mathbf{y}) )
 &= \frac1{k^2} \sum_{i=1}^k \textrm{Var}( \mathbb{1}[c_i(\mathbf{x}) = c_i(\mathbf{y})] ) \\
-&= \frac1{k^2} \sum_{i=1}^k J(\mathbf{x}, \mathbf{y}) -  J(\mathbf{x}, \mathbf{y})^2
+&= \frac1{k^2} \sum_{i=1}^k \left(J(\mathbf{x}, \mathbf{y}) -  J(\mathbf{x}, \mathbf{y})^2\right)
 \leq \frac1{k} J(\mathbf{x}, \mathbf{y})
 \leq \frac1{k}.
 \end{align*}
 
-How big should we choose $k$ so that the the estimate is with an additive error $\epsilon$ of its expectation with probability $1-\delta$?
+How big should we choose $k$ so that the estimate is with an additive error $\epsilon$ of its expectation with probability $1-\delta$?
 
 Chebyshev's inequality tells us that
 \begin{align*}
@@ -155,7 +155,7 @@ We want to find vectors in a database $\mathbf{y}_1, \ldots, \mathbf{y}_n \in \m
 We showed before how to improve the runtime of linear scans from $O(nd)$ to $O(nk)$ and the space complexity from $O(nd)$ to $O(nk)$.
 This can be helpful but we want to go even further to an algorithm which finds nearby vectors with runtime *sublinear* in $n$.
 
-To see convince yourself it is possible to find nearest neighbors in sublinear time, consider the problem in one dimension.
+To convince yourself it is possible to find nearest neighbors in sublinear time, consider the problem in one dimension.
 We know how to solve this problem in $\log_2 n$ time using binary search.
 We can generalize this approach to higher dimensions with data structures like k-d trees.
 Unfortunately, the runtime is roughly $O(d \min(n, 2^d))$ which is sublinear only for $d=o(\log n)$.
@@ -215,8 +215,8 @@ For example, we may want to find anything with Jaccard similarity at least $.4$ 
 We can reduce the false negative rate by using multiple hash functions.
 In the preprocessing step, we now select $t$ independent LSH hash functions $h_1, \ldots, h_t$.
 We create tables $T_1, \ldots, T_t$ each with $m$ slots.
-For every vector $i \in [n]$ and every table $j$ \in [t], we compute $h_1(\mathbf{y}_i), \ldots, h_t(\mathbf{y}_i)$ and store $\mathbf{y}_i$ in the corresponding slots in $T_1, \ldots, T_t$.
-In the query step we compute $h_1(\mathbf{x}), \ldots, h_t(\mathbf{x})$ and look in each one of the corresponding slots in $T_1, \ldots, T_t$.
+For every vector $i \in [n]$ and every table $j \in [t]$, we compute $h_1(\mathbf{y}_i), \ldots, h_t(\mathbf{y}_i)$ and store $\mathbf{y}_i$ in the corresponding slots in $T_1, \ldots, T_t$.
+In the query step, we compute $h_1(\mathbf{x}), \ldots, h_t(\mathbf{x})$ and look in each one of the corresponding slots in $T_1, \ldots, T_t$.
 
 We can now analyze the probability that we find a nearby vector $\mathbf{y}$ that has Jaccard similarity at least $.4$.
 The probability that we find $\mathbf{y}$
@@ -234,10 +234,10 @@ Now that we reduced the false negative rate, we need to find a way to reduce the
 
 We can reduce the false positive rate by modifying our LSH scheme one more time.
 Choose a positive integer $r$.
-Let $c_1, \ldots, c_r: \{0,1\}^d \rightarrow[0,1]$ be independent instantiations of MinHash.
+Let $c_1, \ldots, c_r: \{0,1\}^d \rightarrow [0,1]$ be independent instantiations of MinHash.
 Let $g:[0,1]^r \rightarrow \{1,\ldots,m\}$ be a uniform random hash function.
-Then define the LSH hash function is $h(\mathbf{x}) = g(c_1(\mathbf{x}), \ldots, c_r(\mathbf{x}))$.
-We refer to $r$ as the number of *bands*.
+Then define the LSH hash function as $h(\mathbf{x}) = g(c_1(\mathbf{x}), \ldots, c_r(\mathbf{x}))$.
+We refer to $r$ as the number of *rows*.
 Now the probability that $\mathbf{x}$ and $\mathbf{y}$ are in the same slot in a particular table is
 \begin{align*}
 \Pr(h(\mathbf{x}) = h(\mathbf{y}))
@@ -245,10 +245,10 @@ Now the probability that $\mathbf{x}$ and $\mathbf{y}$ are in the same slot in a
 + (1-J(\mathbf{x}, \mathbf{y})^r) \frac1{m}
 \end{align*}
 
-The full LSH scheme now has two parameters: $r$ the number of bands and $t$ the number of tables.
+The full LSH scheme now has two parameters: $r$ the number of rows and $t$ the number of tables.
 Changing $r$ and $t$ changes the false positive and false negative rates.
 If we increase the number of tables $t$, we decrease the false negative rate and increase the false positive rate.
-If we decrease the number of bands $r$, we increase the false negative rate and decrease the false positive rate.
+If we decrease the number of rows $r$, we increase the false negative rate and decrease the false positive rate.
 
 Intuitively, these parameters are in tension but we can find a sweet spot that works well for each application.
 
@@ -285,7 +285,7 @@ Then we have
 = 2 - 2 \cos(\theta(\mathbf{x}, \mathbf{y})).
 \end{align*}
 
-Let's design a LSH scheme for cosine similarity with $r$ bands.
+Let's design a LSH scheme for cosine similarity with $r$ rows.
 Let $\mathbf{g}_1, \ldots, \mathbf{g}_r \in \mathbb{R}^d$ be random vectors with each entry drawn from the standard normal distribution $\mathcal{N}(0,1)$.
 Let $f: \{-1, 1\}^r \to \{1, \ldots, m\}$ be a uniform random hash function.
 Then we define the LSH hash function
@@ -303,7 +303,7 @@ We will show that
 
 As an intermediate result, we will show that
 \begin{align*}
-\Pr( \langle \mathbf{g}, \mathbf{x} \rangle = \langle \mathbf{g}, \mathbf{y} \rangle )
+\Pr( \text{sign}(\langle \mathbf{g}, \mathbf{x} \rangle) = \text{sign}(\langle \mathbf{g}, \mathbf{y} \rangle) )
 = 1 - \frac{\theta}{\pi}.
 \end{align*}
 
@@ -336,4 +336,4 @@ But we are also interested in the worst case performance.
 Such guarantees can be proven and were actually a major driving force in the development of LSH schemes.
 
 **Theorem (Indyk and Motwani 1998):**
-If there exists some vector $\mathbf{y}$ with $\|\mathbf{x} - \mathbf{y}\|_0 \leq R$, then we can return a vector $\hat{\mathbf{y}}$ with $\|\mathbf{x} - \hat{\mathbf{y}}\|_0 \leq C \cdot R$ in $O(n^{1/C})$ time and $O(n^{1+1/C})$ space.
+For a database of binary vectors in Hamming space, if there exists some vector $\mathbf{y}$ in the database with $\|\mathbf{x} - \mathbf{y}\|_0 \leq R$, then we can return a vector $\hat{\mathbf{y}}$ with $\|\mathbf{x} - \hat{\mathbf{y}}\|_0 \leq C \cdot R$ in $O(d \cdot n^{1/C})$ time and $O(d \cdot n^{1+1/C})$ space.
