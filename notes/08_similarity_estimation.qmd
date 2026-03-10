@@ -30,8 +30,8 @@ The process is a little more challenging because song clips may be slightly off 
 But, for our purposes, we are primarily interested in how we can compress the high-dimensional binary vector.
 
 Once we have a fingerprint from a song clip, we want to search our database for similar songs.
-Formally, given a binary vector $q \in \{0,1\}^d$ representing our song clip in $d$ dimensions, we want to find a nearby fingerprint $\mathbf{y} \in \{0,1\}^d$ in our database.
-The first challenge is that our database is possibly huge with $O(nd)$ bits where $n$ is the number of song clips.
+Formally, given a binary vector $\mathbf{x} \in \{0,1\}^d$ representing our song clip in $d$ dimensions, we want to find a nearby fingerprint $\mathbf{y} \in \{0,1\}^d$ in our database.
+The first challenge is that our database is possibly huge with $O(nd)$ bits where $n$ is the total number of fingerprints in the library.
 The second challenge is that it is expensive to compute the distance between $\mathbf{y}$ and $\mathbf{x}$ with runtime $O(d)$.
 
 In light of these challenges, our goal is to design a more compact sketch for comparing $\mathbf{x}$ and $\mathbf{y}$. We ideally want to use $k \ll d$ space and time complexity.
@@ -85,8 +85,8 @@ We'll argue that for all $i$,
 \end{align*}
 
 Every non-zero index in $\mathbf{x} \cup \mathbf{y}$ is equally likely to produce the lowest hash value.
-We have $c_i(\mathbf{x}) = c_j(\mathbf{x})$ if and only if the index hashed to the lowest value is 1 in both $\mathbf{x}$ and $\mathbf{y}$.
-Since there are $|\mathbf{x} \cap \mathbf{y}|$ such indices, the probability that $c_i(\mathbf{x}) = c_j(\mathbf{x})$ is the Jaccard similarity.
+We have $c_i(\mathbf{x}) = c_i(\mathbf{y})$ if and only if the index hashed to the lowest value is 1 in both $\mathbf{x}$ and $\mathbf{y}$.
+Since there are $|\mathbf{x} \cap \mathbf{y}|$ such indices, the probability that $c_i(\mathbf{x}) = c_i(\mathbf{y})$ is the Jaccard similarity.
 
 Inspired by this observation, the MinHash algorithm returns an estimate for the Jaccard similarity between $\mathbf{x}$ and $\mathbf{y}$:
 \begin{align*}
@@ -120,8 +120,9 @@ The variance of the estimator is
 &= \frac1{k^2} \sum_{i=1}^k \textrm{Var}( \mathbb{1}[c_i(\mathbf{x}) = c_i(\mathbf{y})] ) \\
 &= \frac1{k^2} \sum_{i=1}^k \left(J(\mathbf{x}, \mathbf{y}) -  J(\mathbf{x}, \mathbf{y})^2\right)
 \leq \frac1{k} J(\mathbf{x}, \mathbf{y})
-\leq \frac1{k}.
+\leq \frac1{4k},
 \end{align*}
+where we used the fact that the variance of a Bernoulli random variable with parameter $p$ is $p(1-p)$ and that $p(1-p) \leq 1/4$ for all $p \in [0,1]$.
 
 How big should we choose $k$ so that the estimate is with an additive error $\epsilon$ of its expectation with probability $1-\delta$?
 
@@ -196,13 +197,16 @@ Let $g: [0,1] \rightarrow \{1, \ldots, m\}$ be a uniform random hash function.
 Then we'll define the locally sensitive hash function $h(\mathbf{x}) = g(c(\mathbf{x}))$.
 
 Observe that $h(\mathbf{x}) = h(\mathbf{y})$ when $c(\mathbf{x}) = c(\mathbf{y})$ or when $\mathbf{x}$ and $\mathbf{y}$ happen to randomly be mapped to the same output.
-In mathematical notation, we have
+Formally, we have
 \begin{align*}
 \Pr(h(\mathbf{x}) = h(\mathbf{y}))
 &= \Pr(c(\mathbf{x}) = c(\mathbf{y}))
-+ \left( 1- \Pr(c(\mathbf{x})) = c(\mathbf{y})) \right) \frac1{m} \\
-&\leq J(\mathbf{x}, \mathbf{y}) + \frac1{m}.
++ \left( 1- \Pr(c(\mathbf{x}) = c(\mathbf{y})) \right) \frac1{m} \\
+&= J(\mathbf{x}, \mathbf{y}) + (1-J(\mathbf{x}, \mathbf{y})) \frac1{m} \\
+&= J(\mathbf{x}, \mathbf{y}) \frac{m-1}{m} + \frac1{m}\\
+&\approx J(\mathbf{x}, \mathbf{y}),
 \end{align*}
+where the approximation holds for large $m$.
 
 The basic approach for near neighbor search in a database has two steps.
 In the preprocessing step, we select a random LSH hash function $h: \{0,1\}^d \rightarrow \{1,\ldots, m\}$.
@@ -214,9 +218,10 @@ We compute $h(\mathbf{x})$ and look in the corresponding slot of the table.
 We then scan through all the vectors in the slot and compute the distance to $\mathbf{x}$.
 The time required is now the time to compute the distance between the query vector and each vector in the slot.
 
-There are two main considerations that we want to analyze.
-The first is the false negative rate: What's the probability we do not find a vector that is close to $\mathbf{x}$?
-The second is the false positive rate: What's the probability that a vector in the slot is not close to $\mathbf{x}$?
+There are two main considerations that we want to analyze:
+
+* **False negative rate**: What's the probability we do not find a vector that is close to $\mathbf{x}$?  
+* **False positive rate**: What's the probability that a vector in the slot is not close to $\mathbf{x}$?
 
 A higher false negative rate means we may miss a vector that is close to $\mathbf{x}$.
 A higher false positive rate means we increase the runtime of the query step because we have to scan through more vectors in the slot.
@@ -236,7 +241,7 @@ is
 1 - \Pr(h_1(\mathbf{x}) \neq h_1(\mathbf{y}))
 \cdots
 \Pr(h_t(\mathbf{x}) \neq h_t(\mathbf{y}))
-= 1-(1-J(\mathbf{x}, \mathbf{y}))^t.
+\approx 1-\left(1-J(\mathbf{x}, \mathbf{y})\right)^t.
 \end{align*}
 If the Jaccard similarity is $.4$ and $t=10$, then the probability that we find $\mathbf{y}$ is $1-(1-.4)^t \approx .99$.
 But now we have a new problem which is that we may find many false positives.
@@ -254,6 +259,13 @@ Now the probability that $\mathbf{x}$ and $\mathbf{y}$ are in the same slot in a
 \Pr(h(\mathbf{x}) = h(\mathbf{y}))
 = J(\mathbf{x}, \mathbf{y})^r
 + (1-J(\mathbf{x}, \mathbf{y})^r) \frac1{m}
+\end{align*}
+The probability that we find $\mathbf{y}$ is
+\begin{align*}
+1 - \Pr(h_1(\mathbf{x}) \neq h_1(\mathbf{y}))
+\cdots
+\Pr(h_t(\mathbf{x}) \neq h_t(\mathbf{y}))
+\approx 1-\left(1-J(\mathbf{x}, \mathbf{y})^r\right)^t.
 \end{align*}
 
 The full LSH scheme now has two parameters: $r$ the number of rows and $t$ the number of tables.
@@ -292,8 +304,8 @@ Then we have
 \begin{align*}
 \| \mathbf{x} - \mathbf{y} \|_2^2
 &= \langle \mathbf{x} - \mathbf{y}, \mathbf{x} - \mathbf{y} \rangle \\
-&= \| \mathbf{x} \|_2^2 + \| \mathbf{y} \|_2^2 - 2 \langle \mathbf{x}, \mathbf{y} \rangle
-= 2 - 2 \cos(\theta(\mathbf{x}, \mathbf{y})).
+&= \| \mathbf{x} \|_2^2 + \| \mathbf{y} \|_2^2 - 2 \langle \mathbf{x}, \mathbf{y} \rangle \\
+&= 2 - 2 \cos(\theta(\mathbf{x}, \mathbf{y})).
 \end{align*}
 
 Let's design a LSH scheme for cosine similarity with $r$ rows.
@@ -309,12 +321,13 @@ Let $\theta = \theta(\mathbf{x}, \mathbf{y})$.
 We will show that
 \begin{align*}
 \Pr( h(\mathbf{x}) = h(\mathbf{y}) )
-= (1 - \frac{\theta}{\pi})^r + \frac{1}{m}.
+= \left(1 - \frac{\theta}{\pi}\right)^r 
++ \left(1-\left(1 - \frac{\theta}{\pi}\right)^r\right) \frac{1}{m}.
 \end{align*}
 
 As an intermediate result, we will show that
 \begin{align*}
-\Pr( \text{sign}(\langle \mathbf{g}, \mathbf{x} \rangle) = \text{sign}(\langle \mathbf{g}, \mathbf{y} \rangle) )
+\Pr_{\mathbf{g} \sim \mathcal{N}(0,1)^d}\left( \text{sign}(\langle \mathbf{g}, \mathbf{x} \rangle) = \text{sign}(\langle \mathbf{g}, \mathbf{y} \rangle) \right)
 = 1 - \frac{\theta}{\pi}.
 \end{align*}
 

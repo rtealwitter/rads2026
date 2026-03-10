@@ -1,3 +1,5 @@
 /.quarto/
 .DS_Store
 txt/
+canvas_grades.csv
+gradescope_grades.csv

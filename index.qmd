@@ -102,7 +102,7 @@ output:
     <td>Week 8 (3/10 and 3/12)</td>
     <td><a href="notes/08_similarity_estimation.html">Similarity Estimation</a></td>
     <td><a href="notes/14_singular_value_decomposition.html">Singular Value Decomposition</a></td>
-    <td></td>
+    <td><a href="slides/Week08.pdf">Slides</a></td>
     <td></td>
   </tr>
   <tr>
