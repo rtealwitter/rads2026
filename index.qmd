@@ -103,7 +103,7 @@ output:
     <td><a href="notes/08_similarity_estimation.html">Similarity Estimation</a></td>
     <td><a href="notes/14_singular_value_decomposition.html">Singular Value Decomposition</a></td>
     <td><a href="slides/Week08.pdf">Slides</a></td>
-    <td></td>
+    <td><a href="https://colab.research.google.com/drive/1h893kni7lVBI9OqHD7sY420JWlzHawQy?usp=sharing">Problem 12</a>, <a href="https://colab.research.google.com/drive/1T_F7Jp4Ts38uBG8D4GGSW33pY70OzFbg?usp=sharing">Problem 13</a></td>
   </tr>
   <tr>
     <td>Week 9 (3/17 and 3/19)</td>
