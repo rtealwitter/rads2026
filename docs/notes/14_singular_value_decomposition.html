@@ -191,16 +191,17 @@ window.Quarto = {
 <p>The next part of this course will cover numerical linear algebra.</p>
 <section id="linear-algebra-review" class="level2">
 <h2 class="anchored" data-anchor-id="linear-algebra-review">Linear Algebra Review</h2>
-<p>Recall that an eigenvalue of a square matrix <span class="math inline">\(\mathbf{X} \in \mathbb{R}^{d \times d}\)</span> is any vector <span class="math inline">\(\mathbf{v}\)</span> such that <span class="math inline">\(\mathbf{Xv} = \lambda \mathbf{v}\)</span> for some scalar <span class="math inline">\(\lambda\)</span>.</p>
+<p>In this section, we will assume that <span class="math inline">\(\mathbf{X} \in \mathbb{R}^{d \times d}\)</span> is a square and symmetric matrix. Recall that an eigenvector <span class="math inline">\(\mathbf{v} \in \mathbb{R}^d\)</span> and corresponding eigenvalue <span class="math inline">\(\lambda \in \mathbb{R}\)</span> of <span class="math inline">\(\mathbf{X}\)</span> satisfy <span class="math inline">\(\mathbf{Xv} = \lambda \mathbf{v}\)</span>.</p>
 <p>The matrix <span class="math inline">\(\mathbf{X}\)</span> has at most <span class="math inline">\(d\)</span> linearly independent eigenvectors. If it has a full set of <span class="math inline">\(d\)</span> eigenvectors <span class="math inline">\(\mathbf{v}_1, \ldots, \mathbf{v}_d\)</span> where <span class="math inline">\(\|\mathbf{v}_i\|_2 = 1\)</span> for all <span class="math inline">\(i\)</span> and with eigenvalues <span class="math inline">\(\lambda_1 \geq \ldots \geq \lambda_d\)</span>, the matrix is called diagonalizable and can be written as <span class="math display">\[
 \mathbf{X} = \mathbf{V} \mathbf{\Lambda} \mathbf{V}^{-1}.
 \]</span></p>
 <p>Decomposing a matrix into its eigenvectors and eigenvalues is called eigendecomposition.</p>
-<p>While eigendecomposition only applies to square matrices, we can extend the idea to rectangular matrices with a related tool called singular value decomposition. But first, let’s review eigendecomposition. If a square matrix <span class="math inline">\(\mathbf{V}\)</span> has orthonormal rows, it also has orthonormal columns.</p>
+<p>While eigendecomposition only applies to square matrices, we can extend the idea to rectangular matrices with a related tool called singular value decomposition. But first, let’s review eigendecomposition.</p>
+<p>The matrix <span class="math inline">\(\mathbf{V}\)</span> is constructed by placing the orthonormal eigenvectors <span class="math inline">\(\mathbf{v}_1, \ldots, \mathbf{v}_d\)</span> as its columns. Because these column vectors are orthonormal, their dot products are <span class="math inline">\(1\)</span> with themselves and <span class="math inline">\(0\)</span> with each other. That is, <span class="math inline">\(\mathbf{V}^\top \mathbf{V} = \mathbf{I}\)</span>.</p>
 <p align="center">
 <img src="images/orth_square.png" width="400px">
 </p>
-<p>That is, <span class="math inline">\(\mathbf{V} \mathbf{V}^\top = \mathbf{I}\)</span> because the eigenvectors are orthonormal. Then, by definition, <span class="math inline">\(\mathbf{V}^{-1} = \mathbf{V}^\top\)</span>. Next, because <span class="math inline">\(\mathbf{V}^\top\)</span> is full rank, we can write <span class="math inline">\(\mathbf{I} = \mathbf{V}^\top (\mathbf{V}^\top)^{-1}=\mathbf{V}^\top (\mathbf{V}^{-1})^{-1}= \mathbf{V}^\top \mathbf{V}\)</span>.</p>
+<p>By definition of an inverse for a square matrix, this implies that <span class="math inline">\(\mathbf{V}^{-1} = \mathbf{V}^\top\)</span>. Finally, because a left inverse is also a right inverse for square matrices, we also have <span class="math inline">\(\mathbf{V} \mathbf{V}^\top = \mathbf{I}\)</span>. This elegantly shows that if a square matrix has orthonormal columns, it also has orthonormal rows.</p>
 <p>This implies that, for any vector <span class="math inline">\(\mathbf{x}\)</span>, <span class="math inline">\(\| \mathbf{V x}\|_2^2 = \| \mathbf{x} \|_2^2 = \| \mathbf{V}^\top \mathbf{x} \|_2^2\)</span>.</p>
 <p>To see this, we can write <span class="math display">\[\begin{align*}
 \| \mathbf{V x}\|_2^2
@@ -226,11 +227,11 @@ window.Quarto = {
 </p>
 <p>Singular values are unique but factors are not. We would still get a valid decomposition if we multiply the <span class="math inline">\(i\)</span>th column of <span class="math inline">\(\mathbf{U}\)</span> and <span class="math inline">\(\mathbf{V}\)</span> by <span class="math inline">\(-1\)</span>.</p>
 <p>For the eigendecomposition, we showed that <span class="math inline">\(\|\mathbf{V} \mathbf{x}\|_2^2 = \| \mathbf{x} \|_2^2 = \| \mathbf{V}^\top \mathbf{x} \|_2^2\)</span>. It then followed that <span class="math inline">\(\| \mathbf{V} \mathbf{X} \|_F^2 = \| \mathbf{X} \|_F^2\)</span> and <span class="math inline">\(\| \mathbf{V}^\top \mathbf{X} \|_F^2 = \| \mathbf{X} \|_F^2\)</span>. Not all of these properties are true for singular value decomposition.</p>
-<p>These properties are not true for rectangular matrices. Let <span class="math inline">\(\mathbf{U} \in \mathbb{R}^{n \times d}\)</span> with <span class="math inline">\(n &gt; d\)</span> be a matrix with orthogonal columns. Then <span class="math inline">\(\mathbf{U}^\top \mathbf{U} = \mathbf{I}\)</span> but <span class="math inline">\(\mathbf{U} \mathbf{U}^\top \neq \mathbf{I}\)</span>.</p>
+<p>These properties are not true for rectangular matrices. Let <span class="math inline">\(\mathbf{U} \in \mathbb{R}^{n \times d}\)</span> with <span class="math inline">\(n &gt; d\)</span> be a matrix with orthonormal columns. Then <span class="math inline">\(\mathbf{U}^\top \mathbf{U} = \mathbf{I}\)</span> but <span class="math inline">\(\mathbf{U} \mathbf{U}^\top \neq \mathbf{I}\)</span>.</p>
 <p align="center">
 <img src="images/orth_rect.png" width="400px">
 </p>
-<p>Similarly, for any <span class="math inline">\(\mathbf{x}\)</span>, <span class="math inline">\(\| \mathbf{U x}\|_2^2 = \| \mathbf{x} \|_2^2\)</span> but <span class="math inline">\(\| \mathbf{U}^\top \mathbf{x} \|_2^2 \neq \| \mathbf{x} \|_2^2\)</span>.</p>
+<p>Similarly, for any <span class="math inline">\(\mathbf{x} \in \mathbb{R}^d\)</span>, <span class="math inline">\(\| \mathbf{U x}\|_2^2 = \| \mathbf{x} \|_2^2\)</span>. However, for a vector <span class="math inline">\(\mathbf{y} \in \mathbb{R}^n\)</span>, it is generally true that <span class="math inline">\(\| \mathbf{U}^\top \mathbf{y} \|_2^2 \neq \| \mathbf{y} \|_2^2\)</span>.</p>
 <p>Multiplying a vector by a matrix <span class="math inline">\(\mathbf{U}\)</span> with orthonormal columns rotates and/or reflects the vector.</p>
 <p align="center">
 <img src="images/rotation.png" width="400px">
@@ -253,9 +254,9 @@ window.Quarto = {
 <ul>
 <li><p>Singular value decomposition exists for all matrices (square or rectangular) while eigendecomposition only exists for some square matrices.</p></li>
 <li><p>Singular values are always positive while eigenvalues can be positive or negative.</p></li>
-<li><p>The factors <span class="math inline">\(\mathbf{U}\)</span> and <span class="math inline">\(\mathbf{V}\)</span> in singular value composition have orthogonal columns while the factor <span class="math inline">\(\mathbf{V}\)</span> in eigendecomposition has orthogonal columns if and only if <span class="math inline">\(\mathbf{X}\)</span> is full rank.</p></li>
+<li><p>The factors <span class="math inline">\(\mathbf{U}\)</span> and <span class="math inline">\(\mathbf{V}\)</span> in singular value decomposition have orthogonal columns while the factor <span class="math inline">\(\mathbf{V}\)</span> in eigendecomposition has orthogonal columns if and only if <span class="math inline">\(\mathbf{X}\)</span> is full rank.</p></li>
 </ul>
-<p>We can connect singular value decomposition with eigendecomposition by considering the matrix <span class="math inline">\(\mathbf{X}^\top \mathbf{X}\)</span>. The factor <span class="math inline">\(\mathbf{U}\)</span> contains the orthogonal eigenvectors of <span class="math inline">\(\mathbf{X} \mathbf{X}^\top\)</span> while the factor <span class="math inline">\(\mathbf{V}\)</span> contains the orthogonal eigenvectors of <span class="math inline">\(\mathbf{X}^\top \mathbf{X}\)</span>. To see this, recall that <span class="math display">\[
+<p>We can connect singular value decomposition with eigendecomposition by considering the matrix <span class="math inline">\(\mathbf{X}^\top \mathbf{X}\)</span>. The factor <span class="math inline">\(\mathbf{U}\)</span> contains the orthogonal eigenvectors corresponding to the non-zero eigenvalues of <span class="math inline">\(\mathbf{X} \mathbf{X}^\top\)</span> while the factor <span class="math inline">\(\mathbf{V}\)</span> contains the orthogonal eigenvectors corresponding to the non-zero eigenvalues of <span class="math inline">\(\mathbf{X}^\top \mathbf{X}\)</span>. To see this, recall that <span class="math display">\[
 \mathbf{X} = \mathbf{U} \mathbf{\Sigma} \mathbf{V}^\top \text{ and }
 \mathbf{X}^\top = \mathbf{V} \mathbf{\Sigma} \mathbf{U}^\top.
 \]</span> Then <span class="math display">\[\begin{align*}
@@ -268,94 +269,13 @@ window.Quarto = {
 \end{align*}\]</span> An additional observation is that the singular values of <span class="math inline">\(\mathbf{X}\)</span> are the square roots of the eigenvalues of <span class="math inline">\(\mathbf{X}^\top \mathbf{X}\)</span> and <span class="math inline">\(\mathbf{X} \mathbf{X}^\top\)</span>. That is, <span class="math inline">\(\sigma_i^2 = \lambda_i(\mathbf{X X}^\top) = \lambda_i(\mathbf{X}^\top \mathbf{X})\)</span>.</p>
 <p>There are many applications of SVD including:</p>
 <ul>
-<li><p>Computing the pseudoinverse <span class="math inline">\(\mathbf{V} \mathbf{\Sigma}^{-1} \mathbf{U}^\top\)</span>.</p></li>
+<li><p>Computing the pseudoinverse <span class="math inline">\(\mathbf{V} \mathbf{\Sigma}^{+} \mathbf{U}^\top\)</span>.</p></li>
 <li><p>Reading off the condition number of <span class="math inline">\(\mathbf{X}\)</span> from the ratio of the largest and smallest singular values.</p></li>
 <li><p>Computing matrix norms like <span class="math inline">\(\| \mathbf{X} \|_2 =\sigma_1\)</span> and <span class="math inline">\(\| \mathbf{X} \|_F = \sqrt{\sum_{i=1}^d \sigma_i^2}\)</span>.</p></li>
 <li><p>Computing the matrix square root <span class="math inline">\(\mathbf{X}^{1/2} = \mathbf{V} \mathbf{\Sigma}^{1/2} \mathbf{U}^\top\)</span>.</p></li>
-<li><p>Performing principle component analysis.</p></li>
+<li><p>Performing principal component analysis.</p></li>
 </ul>
 <p>We’ll focus on a particularly useful application called low-rank approximations of <span class="math inline">\(\mathbf{X}\)</span>.</p>
-<!--
-## Low-Rank Approximation
-
-The column span of a matrix $\mathbf{X} \in \mathbb{R}^{n \times d}$ is the set of all vectors that can be written as $\mathbf{Xa}$ for some $\mathbf{a} \in \mathbb{R}^d$.
-The dimension of the column span $D_c$ is the maximum number of linearly independent vectors in the column span.
-
-The row span of a matrix $\mathbf{X} \in \mathbb{R}^{n \times d}$ is the set of all vectors that can be written as $\mathbf{X}^\top \mathbf{b}$ for some $\mathbf{b} \in \mathbb{R}^n$.
-The dimension of the row span $D_r$ is the maximum number of linearly independent vectors in the row span.
-
-We have
-$$
-D_c \leq d \qquad D_r \leq n \qquad D_c = D_r.
-$$
-
-We call the value $D_c = D_r$ the rank of $\mathbf{X}$.
-
-For the problem of low-rank approximation, we will approximate $\mathbf{X}$ as the product of two rank-$k$ matrices.
-
-<p align="center">
-<img src="images/low_rank_orth.png" width="400px">
-</p>
-
-We will use two matrices $\mathbf{C} \in \mathbb{R}^{n \times k}$ and $\mathbf{W} \in \mathbb{R}^{d \times k}$ where $k < \min(n, d)$.
-Typically, we want to choose $\mathbf{C}$ and $\mathbf{W}$ to minimize
-\begin{align*}
-\min_{\mathbf{B}, \mathbf{W}} \| \mathbf{X} - \mathbf{CW}^\top \|
-\end{align*}
-for some matrix norm.
-A common choice of matrix norm is Frobenius norm.
-
-There are several advantages of low-rank approximation including that we can store $\mathbf{CW}^\top$ is $O(nk + dk)$ space rather than $O(nd)$
-and solve regression problems on $\mathbf{CW}^\top$ in $O(nk^2)$ time rather than $O(nd^2)$.
-
-Without loss of generality, we can assume that the matrix $\mathbf{W}$ has orthonormal columns.
-That is, $\mathbf{W}^\top \mathbf{W} = \mathbf{I}$.
-Then we should choose $\mathbf{C}$ to minimize
-$$
-\min_{\mathbf{C}} \| \mathbf{X} - \mathbf{CW} \|_F^2.
-$$
-Notice that this is just $n$ least squares regression problems!
-The $i$th least squares regression problem is given by
-$$
-\mathbf{c}_i = \arg \min_{\mathbf{c}} \| \mathbf{x}_i - \mathbf{W} \mathbf{c} \|_2^2.
-$$
-Since we have know the optimal solution to least squares regression, we can write
-\begin{align*}
-\mathbf{c}_i = (\mathbf{W}^\top \mathbf{W})^{-1}
-\mathbf{W}^\top \mathbf{x}_i = \mathbf{W}^\top \mathbf{x}_i
-\end{align*}
-since $\mathbf{W}$ has orthonormal columns.
-So we can write $\mathbf{C} = \mathbf{X} \mathbf{W}$
-and then our optimal low-rank approximation becomes
-\begin{align*}
-\min_{\mathbf{W}} \| \mathbf{X} - \mathbf{X} \mathbf{W} \mathbf{W}^\top \|_F^2.
-\end{align*}
-The advantage of the reformulation is that we are now looking for only one matrix $\mathbf{W}$ rather than two matrices $\mathbf{C}$ *and* $\mathbf{W}$.
-
-$\mathbf{W} \mathbf{W}^\top$ is a symmetric projection matrix.
-The product $\mathbf{XW}$ gives the coordinates of the data points in the lower dimensional space.
-Then $\mathbf{XW} \mathbf{W}^\top$ projects the data points back into the original space.
-
-<p align="center">
-<img src="images/projection.png" width="400px">
-</p>
-
-With this observation, can use $\mathbf{X} \mathbf{W}$ as a compressed version of the data matrix $\mathbf{X}$.
-Notice that we've seen a similar approach before with the Johnson-Lindenstrauss lemma where we used a random projection matrix $\mathbf{R}$ to get $\mathbf{XR}$ as a compressed version of the data matrix $\mathbf{X}$.
-If we choose $\mathbf{W}$ well and $\mathbf{X} \approx \mathbf{XW} \mathbf{W}^\top$, we expect that
-$$
-\| \mathbf{x}_i - \mathbf{x}_j \|_2^2
-\approx \| \mathbf{x}_i \mathbf{WW}^\top - \mathbf{x}_j \mathbf{WW}^\top \|_2^2
-= \| \mathbf{x}_i \mathbf{W} - \mathbf{x}_j \mathbf{W} \|_2^2
-$$
-where the last equality follows from the fact that $\mathbf{W}^\top \mathbf{W} = \mathbf{I}$.
-
-While low-rank approximation and Johnson-Lindenstrauss projection are similar, there are some important differences:
-
-* Low-rank approximation is deterministic while Johnson-Lindenstrauss projection is randomized.
-
-* Low-rank approximation seeks to minimize the reconstruction error while Johnson-Lindenstrauss projection seeks to preserve pairwise distances with high probability.
--->
 </section>
 <section id="best-low-rank-approximation" class="level2">
 <h2 class="anchored" data-anchor-id="best-low-rank-approximation">Best Low-Rank Approximation</h2>
@@ -367,28 +287,29 @@ While low-rank approximation and Johnson-Lindenstrauss projection are similar, t
 </p>
 <p>Let <span class="math inline">\(\mathbf{X} = \mathbf{U} \mathbf{\Sigma} \mathbf{V}^\top\)</span> be the singular value decomposition of <span class="math inline">\(\mathbf{X}\)</span>. Let <span class="math inline">\(\mathbf{X}_k\)</span> be the best rank-<span class="math inline">\(k\)</span> approximation to <span class="math inline">\(\mathbf{X}\)</span> i.e. <span class="math display">\[
 \mathbf{X}_k = \arg \min_{\text{rank } k \text{ } \mathbf{B}} \| \mathbf{X} - \mathbf{B} \|_F^2.
-\]</span> We will show that <span class="math inline">\(\mathbf{X}_k = \mathbf{U}_k \mathbf{\Sigma}_k \mathbf{V}_k^\top\)</span> where <span class="math inline">\(\mathbf{U}_k\)</span> contains the first <span class="math inline">\(k\)</span> columns of <span class="math inline">\(\mathbf{U}\)</span>, <span class="math inline">\(\mathbf{\Sigma}_k\)</span> contains the first <span class="math inline">\(k\)</span> singular values of <span class="math inline">\(\mathbf{\Sigma}\)</span> and <span class="math inline">\(\mathbf{V}_k\)</span> contains the first <span class="math inline">\(k\)</span> columns of <span class="math inline">\(\mathbf{V}\)</span>.</p>
-<p>We will repeatedly use two observations:</p>
+\]</span> Define <span class="math inline">\(\mathbf{U}_k\)</span> as the matrix with the first <span class="math inline">\(k\)</span> columns of <span class="math inline">\(\mathbf{U}\)</span>, <span class="math inline">\(\mathbf{\Sigma}_k\)</span> as the matrix with the first <span class="math inline">\(k\)</span> singular values of <span class="math inline">\(\mathbf{\Sigma}\)</span> and <span class="math inline">\(\mathbf{V}_k\)</span> as the matrix with the first <span class="math inline">\(k\)</span> columns of <span class="math inline">\(\mathbf{V}\)</span>.</p>
+<p><strong>Lemma:</strong> <span class="math display">\[
+\mathbf{X}_k = \mathbf{U}_k \mathbf{\Sigma}_k \mathbf{V}_k^\top.
+\]</span></p>
+<p>The proof repeatedly uses two observations:</p>
 <ul>
 <li><p><span class="math inline">\(\| \mathbf{V} \mathbf{X} \|_F^2 = \| \mathbf{X} \|_F^2\)</span> if <span class="math inline">\(\mathbf{V}^\top \mathbf{V} = \mathbf{I}\)</span> by the connection to <span class="math inline">\(\ell_2\)</span> norm we saw before and</p></li>
 <li><p><span class="math inline">\(\| \mathbf{X}^\top \|_F^2 = \| \mathbf{X} \|_F^2\)</span> since the Frobenius norm is the sum of squared entries (which is invariant under the transpose operation).</p></li>
 </ul>
-<p>We can write <span class="math display">\[\begin{align*}
-\arg \min_{\text{rank } k \text{ } \mathbf{B}}
-\| \mathbf{X} - \mathbf{B} \|_F^2
-= \arg \min_{\text{rank } k \text{ } \mathbf{B}}
-\| \mathbf{\Sigma V}^\top - \mathbf{U}^\top \mathbf{B} \|_F^2
-\end{align*}\]</span> since <span class="math inline">\(\mathbf{U}^\top \mathbf{U} = \mathbf{I}\)</span>.</p>
+<div class="proof-block">
+<details open="">
+<summary>
+Proof
+</summary>
+<p><strong>Note:</strong> For the purposes of the proof, we will use the <em>full</em> SVD of <span class="math inline">\(\mathbf{X}\)</span>, which is <span class="math inline">\(\mathbf{X} = \mathbf{U} \mathbf{\Sigma} \mathbf{V}^\top\)</span> where <span class="math inline">\(\mathbf{U} \in \mathbb{R}^{n \times n}\)</span>, <span class="math inline">\(\mathbf{\Sigma} \in \mathbb{R}^{n \times d}\)</span>, and <span class="math inline">\(\mathbf{V} \in \mathbb{R}^{d \times d}\)</span>. The first <span class="math inline">\(d\)</span> columns of <span class="math inline">\(\mathbf{U}\)</span> are the same as the <span class="math inline">\(d\)</span> columns of <span class="math inline">\(\mathbf{U}\)</span> in the reduced SVD and the remaining <span class="math inline">\(n-d\)</span> columns of <span class="math inline">\(\mathbf{U}\)</span> are orthogonal to the first <span class="math inline">\(d\)</span> columns and to each other. The first <span class="math inline">\(d\)</span> rows of <span class="math inline">\(\mathbf{\Sigma}\)</span> are the same as the <span class="math inline">\(d\)</span> rows of <span class="math inline">\(\mathbf{\Sigma}\)</span> in the reduced SVD and the remaining <span class="math inline">\(n-d\)</span> rows of <span class="math inline">\(\mathbf{\Sigma}\)</span> are all zero. Using the full SVD allows to use that <span class="math inline">\(\mathbf{U}^\top \mathbf{U} = \mathbf{I}\)</span> and <span class="math inline">\(\mathbf{V}^\top \mathbf{V} = \mathbf{I}\)</span>.</p>
 <p>Then <span class="math display">\[\begin{align*}
-\arg &amp; \min_{\text{rank } k \text{ } \mathbf{B}}
-\| \mathbf{\Sigma V}^\top - \mathbf{U}^\top \mathbf{B} \|_F^2 \\
-&amp;= \arg \min_{\text{rank } k \text{ } \mathbf{B}}
-\| \mathbf{V \Sigma } - \mathbf{B}^\top \mathbf{U} \|_F^2 \\
-&amp;= \arg \min_{\text{rank } k \text{ } \mathbf{B}}
-\| \mathbf{\Sigma} - \mathbf{V}^\top \mathbf{B}^\top \mathbf{U} \|_F^2
+\arg \min_{\text{rank } k \text{ } \mathbf{B}} \| \mathbf{X} - \mathbf{B} \|_F^2
+&amp;= \arg \min_{\text{rank } k \text{ } \mathbf{B}} \| \mathbf{U} \mathbf{\Sigma} \mathbf{V}^\top - \mathbf{B} \|_F^2 \\
+&amp;= \arg \min_{\text{rank } k \text{ } \mathbf{B}} \| \mathbf{U}^\top ( \mathbf{U} \mathbf{\Sigma} \mathbf{V}^\top - \mathbf{B} ) \mathbf{V} \|_F^2 \\
+&amp;= \arg \min_{\text{rank } k \text{ } \mathbf{B}} \| \mathbf{\Sigma} - \mathbf{U}^\top \mathbf{B} \mathbf{V} \|_F^2.
 \end{align*}\]</span> since <span class="math inline">\(\mathbf{V}^\top \mathbf{V} = \mathbf{I}\)</span>.</p>
-<p>Then we choose <span class="math inline">\(\mathbf{B}\)</span> so that <span class="math inline">\(\mathbf{V}^\top \mathbf{B}^\top \mathbf{U}\)</span> is the matrix which agrees with <span class="math inline">\(\mathbf{\Sigma}\)</span> on the largest <span class="math inline">\(k\)</span> singular values. It is intuitive but not obvious that the best rank-<span class="math inline">\(k\)</span> approximation to a diagonal matrix is a diagonal matrix that agrees on the largest <span class="math inline">\(k\)</span> values.</p>
-<p><strong>Claim (Orthogonal Projection):</strong> Consider any orthogonal matrix <span class="math inline">\(\mathbf{W} \in \mathbb{R}^{d \times k}\)</span>. Then <span class="math display">\[
+<p>Then we choose <span class="math inline">\(\mathbf{B}\)</span> so that <span class="math inline">\(\mathbf{U}^\top \mathbf{B} \mathbf{V}\)</span> is the matrix which agrees with <span class="math inline">\(\mathbf{\Sigma}\)</span> on the largest <span class="math inline">\(k\)</span> singular values. It is intuitive but not obvious that the best rank-<span class="math inline">\(k\)</span> approximation to a diagonal matrix is a diagonal matrix that agrees on the largest <span class="math inline">\(k\)</span> values.</p>
+<p><strong>Claim (Orthogonal Projection):</strong> Consider any matrix <span class="math inline">\(\mathbf{W} \in \mathbb{R}^{d \times k}\)</span> with orthonormal columns. Then <span class="math display">\[
 \| \mathbf{X} - \mathbf{X W W}^\top \|_F^2
 = \| \mathbf{X} \|_F^2 - \| \mathbf{X W W}^\top \|_F^2.
 \]</span></p>
@@ -412,7 +333,7 @@ While low-rank approximation and Johnson-Lindenstrauss projection are similar, t
 \arg \min_{\mathbf{W} \in \mathbb{R}^{d \times k}}
 \| \mathbf{X} - \mathbf{X W W}^\top \|_F^2
 = \arg \max_{\mathbf{W} \in \mathbb{R}^{d \times k}} \| \mathbf{X W W}^\top \|_F^2.
-\]</span> Since <span class="math inline">\(\| \mathbf{X} \|_F^2\)</span> is a constant with respect to <span class="math inline">\(\mathbf{W}\)</span>, we can maximize <span class="math inline">\(\| \mathbf{X W W}^\top \|_F^2\)</span> to minimize <span class="math inline">\(\| \mathbf{X} - \mathbf{X W W}^\top \|_F^2\)</span>. This is often the perspective people take when thinking about principle component analysis.</p>
+\]</span> Since <span class="math inline">\(\| \mathbf{X} \|_F^2\)</span> is a constant with respect to <span class="math inline">\(\mathbf{W}\)</span>, we can maximize <span class="math inline">\(\| \mathbf{X W W}^\top \|_F^2\)</span> to minimize <span class="math inline">\(\| \mathbf{X} - \mathbf{X W W}^\top \|_F^2\)</span>. This is often the perspective people take when thinking about principal component analysis.</p>
 <p>We will show the orthogonal claim from the observation that the column <span class="math inline">\(\mathbf{X}_i\)</span> is orthogonal to itself projected onto <span class="math inline">\(\mathbf{W W}^\top\)</span> and then applying the Pythagorean theorem.</p>
 <p align="center">
 <img src="images/pythagorean.png" width="400px">
@@ -420,8 +341,8 @@ While low-rank approximation and Johnson-Lindenstrauss projection are similar, t
 <p>The orthogonal projection claim combined with our characterization of the optimal low rank approximation gives us <span class="math display">\[
 \| \mathbf{X} - \mathbf{X}_k \|_F^2
 = \| \mathbf{X} \|_F^2 - \| \mathbf{X}_k \|_F^2
-= \sum_{i=1}^n \sigma_i^2 - \sum_{i=1}^k \sigma_i^2
-= \sum_{i=k+1}^n \sigma_i^2.
+= \sum_{i=1}^d \sigma_i^2 - \sum_{i=1}^k \sigma_i^2
+= \sum_{i=k+1}^d \sigma_i^2.
 \]</span></p>
 <p>We can see this because <span class="math display">\[\begin{align*}
 \| \mathbf{X} \|_F^2
@@ -429,6 +350,8 @@ While low-rank approximation and Johnson-Lindenstrauss projection are similar, t
 = \| \mathbf{\Sigma} \mathbf{V}^\top \|_F^2
 = \| \mathbf{\Sigma} \|_F^2
 \end{align*}\]</span> where we used our favorite tricks that <span class="math inline">\(\mathbf{U}^\top \mathbf{U} = \mathbf{I}\)</span>, <span class="math inline">\(\mathbf{V}^\top \mathbf{V} = \mathbf{I}\)</span>, and the Frobenius norm is invariant with respect to transposes.</p>
+</details>
+</div>
 <p>The characterization of our low-rank approximation error in terms of the singular values gives a sense of <em>how</em> low-rank a matrix is. Data with structure will have a small number of large singular values and a large number of small singular values.</p>
 <p align="center">
 <img src="images/mnist_spectrum.png" width="400px">
@@ -442,7 +365,7 @@ While low-rank approximation and Johnson-Lindenstrauss projection are similar, t
 <ul>
 <li><p>Compute <span class="math inline">\(\mathbf{X}^\top \mathbf{X}\)</span> in <span class="math inline">\(O(nd^2)\)</span> time.</p></li>
 <li><p>Find eigendecomposition of <span class="math inline">\(\mathbf{X}^\top \mathbf{X} = \mathbf{V} \mathbf{\Lambda} \mathbf{V}^\top\)</span> in <span class="math inline">\(O(d^3)\)</span> time using methods like the QR algorithm in <span class="math inline">\(O(d^3)\)</span> time.</p></li>
-<li><p>Finally, compute <span class="math inline">\(\mathbf{L} = \mathbf{X V}\)</span> and then set <span class="math inline">\(\sigma_i = \| \mathbf{L}_i \|_2\)</span> and <span class="math inline">\(\mathbf{U}_i = \mathbf{L}_i / \sigma_i\)</span> for <span class="math inline">\(i = 1, \ldots, d\)</span> in <span class="math inline">\(O(n d^2)\)</span> time.</p></li>
+<li><p>Finally, compute <span class="math inline">\(\mathbf{L} = \mathbf{X V}\)</span> and then set <span class="math inline">\(\sigma_i = \| \mathbf{L}_i \|_2\)</span> and <span class="math inline">\(\mathbf{U}_i = \mathbf{L}_i / \sigma_i\)</span> for <span class="math inline">\(i = 1, \ldots, d\)</span> (provided <span class="math inline">\(\sigma_i \neq 0\)</span>) in <span class="math inline">\(O(n d^2)\)</span> time.</p></li>
 </ul>
 <p>The total time complexity is <span class="math inline">\(O(nd^2 + d^3 + nd^2) = O(nd^2)\)</span>. If we use the SVD only for low rank approximation, notice that we didn’t really need to find all the singular vectors and values.</p>
 <p>We can save time by computing an approximate solution to the SVD. In particular, we will only compute the top <span class="math inline">\(k\)</span> singular vectors and values. We can do this with iterative algorithms that achieve time complexity <span class="math inline">\(O(ndk)\)</span> instead of <span class="math inline">\(O(nd^2)\)</span>. There are many algorithms for this problem:</p>
