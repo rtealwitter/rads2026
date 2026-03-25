@@ -122,7 +122,7 @@ output:
     <td><a href="notes/14_svd.html">Singular Value Decomposition</a></td>
     <td><a href="notes/15_power_method.html">Power Method</a></td>
     <td><a href="slides/Week10.pdf">Slides</a></td>
-    <td></td>
+    <td><a href="https://colab.research.google.com/drive/131XUvWaOZQLDnd_PZGU1o8yenD8XoOgP?usp=sharing">Problem 14</a>, <a href="https://colab.research.google.com/drive/1KeC2s6iVbQB8S1OCRjM20xiq5wwbiOtJ?usp=sharing">Problem 15</a></td>
   </tr>
   <tr>
     <td>Week 11 (3/31 and 4/2)</td>
