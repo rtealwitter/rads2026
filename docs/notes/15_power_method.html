@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Power Method</title>
+<title>Power Method &amp; Lanczos Method</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -160,7 +160,13 @@ window.Quarto = {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#the-lanczos-method" id="toc-the-lanczos-method" class="nav-link active" data-scroll-target="#the-lanczos-method">The Lanczos Method</a></li>
+  <li><a href="#analysis-preliminaries" id="toc-analysis-preliminaries" class="nav-link active" data-scroll-target="#analysis-preliminaries">Analysis Preliminaries</a></li>
+  <li><a href="#heart-of-the-analysis" id="toc-heart-of-the-analysis" class="nav-link" data-scroll-target="#heart-of-the-analysis">Heart of the Analysis</a></li>
+  <li><a href="#alternative-guarantee" id="toc-alternative-guarantee" class="nav-link" data-scroll-target="#alternative-guarantee">Alternative Guarantee</a></li>
+  <li><a href="#the-lanczos-method" id="toc-the-lanczos-method" class="nav-link" data-scroll-target="#the-lanczos-method">The Lanczos Method</a></li>
+  <li><a href="#analysis-preliminaries-1" id="toc-analysis-preliminaries-1" class="nav-link" data-scroll-target="#analysis-preliminaries-1">Analysis Preliminaries</a></li>
+  <li><a href="#heart-of-the-analysis-1" id="toc-heart-of-the-analysis-1" class="nav-link" data-scroll-target="#heart-of-the-analysis-1">Heart of the Analysis</a></li>
+  <li><a href="#finishing-up" id="toc-finishing-up" class="nav-link" data-scroll-target="#finishing-up">Finishing Up</a></li>
   </ul>
 </nav>
     </div>
@@ -169,7 +175,7 @@ window.Quarto = {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><strong>Power Method</strong></h1>
+<h1 class="title"><strong>Power Method &amp; Lanczos Method</strong></h1>
 </div>
 
 
@@ -189,89 +195,135 @@ window.Quarto = {
 <p>Previously, we used the SVD to find the best rank-<span class="math inline">\(k\)</span> approximation to a matrix <span class="math inline">\(\mathbf{X}\)</span>. For this application, notice that we didn’t really need to find all the singular vectors and values.</p>
 <p>We can save time by computing an approximate solution to the SVD. In particular, we will only compute the top <span class="math inline">\(k\)</span> singular vectors and values. We can do this with iterative algorithms that achieve time complexity <span class="math inline">\(O(ndk)\)</span> instead of <span class="math inline">\(O(nd^2)\)</span>. There are many algorithms for this problem:</p>
 <ul>
-<li><p><strong>Krylov subspace methods</strong> like the Lanczos method are most commonly used in practice.</p></li>
-<li><p><strong>Power method</strong> is the simplest Krylov subspace method and still works very well.</p></li>
+<li><strong>Krylov subspace methods</strong> like the Lanczos method are most commonly used in practice.</li>
+<li><strong>Power method</strong> is the simplest Krylov subspace method and still works very well.</li>
 </ul>
-<p>The power method computes the top right singular vector, <span class="math inline">\(\mathbf{v}_1\)</span>, of a matrix <span class="math inline">\(\mathbf{X} \in \mathbb{R}^{n\times d}\)</span> with singular value decomposition <span class="math inline">\(\mathbf{X} = \mathbf{U\Sigma V}^\top\)</span>. The method is as follows:</p>
+<p>The power method is a general algorithm for finding the dominant eigenvector of a square matrix. In the context of computing the SVD of a matrix <span class="math inline">\(\mathbf{X} \in \mathbb{R}^{n\times d}\)</span>, we apply the power method to the square, symmetric matrix <span class="math inline">\(\mathbf{A} = \mathbf{X}^\top \mathbf{X} \in \mathbb{R}^{d\times d}\)</span>.</p>
+<p>Because <span class="math inline">\(\mathbf{A}\)</span> is symmetric, it has real, non-negative eigenvalues <span class="math inline">\(\lambda_1 \geq \lambda_2 \geq \ldots \geq \lambda_d \geq 0\)</span> and orthonormal eigenvectors <span class="math inline">\(\mathbf{v}_1, \mathbf{v}_2, \ldots, \mathbf{v}_d\)</span>. Notice that the eigenvectors of <span class="math inline">\(\mathbf{A}\)</span> are exactly the right singular vectors of <span class="math inline">\(\mathbf{X}\)</span>, and its eigenvalues are the squared singular values (<span class="math inline">\(\lambda_j = \sigma_j^2\)</span>).</p>
 <p align="center">
 <img src="images/power.png" width="400px">
 </p>
 <p><strong>Power Method:</strong></p>
 <ul>
-<li>Choose <span class="math inline">\(\mathbf{z}^{(0)}\)</span> randomly. E.g. <span class="math inline">\(\mathbf{z}^{(0)} \sim \mathcal{N}(0,1)\)</span>.</li>
+<li>Choose <span class="math inline">\(\mathbf{z}^{(0)}\)</span> randomly. E.g. <span class="math inline">\(\mathbf{z}^{(0)} \sim \mathcal{N}(\mathbf{0}, \mathbf{I}_d)\)</span>.</li>
 <li><span class="math inline">\(\mathbf{z}^{(0)} = \mathbf{z}^{(0)} /\|\mathbf{z}^{(0)}\|_2\)</span></li>
 <li>For <span class="math inline">\(i = 1,\ldots, q\)</span>
 <ul>
-<li><span class="math inline">\(\mathbf{z}^{(i)} = \mathbf{X}^\top \mathbf{X} \mathbf{z}^{(i-1)} )\)</span></li>
+<li><span class="math inline">\(\mathbf{z}^{(i)} = \mathbf{A} \mathbf{z}^{(i-1)}\)</span></li>
 <li><span class="math inline">\(n_i = \|\mathbf{z}^{(i)}\|_2\)</span></li>
 <li><span class="math inline">\(\mathbf{z}^{(i)}  = \mathbf{z}^{(i)}/n_i\)</span></li>
 </ul></li>
 <li>Return <span class="math inline">\(\mathbf{z}^{(q)}\)</span></li>
 </ul>
 <p>In other words, each of our iterates <span class="math inline">\(\mathbf{z}^{(i)}\)</span> is simply a scaling of a column in the following matrix: <span class="math display">\[
-K = \begin{bmatrix} \mathbf{z}^{(0)} &amp; \mathbf{A}\mathbf{z}^{(0)} &amp; \mathbf{A}^2 \mathbf{z}^{(0)} &amp; \mathbf{A}^3\mathbf{z}^{(0)} \ldots \mathbf{A}^q \mathbf{z}^{(0)}\end{bmatrix},
-\]</span> where <span class="math inline">\(\mathbf{A} = \mathbf{X}^\top\mathbf{X}\)</span>. Typically we run <span class="math inline">\(q \ll d\)</span> iterations, so <span class="math inline">\(K\)</span> is a tall, narrow matrix. The span of <span class="math inline">\(K\)</span>’s columns is called a <strong>Krylov subspace</strong> because it is generated by starting with a single vector <span class="math inline">\(\mathbf{z}^{(0)}\)</span> and repeatedly multiplying by a fixed matrix <span class="math inline">\(A\)</span>. We will return to <span class="math inline">\(K\)</span> shortly.</p>
-<section id="analysis-preliminaries" class="level4">
-<h4 class="anchored" data-anchor-id="analysis-preliminaries">Analysis Preliminaries</h4>
-<p>Let <span class="math inline">\(\mathbf{v}_1, \ldots, \mathbf{v}_d\)</span> be the right singular vectors of <span class="math inline">\(\mathbf{X}\)</span> (the columns of <span class="math inline">\(\mathbf{V}\)</span>). We write each iterate in terms of this basis of vectors: <span class="math display">\[
+\mathbf{K} = \begin{bmatrix} \mathbf{z}^{(0)} &amp; \mathbf{A}\mathbf{z}^{(0)} &amp; \mathbf{A}^2 \mathbf{z}^{(0)} &amp; \mathbf{A}^3\mathbf{z}^{(0)} \ldots \mathbf{A}^{q-1} \mathbf{z}^{(0)}\end{bmatrix}.
+\]</span> Typically we run <span class="math inline">\(q \ll d\)</span> iterations, so <span class="math inline">\(\mathbf{K}\)</span> is a tall, narrow matrix. The span of <span class="math inline">\(\mathbf{K}\)</span>’s columns is called a <strong>Krylov subspace</strong> because it is generated by starting with a single vector <span class="math inline">\(\mathbf{z}^{(0)}\)</span> and repeatedly multiplying by a fixed matrix <span class="math inline">\(\mathbf{A}\)</span>. We will return to <span class="math inline">\(\mathbf{K}\)</span> shortly.</p>
+<section id="analysis-preliminaries" class="level2">
+<h2 class="anchored" data-anchor-id="analysis-preliminaries">Analysis Preliminaries</h2>
+<p>Let <span class="math inline">\(\mathbf{v}_1, \ldots, \mathbf{v}_d\)</span> be the orthonormal eigenvectors of <span class="math inline">\(\mathbf{A}\)</span>. We can express our initial random vector in terms of this basis: <span class="math display">\[
+\mathbf{z}^{(0)} = c_1^{(0)}\mathbf{v}_1 + c_2^{(0)}\mathbf{v}_2 + \ldots + c_d^{(0)} \mathbf{v}_d = \sum_{j=1}^d c_j^{(0)} \mathbf{v}_j
+\]</span> where the coefficients are given by the inner product <span class="math inline">\(c_j^{(0)} = \langle \mathbf{z}^{(0)}, \mathbf{v}_j \rangle = \mathbf{v}_j^\top \mathbf{z}^{(0)}\)</span>.</p>
+<p>To see what happens when we repeatedly multiply by <span class="math inline">\(\mathbf{A}\)</span>, we can rely on our outer product view of matrix multiplication. Recall the eigendecomposition of <span class="math inline">\(\mathbf{A}\)</span>: <span class="math display">\[
+\mathbf{A} = \sum_{j=1}^d \lambda_j \mathbf{v}_j \mathbf{v}_j^\top
+\]</span></p>
+<p>When we compute the next unnormalized iterate, <span class="math inline">\(\mathbf{A} \mathbf{z}^{(i-1)}\)</span>, the outer product view makes the operation completely transparent: <span class="math display">\[
 \begin{align*}
-\mathbf{z}^{(0)} &amp;= c_1^{(0)}\mathbf{v}_1 + {c}_2^{(0)}\mathbf{v}_2 + \ldots + c_d^{(0)} \mathbf{v}_d \\
-        \mathbf{z}^{(1)} &amp;= c_1^{(1)}\mathbf{v}_1 + {c}_2^{(1)}\mathbf{v}_2 + \ldots + c_d^{(1)} \mathbf{v}_d\\
-        &amp;\vdots\\
-        \mathbf{z}^{(q)} &amp;= c_1^{(q)}\mathbf{v}_1 + {c}_2^{(i)}\mathbf{v}_2 + \ldots + c_d^{(q)} \mathbf{v}_d
+\mathbf{A} \mathbf{z}^{(i-1)}
+&amp;= \left( \sum_{j=1}^d \lambda_j \mathbf{v}_j \mathbf{v}_j^\top \right) \mathbf{z}^{(i-1)} \\
+&amp;= \sum_{j=1}^d \lambda_j \mathbf{v}_j (\mathbf{v}_j^\top \mathbf{z}^{(i-1)}) \\
+&amp;= \sum_{j=1}^d \lambda_j c_j^{(i-1)} \mathbf{v}_j
 \end{align*}
 \]</span></p>
-<p>Note that <span class="math inline">\(c_j^{(i)} = \langle \mathbf{z}^{(i)}, v_i\rangle\)</span>. Intuitively, we expect the relative size of <span class="math inline">\(c_1^{(i)}\)</span> to <strong>increase</strong> in comparison to the other coefficients as <span class="math inline">\(i\)</span> increases, which is good because then <span class="math inline">\(\mathbf{z}^{(q)}\)</span> will start looking more and more like <span class="math inline">\(\mathbf{v}_1\)</span>. Why do we expect this? Because <span class="math inline">\(\mathbf{z}^{(i)} = \frac{1}{n_i}\mathbf{A}^q \mathbf{z}^{(i-1)}\)</span> and thus we can check that <span class="math inline">\(c_j^{(i)} = \frac{1}{n_i}\sigma_j^2 c^{(i-1)}_j\)</span>. The <span class="math inline">\(\frac{1}{n_i}\)</span> term is fixed for all <span class="math inline">\(j\)</span>, but the <span class="math inline">\(\sigma_j^2\)</span> term will be largest for <span class="math inline">\(j=1\)</span>, and thus the <span class="math inline">\(c_1^{(i)}\)</span> will increase in size more than any other term. We will analyze this formally soon.</p>
+<p>Because <span class="math inline">\(\mathbf{z}^{(i)} = \frac{1}{n_i} \mathbf{A} \mathbf{z}^{(i-1)}\)</span>, we can see exactly how the coefficients update: <span class="math display">\[
+c_j^{(i)} = \frac{1}{n_i}\lambda_j c^{(i-1)}_j
+\]</span></p>
+<p>Intuitively, we expect the relative size of <span class="math inline">\(c_1^{(i)}\)</span> to <strong>increase</strong> in comparison to the other coefficients as <span class="math inline">\(i\)</span> increases, because <span class="math inline">\(\mathbf{z}^{(q)}\)</span> will start looking more and more like <span class="math inline">\(\mathbf{v}_1\)</span>. The <span class="math inline">\(\frac{1}{n_i}\)</span> term is fixed for all <span class="math inline">\(j\)</span>, but the <span class="math inline">\(\lambda_j\)</span> term will be largest for <span class="math inline">\(j=1\)</span>, and thus <span class="math inline">\(c_1^{(i)}\)</span> will increase in size more than any other term. We will analyze this formally soon.</p>
 <p>First however, let’s see what it suffices to prove.</p>
-<p><strong>Claim 1</strong>: If <span class="math inline">\(c_j^{(q)}/c_1^{(q)} \leq \sqrt{\epsilon/d}\)</span> for all <span class="math inline">\(j\neq 1\)</span> than either <span class="math inline">\(\|\mathbf{v}_1 -\mathbf{z}^{(q)}\|_2^2\leq 2\epsilon\)</span> or <span class="math inline">\(\|-\mathbf{v}_1 - \mathbf{z}^{(q)}\|_2^2\leq 2\epsilon\)</span> .</p>
-<p><em>Proof.</em> Since <span class="math inline">\(c_1^{(q)} \leq 1\)</span>, the above would imply that <span class="math inline">\(c_j^{(q)} \leq \sqrt{\epsilon/d}\)</span>. Since <span class="math inline">\(\sum_{k=1}^d \left(c_k^{(q)}\right)^2 = 1\)</span> it follows that <span class="math inline">\(\left(c_1^{(q)}\right)^2 \geq (1-\epsilon)\)</span> and thus <span class="math inline">\(\left|c_1^{(q)}\right| \geq 1-\epsilon\)</span>. Then for any unit vector <span class="math inline">\(\mathbf{x}\)</span> we have <span class="math inline">\(\|\mathbf{x} -\mathbf{z}^{(q)}\|_2^2 = 2 - 2\langle\mathbf{x},\mathbf{z}^{(q)}\rangle\)</span>. Since <span class="math inline">\(\langle\mathbf{v}_1,\mathbf{z}^{(q)}\rangle = c_1^{(q)}\)</span> we conclude that either <span class="math inline">\(\langle\mathbf{v}_1,\mathbf{z}^{(q)}\rangle \geq 1-\epsilon\)</span> or <span class="math inline">\(\langle- \mathbf{v}_1,\mathbf{z}^{(q)}\rangle \geq 1-\epsilon\)</span>. Suppose without loss of generality it’s the first: <span class="math inline">\(\langle\mathbf{v}_1,\mathbf{z}^{(q)}\rangle \geq 1-\epsilon\)</span>. Then we would conclude that <span class="math inline">\(\|\mathbf{v}_1 -\mathbf{z}^{(q)}\|_2 = 2 - 2\langle\mathbf{v}_1,\mathbf{z}^{(q)}\rangle \leq 2 - 2\cdot (1-\epsilon) = 2\epsilon\)</span>. <span class="math inline">\(\square\)</span></p>
-<p>So, to show power methods converges, our goal is to prove that <span class="math inline">\(\left|c_j^{(q)}/c_1^{(q)}\right| \leq \sqrt{\epsilon/d}\)</span> for all <span class="math inline">\(j\neq 1\)</span>.</p>
+<p><strong>Claim 1</strong>: If <span class="math inline">\(\left|c_j^{(q)}/c_1^{(q)}\right| \leq \sqrt{\epsilon/d}\)</span> for all <span class="math inline">\(j\neq 1\)</span> then either <span class="math inline">\(\|\mathbf{v}_1 -\mathbf{z}^{(q)}\|_2^2\leq 2\epsilon\)</span> or <span class="math inline">\(\|-\mathbf{v}_1 - \mathbf{z}^{(q)}\|_2^2\leq 2\epsilon\)</span>.</p>
+<div class="proof-block">
+<details open="">
+<summary>
+Proof of Claim 1
+</summary>
+<p>Since <span class="math inline">\(c_1^{(q)} \leq 1\)</span>, the hypothesis implies that <span class="math inline">\(\left|c_j^{(q)}\right| \leq \sqrt{\epsilon/d}\)</span>. Since our iterates are unit vectors, <span class="math inline">\(\sum_{k=1}^d \left(c_k^{(q)}\right)^2 = 1\)</span>. It follows that <span class="math inline">\(\left(c_1^{(q)}\right)^2 \geq (1-\epsilon)\)</span> and thus <span class="math inline">\(\left|c_1^{(q)}\right| \geq 1-\epsilon\)</span>.</p>
+<p>For any unit vector <span class="math inline">\(\mathbf{x}\)</span>, we have <span class="math inline">\(\|\mathbf{x} -\mathbf{z}^{(q)}\|_2^2 = 2 - 2\langle\mathbf{x},\mathbf{z}^{(q)}\rangle\)</span>. Since <span class="math inline">\(\langle\mathbf{v}_1,\mathbf{z}^{(q)}\rangle = c_1^{(q)}\)</span>, we conclude that either <span class="math inline">\(\langle\mathbf{v}_1,\mathbf{z}^{(q)}\rangle \geq 1-\epsilon\)</span> or <span class="math inline">\(\langle- \mathbf{v}_1,\mathbf{z}^{(q)}\rangle \geq 1-\epsilon\)</span>.</p>
+Suppose without loss of generality it’s the first: <span class="math inline">\(\langle\mathbf{v}_1,\mathbf{z}^{(q)}\rangle \geq 1-\epsilon\)</span>. Then we would conclude that: <span class="math display">\[
+\|\mathbf{v}_1 -\mathbf{z}^{(q)}\|_2^2 = 2 - 2\langle\mathbf{v}_1,\mathbf{z}^{(q)}\rangle \leq 2 - 2(1-\epsilon) = 2\epsilon.
+\]</span>
+</details>
+</div>
+<p>So, to show the power method converges, our goal is to prove that <span class="math inline">\(\left|c_j^{(q)}/c_1^{(q)}\right| \leq \sqrt{\epsilon/d}\)</span> for all <span class="math inline">\(j\neq 1\)</span>.</p>
 </section>
-<section id="heart-of-the-analysis" class="level4">
-<h4 class="anchored" data-anchor-id="heart-of-the-analysis">Heart of the Analysis</h4>
-<p>To prove this bound, we note that <span class="math inline">\(c_j^{(q)} = S\cdot \sigma_j^{2q} c_j^{(0)}\)</span> for any <span class="math inline">\(j\)</span> and <span class="math inline">\(c_1^{(q)} = S\cdot \sigma_1^{2q} c_1^{(0)}\)</span> where <span class="math inline">\(S = 1/\prod_{i=1}^q n_i\)</span> is some fixed scaling. So: <span class="math display">\[
-\left|\frac{c_j^{(q)} }{c_1^{(q)} }\right| = (\sigma_j/\sigma_1)^{2q} \left|\frac{c_j^{(0)} }{c_1^{(0)} }\right|.
-\]</span> As claimed in class (and can be prove as an exercise – try using rotational invariance of the Gaussian ) if <span class="math inline">\(z^{(0)}\)</span> is a randomly initialized start vector, <span class="math inline">\(\left|\frac{c_j^{(0)} }{c_1^{(0)} }\right| \leq d^{3}\)</span> with high probability. That may seem like a lot, but <span class="math inline">\((\sigma_j/\sigma_1)^{2q}\)</span> is going to be a tiny number, so will easily cancel that out. In particular, <span class="math display">\[
-(\sigma_j/\sigma_1)^{2q} = \left(1-\frac{\sigma_1-\sigma_j}{\sigma_1}\right)^{2q} \leq (1-\gamma)^{2q},
-\]</span> where <span class="math inline">\(\gamma = \frac{\sigma_1-\sigma_2}{\sigma_1}\)</span> is our spectral gap parameter. As long as we set <span class="math display">\[
+<section id="heart-of-the-analysis" class="level2">
+<h2 class="anchored" data-anchor-id="heart-of-the-analysis">Heart of the Analysis</h2>
+<p>To prove this bound, we note that <span class="math inline">\(c_j^{(q)} = S\cdot \lambda_j^{q} c_j^{(0)}\)</span> for any <span class="math inline">\(j\)</span> and <span class="math inline">\(c_1^{(q)} = S\cdot \lambda_1^{q} c_1^{(0)}\)</span> where <span class="math inline">\(S = 1/\prod_{i=1}^q n_i\)</span> is some fixed scaling. So: <span class="math display">\[
+\left|\frac{c_j^{(q)} }{c_1^{(q)} }\right| = \left(\frac{\lambda_j}{\lambda_1}\right)^{q} \left|\frac{c_j^{(0)} }{c_1^{(0)} }\right|.
+\]</span></p>
+<p>As claimed in class (and can be proven as an exercise—try using rotational invariance of the Gaussian), if <span class="math inline">\(\mathbf{z}^{(0)}\)</span> is a randomly initialized start vector, <span class="math inline">\(\left|\frac{c_j^{(0)} }{c_1^{(0)} }\right| \leq d^{3}\)</span> with high probability. That may seem like a lot, but <span class="math inline">\((\lambda_j/\lambda_1)^{q}\)</span> is going to be a tiny number, so it will easily cancel that out. In particular, <span class="math display">\[
+\left(\frac{\lambda_j}{\lambda_1}\right)^{q} = \left(1-\frac{\lambda_1-\lambda_j}{\lambda_1}\right)^{q} \leq (1-\gamma)^{q},
+\]</span> where <span class="math inline">\(\gamma = \frac{\lambda_1-\lambda_2}{\lambda_1}\)</span> is our spectral gap parameter. As long as we set <span class="math display">\[
 q = \frac{\log(d^3\sqrt{d/\epsilon})}{\gamma} = O\left(\frac{\log(d/\epsilon)}{\gamma}\right),
-\]</span> then <span class="math inline">\((1-\gamma)^{2q} \leq \frac{\sqrt{\epsilon/d}}{d^3}\)</span>, and thus <span class="math display">\[
-\left|\frac{c_j^{(q)} }{c_1^{(q)} }\right| = (\sigma_j/\sigma_1)^{2q} \left|\frac{c_j^{(0)} }{c_1^{(0)} }\right| \leq d^3\cdot \frac{\sqrt{\epsilon/d}}{d^3} \leq \sqrt{\epsilon/d},
+\]</span> then <span class="math inline">\((1-\gamma)^{q} \leq \frac{\sqrt{\epsilon/d}}{d^3}\)</span>, and thus <span class="math display">\[
+\left|\frac{c_j^{(q)} }{c_1^{(q)} }\right| = \left(\frac{\lambda_j}{\lambda_1}\right)^{q} \left|\frac{c_j^{(0)} }{c_1^{(0)} }\right| \leq \frac{\sqrt{\epsilon/d}}{d^3} \cdot d^3 \leq \sqrt{\epsilon/d},
 \]</span> as desired.</p>
 </section>
-<section id="alternative-guarantee" class="level4">
-<h4 class="anchored" data-anchor-id="alternative-guarantee">Alternative Guarantee</h4>
-<p>In machine learning applications, we care less about actually approximating <span class="math inline">\(\mathbf{v}_1\)</span>, and more that the <span class="math inline">\(\mathbf{z}\)</span> is a “good top singular vector” in that it offers a good rank-1 approximation to <span class="math inline">\(\mathbf{X}\)</span>. That is, we want to prove that <span class="math display">\[\|\mathbf{X} - \mathbf{X}\mathbf{z}\mathbf{z}^\top\|_F^2 = \|\mathbf{X}\|_F^2 - \|\mathbf{X}\mathbf{z}\mathbf{z}^\top\|_F^2\]</span> is small, or equivalently, that <span class="math display">\[\|\mathbf{X}\mathbf{z}\mathbf{z}^\top\|_F^2\]</span> is large. The largest it could be is <span class="math inline">\(\|\mathbf{X}\mathbf{v}_1\mathbf{v}_1^\top\|_F^2 = \sigma_1^2\)</span>. And from the same argument above, where we claimed that either <span class="math inline">\(\langle\mathbf{v}_1,\mathbf{z}^{(q)}\rangle \geq 1-\epsilon\)</span> or <span class="math inline">\(\langle- \mathbf{v}_1,\mathbf{z}^{(q)}\rangle \geq 1-\epsilon\)</span>, it is not hard to check that <span class="math display">\[\|\mathbf{X}\mathbf{z}\mathbf{z}^\top\|_F^2 \geq (1-\epsilon)^2 \sigma_1^2,\]</span> so after <span class="math inline">\(O\left(\frac{\log(d/\epsilon)}{\gamma}\right)\)</span> iterations we get a near optimal low-rank approximation.</p>
+<section id="alternative-guarantee" class="level2">
+<h2 class="anchored" data-anchor-id="alternative-guarantee">Alternative Guarantee</h2>
+<p>In machine learning applications, we care less about actually approximating <span class="math inline">\(\mathbf{v}_1\)</span>, and more that <span class="math inline">\(\mathbf{z}\)</span> is a “good top singular vector” in that it offers a good rank-1 approximation to <span class="math inline">\(\mathbf{X}\)</span>. Using the outer product, we want to prove that the projection matrix error <span class="math display">\[
+\|\mathbf{X} - \mathbf{X}\mathbf{z}\mathbf{z}^\top\|_F^2 = \|\mathbf{X}\|_F^2 - \|\mathbf{X}\mathbf{z}\mathbf{z}^\top\|_F^2
+\]</span> is small, or equivalently, that <span class="math inline">\(\|\mathbf{X}\mathbf{z}\mathbf{z}^\top\|_F^2\)</span> is large.</p>
+<p>Notice that <span class="math inline">\(\|\mathbf{X}\mathbf{z}\mathbf{z}^\top\|_F^2 = \|\mathbf{X}\mathbf{z}\|_2^2 = \mathbf{z}^\top \mathbf{X}^\top \mathbf{X} \mathbf{z} = \mathbf{z}^\top \mathbf{A} \mathbf{z}\)</span>. The largest this could possibly be is <span class="math inline">\(\mathbf{v}_1^\top \mathbf{A} \mathbf{v}_1 = \lambda_1 = \sigma_1^2\)</span>. From the same argument above, where we claimed that either <span class="math inline">\(\langle\mathbf{v}_1,\mathbf{z}^{(q)}\rangle \geq 1-\epsilon\)</span> or <span class="math inline">\(\langle- \mathbf{v}_1,\mathbf{z}^{(q)}\rangle \geq 1-\epsilon\)</span>, it is not hard to check that: <span class="math display">\[
+\|\mathbf{X}\mathbf{z}\mathbf{z}^\top\|_F^2 \geq (1-\epsilon) \sigma_1^2,
+\]</span> so after <span class="math inline">\(O\left(\frac{\log(d/\epsilon)}{\gamma}\right)\)</span> iterations we get a near optimal low-rank approximation.</p>
 </section>
 <section id="the-lanczos-method" class="level2">
 <h2 class="anchored" data-anchor-id="the-lanczos-method">The Lanczos Method</h2>
-<p>We will now see how to improve on power method using what is known as the Lanczos method. Like power method, Lanczos is considered a <strong>Krylov subspace method</strong> because it will return a solution <strong>in the span of the Krylov subspace</strong> that we introduced before. Power method clearly does this – it returns a scaling of the last column of <span class="math inline">\(K\)</span>. The whole idea behind Lanczos is to avoid “throwing away’” information from earlier columns like power method, but instead to take advantage of the whole space. It turns at that doing so can be very helpful – we will get a bound that depends on <span class="math inline">\(1/\sqrt{\gamma}\)</span> instead of <span class="math inline">\(1/\gamma\)</span>.</p>
-<p>Specifically, to define the Lanczos method, we will let <span class="math inline">\(\mathbf{Q}\in \mathbb{R}^{d\times k}\)</span> be a matrix with orthonormal columns that spans <span class="math inline">\(K\)</span>. In practice, you need to be careful about how this is computed for numerical stability reasons, but we won’t worry about that for now. Imagine your computer has infinite precision and we just compute <span class="math inline">\(\mathbf{Q}\)</span> by orthonormalizing <span class="math inline">\(K\)</span>.</p>
+<p>We will now see how to improve on the power method using what is known as the Lanczos method. Like the power method, Lanczos is considered a <strong>Krylov subspace method</strong> because it will return a solution <strong>in the span of the Krylov subspace</strong> that we introduced before.</p>
+<p>The power method clearly does this—it returns a scaling of the last column of <span class="math inline">\(\mathbf{K}\)</span>. The whole idea behind Lanczos is to avoid “throwing away” information from earlier columns like the power method, but instead to take advantage of the whole space. It turns out that doing so can be very helpful; we will get a bound that depends on <span class="math inline">\(1/\sqrt{\gamma}\)</span> instead of <span class="math inline">\(1/\gamma\)</span>.</p>
+<p>Specifically, to define the Lanczos method, we will let <span class="math inline">\(\mathbf{Q}\in \mathbb{R}^{d\times q}\)</span> be a matrix with orthonormal columns that spans <span class="math inline">\(\mathbf{K}\)</span>. In practice, you need to be careful about how this is computed for numerical stability reasons, but we won’t worry about that for now. Imagine your computer has infinite precision and we just compute <span class="math inline">\(\mathbf{Q}\)</span> by orthonormalizing <span class="math inline">\(\mathbf{K}\)</span>.</p>
 <p><strong>Lanczos Method</strong></p>
 <ul>
 <li>Compute an orthonormal span <span class="math inline">\(\mathbf{Q}\)</span> for the degree <span class="math inline">\(q\)</span> Krylov subspace.</li>
-<li>Let <span class="math inline">\(\mathbf{z}\)</span> be the top eigenvector of <span class="math inline">\(\mathbf{Q}^\top \mathbf{A}\mathbf{Q} = \mathbf{Q}^\top \mathbf{X}^\top \mathbf{X} \mathbf{Q}\)</span></li>
+<li>Let <span class="math inline">\(\mathbf{z}\)</span> be the top eigenvector of <span class="math inline">\(\mathbf{Q}^\top \mathbf{A}\mathbf{Q}\)</span>.</li>
 <li>Return <span class="math inline">\(\mathbf{Q} \mathbf{z}\)</span>.</li>
 </ul>
-<p>Importantly, the first step only requires <span class="math inline">\(q\)</span> matrix-vector multiplications with <span class="math inline">\(\mathbf{X}^\top\mathbf{X}\)</span>, each of which can be implemented in <span class="math inline">\(O(nd)\)</span> time, just like we did for power method. The second step might look a bit circular at first glance. We want an approximation algorithm for computing the top eigenvector of <span class="math inline">\({\mathbf{X}}^\top\mathbf{X}\)</span> and the above method uses a top eigenvector algorithm as a subroutine. But note that <span class="math inline">\(\mathbf{Q}^\top {\mathbf{AQ}}\)</span> only has size <span class="math inline">\(q\times q\)</span>, where <span class="math inline">\(q\ll d\)</span> is our iteration count. So even if it’s too expensive to compute a direct eigendecomposition of <span class="math inline">\(\mathbf{X}^\top\mathbf{X}\)</span>, <span class="math inline">\({\mathbf{Q}}^\top{\mathbf{X}}^\top{\mathbf{X}}{\mathbf{Q}}\)</span> can be computed in <span class="math inline">\(O(ndq) + O(dq^2) + O(q^3) + O(ndq)\)</span> time (the first part is the time to construct <span class="math inline">\(\mathbf{Q}\)</span> and <span class="math inline">\(\mathbf{X}\mathbf{Q}\)</span>, the second to compute <span class="math inline">\({\mathbf{Q}}^\top{\mathbf{X}}^\top{\mathbf{X}}{\mathbf{Q}}\)</span>, and the third to find its top eigenvector using a direct method).</p>
-<section id="analysis-preliminaries-1" class="level4">
-<h4 class="anchored" data-anchor-id="analysis-preliminaries-1">Analysis Preliminaries</h4>
-<p>Our first claim is that Lanczos returns the <em>best</em> approximate singular vector in the span of the Krylov subspace. Then we will argue that there always exists <em>some</em> vector in the span of the subspace that is significantly better than what power method returns, so the Lanczos solution must be significantly better as well.</p>
-<p><strong>Claim 2</strong>: Amongst all vectors in the span of the Krylov subspace (i.e., any vector <span class="math inline">\(\mathbf{y}\)</span> that can be written as <span class="math inline">\(\mathbf{y} = \mathbf{Q}\mathbf{x}\)</span> for some <span class="math inline">\(x\in \mathbb{R}^k\)</span>), <span class="math inline">\(\mathbf{y}^* = \mathbf{Q}\mathbf{z}\)</span> minimizes the low-rank approximation error <span class="math inline">\(\|\mathbf{X} - \mathbf{X}\mathbf{y}\mathbf{y}^\top\|_F^2\)</span>.</p>
-<p><em>Proof.</em> First, we can prove that <span class="math inline">\(\mathbf{y}\)</span> should always be chosen to have unit norm, so that <span class="math inline">\(\mathbf{y}\mathbf{y}^\top\)</span> is a projection. Accordingly, it must also be that <span class="math inline">\(\mathbf{x} = \mathbf{Q}^\top\mathbf{y}\)</span> has unit norm. Then, proving the claim above is equivalent to proving that <span class="math inline">\(\mathbf{y}^* = {\mathbf{Q}}\mathbf{z}\)</span> maximizes <span class="math inline">\(\|\mathbf{X}\mathbf{y}\mathbf{y}^\top\|_F^2 = \|\mathbf{X}\mathbf{y}\|_F^2 = \|\mathbf{X}\mathbf{y}\|_2^2 = \|\mathbf{X}\mathbf{Q}\mathbf{x}\|_2^2\)</span>. It is not hard to check that setting <span class="math inline">\(\mathbf{x}\)</span> to be the maximum right singular vector of <span class="math inline">\({\mathbf{X}}{\mathbf{Q}}\)</span> maximizes this <span class="math inline">\(\|\mathbf{X}\mathbf{Q}\mathbf{x}\|_2^2\)</span> amongst all unit vectors, and this right singular vector is the same at the top eigenvector of <span class="math inline">\(\mathbf{Q}^\top \mathbf{X}^\top \mathbf{X} \mathbf{Q}\)</span>.</p>
-<p><strong>Claim 3</strong>: If we run the Lanczos method for <span class="math inline">\(O\left(\frac{\log(d/\epsilon)}{\sqrt{\gamma}}\right)\)</span> There is <em>some</em> vector <span class="math inline">\(\mathbf{w}\)</span> of the form <span class="math inline">\(\mathbf{w} = \mathbf{Q}\mathbf{x}\)</span> such that either <span class="math inline">\(\langle\mathbf{v}_1,\mathbf{w}\rangle \geq 1-\epsilon\)</span> or <span class="math inline">\(\langle- \mathbf{v}_1,\mathbf{w}\rangle \geq 1-\epsilon\)</span>.</p>
-<p>In other words, there is some <span class="math inline">\(\mathbf{w}\)</span> in the Krylov subspace that has a large inner product with the true top singular vector <span class="math inline">\(\mathbf{v}_1\)</span>. As seen earlier for power method, this can be used to prove that e.g.&nbsp;<span class="math inline">\(\|\mathbf{X}\mathbf{w}\mathbf{w}^\top\|_F^2\)</span> is large, and from <strong>Claim 2</strong>, we know that the <span class="math inline">\(\mathbf{v}\)</span> returned by Lanczos can only do better. So, we focus on proving <strong>Claim 3</strong>.</p>
+<p>Importantly, the first step only requires <span class="math inline">\(q\)</span> matrix-vector multiplications with <span class="math inline">\(\mathbf{A}\)</span>, each of which can be implemented in <span class="math inline">\(O(nd)\)</span> time (if <span class="math inline">\(\mathbf{A} = \mathbf{X}^\top \mathbf{X}\)</span>, we multiply by <span class="math inline">\(\mathbf{X}\)</span> then <span class="math inline">\(\mathbf{X}^\top\)</span>). The second step might look a bit circular at first glance. We want an approximation algorithm for computing the top eigenvector of <span class="math inline">\(\mathbf{A}\)</span>, and the above method uses a top eigenvector algorithm as a subroutine. But note that <span class="math inline">\(\mathbf{Q}^\top \mathbf{A}\mathbf{Q}\)</span> only has size <span class="math inline">\(q\times q\)</span>, where <span class="math inline">\(q\ll d\)</span> is our iteration count. So even if it’s too expensive to compute a direct eigendecomposition of <span class="math inline">\(\mathbf{A}\)</span>, <span class="math inline">\(\mathbf{Q}^\top\mathbf{A}\mathbf{Q}\)</span> can be computed in <span class="math inline">\(O(q^3)\)</span> time.</p>
 </section>
-<section id="heart-of-the-analysis-1" class="level4">
-<h4 class="anchored" data-anchor-id="heart-of-the-analysis-1">Heart of the Analysis</h4>
-<p>The key idea is to observe that any vector in the span of the Krylov subspace of size <span class="math inline">\(q\)</span> – i.e.&nbsp;any vector <span class="math inline">\(\mathbf{w}\)</span> that can be written <span class="math inline">\(\mathbf{w} = \mathbf{Q}\mathbf{x}\)</span> is equal to: <span class="math display">\[
+<section id="analysis-preliminaries-1" class="level2">
+<h2 class="anchored" data-anchor-id="analysis-preliminaries-1">Analysis Preliminaries</h2>
+<p>Our first claim is that Lanczos returns the <em>best</em> approximate eigenvector in the span of the Krylov subspace. Then we will argue that there always exists <em>some</em> vector in the span of the subspace that is significantly better than what the power method returns, so the Lanczos solution must be significantly better as well.</p>
+<p><strong>Claim 2</strong>: Amongst all vectors in the span of the Krylov subspace (i.e., any vector <span class="math inline">\(\mathbf{y}\)</span> that can be written as <span class="math inline">\(\mathbf{y} = \mathbf{Q}\mathbf{x}\)</span> for some <span class="math inline">\(\mathbf{x}\in \mathbb{R}^q\)</span>), <span class="math inline">\(\mathbf{y}^* = \mathbf{Q}\mathbf{z}\)</span> maximizes <span class="math inline">\(\mathbf{y}^\top \mathbf{A} \mathbf{y}\)</span> (which minimizes the low-rank approximation error <span class="math inline">\(\|\mathbf{X} - \mathbf{X}\mathbf{y}\mathbf{y}^\top\|_F^2\)</span>).</p>
+<div class="proof-block">
+<details open="">
+<summary>
+Proof of Claim 2
+</summary>
+<p>First, we can prove that <span class="math inline">\(\mathbf{y}\)</span> should always be chosen to have unit norm, so that <span class="math inline">\(\mathbf{y}\mathbf{y}^\top\)</span> is a projection matrix (an outer product representing projection onto <span class="math inline">\(\mathbf{y}\)</span>). Accordingly, it must also be that <span class="math inline">\(\mathbf{x} = \mathbf{Q}^\top\mathbf{y}\)</span> has unit norm because <span class="math inline">\(\mathbf{Q}\)</span> has orthonormal columns.</p>
+Proving the claim above is equivalent to proving that <span class="math inline">\(\mathbf{y}^* = \mathbf{Q}\mathbf{z}\)</span> maximizes <span class="math inline">\(\mathbf{y}^\top \mathbf{A} \mathbf{y} = (\mathbf{Q}\mathbf{x})^\top \mathbf{A} (\mathbf{Q}\mathbf{x}) = \mathbf{x}^\top (\mathbf{Q}^\top \mathbf{A} \mathbf{Q}) \mathbf{x}\)</span>. By the definition of eigenvectors, the unit vector <span class="math inline">\(\mathbf{x}\)</span> that maximizes this quadratic form is exactly the top eigenvector of <span class="math inline">\(\mathbf{Q}^\top \mathbf{A} \mathbf{Q}\)</span>.
+</details>
+</div>
+<p><strong>Claim 3</strong>: If we run the Lanczos method for <span class="math inline">\(O\left(\frac{\log(d/\epsilon)}{\sqrt{\gamma}}\right)\)</span> iterations, there is <em>some</em> vector <span class="math inline">\(\mathbf{w}\)</span> of the form <span class="math inline">\(\mathbf{w} = \mathbf{Q}\mathbf{x}\)</span> such that either <span class="math inline">\(\langle\mathbf{v}_1,\mathbf{w}\rangle \geq 1-\epsilon\)</span> or <span class="math inline">\(\langle- \mathbf{v}_1,\mathbf{w}\rangle \geq 1-\epsilon\)</span>.</p>
+<p>In other words, there is some <span class="math inline">\(\mathbf{w}\)</span> in the Krylov subspace that has a large inner product with the true top eigenvector <span class="math inline">\(\mathbf{v}_1\)</span>. As seen earlier for the power method, this can be used to prove that e.g.&nbsp;<span class="math inline">\(\mathbf{w}^\top \mathbf{A} \mathbf{w}\)</span> is large, and from <strong>Claim 2</strong>, we know that the vector returned by Lanczos can only do better. So, we focus on proving <strong>Claim 3</strong>.</p>
+</section>
+<section id="heart-of-the-analysis-1" class="level2">
+<h2 class="anchored" data-anchor-id="heart-of-the-analysis-1">Heart of the Analysis</h2>
+<p>The key idea is to observe that any vector in the span of the Krylov subspace of size <span class="math inline">\(q\)</span>—i.e., any vector <span class="math inline">\(\mathbf{w}\)</span> that can be written <span class="math inline">\(\mathbf{w} = \mathbf{Q}\mathbf{x}\)</span>—is equal to: <span class="math display">\[
 \mathbf{w} = p(\mathbf{A})\mathbf{z}^{(0)},
-\]</span> for some <strong>degree q polynomial</strong> <span class="math inline">\(p\)</span>. For example, we might have <span class="math inline">\(p(\mathbf{A}) = 2\mathbf{\mathbf{A}}^2 - 4\mathbf{A}^3 + \mathbf{A}^6\)</span> or <span class="math inline">\(p(\mathbf{A}) = I - \mathbf{A} - 10\mathbf{A}^5\)</span>. And moreover, for any degree <span class="math inline">\(q\)</span> polynomial <span class="math inline">\(p\)</span>, there is <em>some</em> <span class="math inline">\(\mathbf{x}\)</span> such that <span class="math inline">\(\mathbf{Q}\mathbf{x} = p(\mathbf{A})\mathbf{z}^{(0)}\)</span>. To see that this is true, we note that all of the monomials <span class="math inline">\(\mathbf{z}^{(0)}, A\mathbf{z}^{(0)}, \ldots, \mathbf{A}^q\mathbf{z}^{(0)}\)</span> lie in the span of <span class="math inline">\(\mathbf{Q}\)</span>, so any linear combination does as well.</p>
-<p>This means that showing there is a good approximate top singular vector <span class="math inline">\(\mathbf{w}\)</span> in the span of the Krylov subspace can be reduced to finding a <strong>good polynomial <span class="math inline">\(p(\mathbf{A})\)</span></strong>. Specifically, notice that, if we write <span class="math inline">\(p(\mathbf{A})\mathbf{z}^{(0)}\)</span> in the span of the singular vectors we have: <span class="math display">\[
-p(\mathbf{A})\mathbf{z}^{(0)} = g_1 \mathbf{v}_1 + g_2 \mathbf{v}_2 + \ldots + g_d \mathbf{v}_d
-\]</span> where <span class="math display">\[
-g_j = c_j^{(0)}p(\sigma_j^2).
-\]</span> Our goal, which is exactly the same as when we analyzed power method, is to show that <span class="math inline">\(g_1\)</span> is <em>much larger</em> than <span class="math inline">\(g_j\)</span> for all <span class="math inline">\(j \neq 1\)</span>. In other words we want to find a polynomial such that <span class="math inline">\(p(t)\)</span> is small for all values of <span class="math inline">\(0\leq t&lt; \sigma_1^2\)</span>, but then the polynomial should suddenly <strong>jump</strong> to be large at <span class="math inline">\(\sigma_1\)</span>. The simplest degree <span class="math inline">\(q\)</span> polynomial that does this is <span class="math inline">\(p(t) = t^q\)</span>. However, it turns out there are more <em>sharply</em> jumping polynomials, which can be obtained by shifting/scaling a type of polynomials known as a <a href="https://en.wikipedia.org/wiki/Chebyshev_polynomials">Chebyshev polynomial</a>. An example that jumps at <span class="math inline">\(\sigma_1^2 = 1\)</span> is shown below. The difference from <span class="math inline">\(t^q\)</span> is pretty remarkable – even though the polynomial <span class="math inline">\(p\)</span> shown below is nearly as small for all <span class="math inline">\(0\leq t&lt; 1\)</span>, it is much larger at <span class="math inline">\(t=1\)</span>.</p>
+\]</span> for some <strong>degree <span class="math inline">\(q-1\)</span> polynomial</strong> <span class="math inline">\(p\)</span>. For example, we might have <span class="math inline">\(p(\mathbf{A}) = 2\mathbf{A}^2 - 4\mathbf{A}^3 + \mathbf{A}^6\)</span>. For any degree <span class="math inline">\(q-1\)</span> polynomial <span class="math inline">\(p\)</span>, there is <em>some</em> <span class="math inline">\(\mathbf{x}\)</span> such that <span class="math inline">\(\mathbf{Q}\mathbf{x} = p(\mathbf{A})\mathbf{z}^{(0)}\)</span>. This is because all monomials <span class="math inline">\(\mathbf{z}^{(0)}, \mathbf{A}\mathbf{z}^{(0)}, \ldots, \mathbf{A}^{q-1}\mathbf{z}^{(0)}\)</span> lie in the span of <span class="math inline">\(\mathbf{Q}\)</span>, so any linear combination does as well.</p>
+<p>This means that finding a good approximate top eigenvector <span class="math inline">\(\mathbf{w}\)</span> in the span of the Krylov subspace reduces to finding a <strong>good polynomial <span class="math inline">\(p(\mathbf{A})\)</span></strong>.</p>
+<p>Using our outer product expansion of <span class="math inline">\(\mathbf{A} = \sum_{j=1}^d \lambda_j \mathbf{v}_j \mathbf{v}_j^\top\)</span>, we know that applying a polynomial to a matrix simply applies that polynomial to its eigenvalues: <span class="math display">\[
+p(\mathbf{A}) = \sum_{j=1}^d p(\lambda_j) \mathbf{v}_j \mathbf{v}_j^\top
+\]</span></p>
+<p>Therefore, when we multiply this polynomial matrix by our initial vector <span class="math inline">\(\mathbf{z}^{(0)}\)</span>, the outer product isolates the coordinates exactly as we saw in the power method: <span class="math display">\[
+\begin{align*}
+p(\mathbf{A})\mathbf{z}^{(0)}
+&amp;= \left( \sum_{j=1}^d p(\lambda_j) \mathbf{v}_j \mathbf{v}_j^\top \right) \mathbf{z}^{(0)} \\
+&amp;= \sum_{j=1}^d p(\lambda_j) (\mathbf{v}_j^\top \mathbf{z}^{(0)}) \mathbf{v}_j \\
+&amp;= \sum_{j=1}^d p(\lambda_j) c_j^{(0)} \mathbf{v}_j
+\end{align*}
+\]</span></p>
+<p>Letting <span class="math inline">\(g_j = c_j^{(0)}p(\lambda_j)\)</span>, our goal is identical to the power method: we want to show that <span class="math inline">\(g_1\)</span> is <em>much larger</em> than <span class="math inline">\(g_j\)</span> for all <span class="math inline">\(j \neq 1\)</span>. In other words, we want to find a polynomial such that <span class="math inline">\(p(t)\)</span> is small for all values of <span class="math inline">\(0\leq t&lt; \lambda_1\)</span>, but then suddenly <strong>jumps</strong> to be large at <span class="math inline">\(\lambda_1\)</span>.</p>
+<p>The simplest degree <span class="math inline">\(q\)</span> polynomial that does this is <span class="math inline">\(p(t) = t^q\)</span> (which is exactly what the power method uses). However, it turns out there are more <em>sharply</em> jumping polynomials, which can be obtained by shifting/scaling a type of polynomials known as a <a href="https://en.wikipedia.org/wiki/Chebyshev_polynomials">Chebyshev polynomial</a>. An example that jumps at <span class="math inline">\(1\)</span> is shown below. The difference from <span class="math inline">\(t^q\)</span> is remarkable—even though the polynomial <span class="math inline">\(p\)</span> shown below is nearly as small for all <span class="math inline">\(0\leq t&lt; 1\)</span>, it is much larger at <span class="math inline">\(t=1\)</span>.</p>
 <p align="center">
 <img src="images/basic_jump.png" width="400px">
 </p>
@@ -279,229 +331,22 @@ g_j = c_j^{(0)}p(\sigma_j^2).
 <img src="images/cheby_jump.png" width="400px">
 </p>
 <p>Concretely we can claim the following, which is a bit tricky to prove, but well known (see <a href="https://arxiv.org/pdf/1504.05477.pdf">Lemma 5 here</a> for a full proof).</p>
-<p><strong>Claim 4:</strong> There is a degree <span class="math inline">\(O\left(\sqrt{\frac{1}{\gamma}}\log\frac{1}{\epsilon}\right)\)</span> degree polynomial <span class="math inline">\(\hat{p}\)</span> such that <span class="math inline">\(\hat{p}(1) = 1\)</span> and <span class="math inline">\(|p(t)| \leq \epsilon\)</span> for <span class="math inline">\(0 \leq t \leq 1-\gamma\)</span>.</p>
-<p>In contrast, to ensure that <span class="math inline">\(t^q\)</span> satisfies the above, we would need degree q = <span class="math inline">\(O\left({\frac{1}{\gamma}\log\frac{1}{\epsilon}}\right)\)</span> – a quadratically worse bound. This is what will account for the quadratic difference in performance between the Lanczos and Power Methods.</p>
-<p>The fact that there exist much steeper low-degree polynomails than <span class="math inline">\(t^q\)</span> is the sort of thing studied in the mathematical field known as Approximation Theory. That might seem pretty obscure, but steep polynomials are surprisingly useful in computer science, appearing everywhere from <a href="https://dl.acm.org/doi/10.1145/129712.129757">classic</a>, to <a href="https://arxiv.org/pdf/quant-ph/9802049.pdf">Quantum complexity theory</a>, to <a href="http://www.cs.columbia.edu/~rocco/Public/stoc01.pdf">learning theory</a>. If you’re interested in learning more about this, check out slides for this <a href="http://people.cs.georgetown.edu/jthaler/QuICSslides.pdf">talk</a>.</p>
+<p><strong>Claim 4:</strong> There is a degree <span class="math inline">\(O\left(\sqrt{\frac{1}{\gamma}}\log\frac{d}{\epsilon}\right)\)</span> polynomial <span class="math inline">\(\hat{p}\)</span> such that <span class="math inline">\(\hat{p}(1) = 1\)</span> and <span class="math inline">\(|\hat{p}(t)| \leq \epsilon\)</span> for <span class="math inline">\(0 \leq t \leq 1-\gamma\)</span>.</p>
+<p>In contrast, to ensure that <span class="math inline">\(t^q\)</span> satisfies the above, we would need degree <span class="math inline">\(q = O\left({\frac{1}{\gamma}\log\frac{d}{\epsilon}}\right)\)</span>—a quadratically worse bound. This accounts for the quadratic difference in performance between the Lanczos and Power Methods.</p>
 </section>
-<section id="finishing-up" class="level4">
-<h4 class="anchored" data-anchor-id="finishing-up">Finishing Up</h4>
-<p>Finally, we use <strong>Claim 4</strong> to finish the analysis of Lanczos. Consider the vector <span class="math inline">\(\hat{p}\left(\frac{1}{\sigma_1^2}A\right)\mathbf{z}^{(0)}\)</span>, which as argued above lies in the Krylov subspace. As discussed before, our job is to prove that: <span class="math display">\[
-\frac{c_j^{(0)}\hat{p}\left(\frac{1}{\sigma_1^2}\sigma_j^2\right)}{c_1^{(0)}\hat{p}\left(\frac{1}{\sigma_1^2}\sigma_1^2\right)} \leq \sqrt{\epsilon/d},
-\]</span> for all <span class="math inline">\(j \neq i\)</span>, as long as <span class="math inline">\(\hat{p}\)</span> is chosen to have degree <span class="math inline">\(q = O\left(\sqrt{\frac{1}{\gamma}}\log\frac{d}{\epsilon}\right)\)</span></p>
-<p>Consider the numerator first. <span class="math inline">\(\frac{\sigma_j^2}{\sigma_1^2} = \left(\frac{\sigma_j}{\sigma_1}\right)^2 = \left(1 - \left(1-\frac{\sigma_j}{\sigma_1}\right)\right)^2 = \left(1 - \frac{\sigma_1 - \sigma_j}{\sigma_1}\right)^2 \leq (1-\gamma)^2 \leq (1-\gamma)\)</span> .</p>
-<p>Accordingly, if we set <span class="math inline">\(q = O\left(\sqrt{\frac{1}{\gamma}}\log\frac{1}{\epsilon'}\right)\)</span> where <span class="math inline">\(\epsilon' = \sqrt{\epsilon/d}/d^3\)</span>, then <span class="math inline">\(\hat{p}\left(\frac{1}{\sigma_1^2}\sigma_j^2\right) \leq \epsilon'\)</span>. And the denomenator is simply equal to <span class="math inline">\(c_1^{(0)}\hat{p}(1) =  c_1^{(0)}\cdot 1\)</span>. So, since <span class="math inline">\(c_j^{(0)}/c_1^{(0)}\leq d^3\)</span> with high probability, as argued earlier, the equation holds. And thus <strong>Claim 3</strong> is proven by setting <span class="math inline">\(\mathbf{w} = \hat{p}\left(\frac{1}{\sigma_1^2} \mathbf{A} \right)\mathbf{z}^{(0)}\)</span>.</p>
-<!--
-### Power Method
-
-We'll focus on the power method since it is the simplest to understand.
-For exposition, we'll assume that $k=1$.
-Our goal is to find a vector $\mathbf{z} \approx \mathbf{v}_1$ where $\mathbf{v}_1$ is the top singular vector of $\mathbf{X}$.
-
-We start with a randomly initialized vector
-$$
-\mathbf{z}^{(0)} \sim \mathcal{N}(0, \mathbf{I}).
-$$
-We will see why it is important that $\mathbf{z}^{(0)}$ is rotationally invariant later.
-We will then normalize $\mathbf{z}^{(0)}$ to have unit length so $\mathbf{z}^{(0)} = \mathbf{z}^{(0)} / \| \mathbf{z}^{(0)} \|_2$.
-For each iteration $t = 1, \ldots, T$, we will compute
-$$
-\mathbf{z}^{(i)} = \mathbf{X}^\top \mathbf{X} \mathbf{z}^{(i-1)} \qquad n_t = \| \mathbf{z}^{(i)} \|_2.
-$$
-and then re-normalize so $\mathbf{z}^{(i)} = \mathbf{z}^{(i)} / n_t$.
-Finally, we return $\mathbf{z}^{(T)}$.
-
-The method is called the power method because each iterate looks a matrix raised to a power
-$$
-\mathbf{z}^{(t)} = (\mathbf{X}^\top \mathbf{X})^\top \mathbf{z}^{(0)}.
-$$
-The run time of the algorithm is $T O(nd)$ if we use matrix-vector multiplications to compute $\mathbf{X}^\top(\mathbf{X} \mathbf{z}^{(i-1)})$.
-
-As the algorithm runs, the vector $\mathbf{z}^{(t)}$ converges to the top singular vector $\mathbf{v}_1$.
-
-We will prove the following convergence theorem.
-
-**Basic Power Method Convergence:**
-Let $\gamma = \frac{\sigma_1 - \sigma_2}{\sigma_1}$ be a parameter capture the *gap* between the first and second largest singular values. If power method is initialized with a random Gaussian vector then, with high probability after $T = O \left( \frac{\log d/\epsilon}{\gamma} \right)$ iterations, we have either
-$$
-\| \mathbf{v}_1 - \mathbf{z}^{(T)} \|_2 \leq \epsilon
-\qquad \text{or} \qquad
-\| \mathbf{v}_1 + \mathbf{z}^{(T)} \|_2 \leq \epsilon.
-$$
-
-We have the two possible guarantees because we will recover $\mathbf{v}_1$ or $-\mathbf{v}_1$ depending on the sign of the first entry of $\mathbf{v}_1$.
-
-The total time complexity is $O \left( nd \frac{\log d/\epsilon}{\gamma} \right)$.
-
-We can verify that we have found a good approximation to $\mathbf{v}_1$ by checking whether $\mathbf{X}^\top \mathbf{X} \mathbf{z}^{(T)}$ is close to $\sigma \mathbf{z}^{(T)}$ for some scalar $\sigma$.
-Notice that this is equivalent to checking the distance between two iterates.
-
-We will prove the theorem by writing each iterate $\mathbf{z}^{(t)}$ in terms of the singular vectors $\mathbf{v}_1, \ldots \mathbf{v}_d$.
-
-We can write
-\begin{align*}
-\mathbf{z}^{(t)}
-= c_1^{(t)} \mathbf{v}_1 + \ldots + c_d^{(t)} \mathbf{v}_d
-\end{align*}
-where $[c_1^{(t)}, \ldots, c_d^{(t)}] = \mathbf{c}^{(t)} = \mathbf{V}^\top \mathbf{z}^{(t)}$ .
-Since $\mathbf{V}$ is orthogonal, notice that
-$\| \mathbf{z}^{(t)} \|_2 = 1$ implies that
-$\| \mathbf{c}^{(t)} \|_2 = 1$.
-
-We will focus on a single iteration $t$ and a single component $j$ of the iterate
-We have that
-$$
-c_j^{(t)} = \sigma_j^2 c_j^{(t-1)} \frac1{n_t}
-$$
-
-Notice that $\mathbf{X}^\top \mathbf{X} = \mathbf{V} \mathbf{\Sigma} \mathbf{U}^\top \mathbf{U} \mathbf{\Sigma} \mathbf{V}^\top = \mathbf{V} \mathbf{\Sigma}^2 \mathbf{V}^\top$.
-
-So then 
-\begin{align*}
-\mathbf{z}^{(t)}
-= \frac1{n_t}
-\mathbf{X}^\top \mathbf{X} \mathbf{z}^{(t-1)}
-= \frac1{n_t}
-\mathbf{V} \mathbf{\Sigma}^2 \mathbf{V}^\top \mathbf{z}^{(t-1)}
-= \frac1{n_t} \mathbf{V} \mathbf{\Sigma}^2 \mathbf{c}^{(t-1)}.
-\end{align*}
-
-This operation composes after $T$ updates.
-So we can write
-\begin{align*}
-\mathbf{z}^{(T)}
-= \frac1{\prod_{t=1}^\top n_t} 
-\left[ c_1^{(1)} \sigma_1^{2T}
-\mathbf{v}_1 + c_2^{(1)} \sigma_2^{2T}
-\mathbf{v}_2 + \ldots + c_d^{(1)} \sigma_d^{2T} \mathbf{v}_d
-\right].
-\end{align*}
-
-Let $\alpha_j = \frac1{\prod_{t=1}^\top n_t} c_j^{(0)} \sigma_j^{2T}$.
-We want to show that $\alpha_j \ll \epsilon$ for $j \neq 1$.
-
-Since $\mathbf{z}^{(T)} is a unit vector,
-$\sum_{i=1}^d \alpha_i^2 = 1$ so $|\alpha_1| \leq 1.
-If we can prove that
-$|\frac{\alpha_j}{\alpha_1}| \leq \sqrt{\frac{\epsilon}{2d}}$ then we will have that
-$\| \mathbf{v}_1 - \mathbf{z}^{(T)} \|_2^2 \leq \epsilon$
-since
-\begin{align*}
-\alpha_j^2 &\leq \alpha_1^2 \frac{\epsilon}{2d} \\
-1 = \alpha_1^2 + \sum_{j=2}^d \alpha_d^2 &\leq \alpha_1^2 + \frac{\epsilon}{2} \\
-\alpha_1^2 &\geq 1 - \frac{\epsilon}{2} \\
-|\alpha_1| \geq 1 - \frac{\epsilon}{2}.
-\end{align*}
-
-Let's see how many steps it takes to ensure that $|\frac{\alpha_j}{\alpha_1}| \leq \sqrt{\frac{\epsilon}{2d}}$.
-
-We will assume that the starting coefficient on the the first singular vector is not too small.
-In particular,
-$$
-|c_1^{(0)}| \geq O \left( \frac1{\sqrt{d}} \right).
-$$
-
-TODO: Put in here
-
-
-We have seen concentration results many times before.
-Today, we'll use an *anti*concentration result.
-We'll use the rotational invariance of the Gaussian to observe that
-$$
-\mathbf{c}^{(0)} = \frac{\mathbf{V}^\top \mathbf{z}^{(0)}}{\| \mathbf{z}^{(0)} \|_2} 
-= \frac{\mathbf{V}^\top \mathbf{z}^{(0)}}{\| \mathbf{V}^\top \mathbf{z}^{(0)} \|_2}
-\sim \frac{\mathbf{g}}{\| \mathbf{g} \|_2}
-$$
-where $\mathbf{g} \sim \mathcal{N}(0,\mathbf{I})$.
-
-We need to show that with high probabiity, the first entry of $\frac{\mathbf{g} } {\| \mathbf{g} \|_2} \geq c \frac1{\sqrt{d}}$ for some constant $c$.
-
-With high probability, $\| \mathbf{g} \|_2 \leq 2d$
-since $\mathbb{E}[\| \mathbf{g} \|_2^2] = d$.
-
-In addition, with probability $1-O(\alpha)$, we have $g_1 \geq \alpha$.
-To see this, observe that
-
-TODO: Integral argument
-
-In the theorem assumptions, we needed $\gamma$ to be reasonably large. 
-If $\gamma$ is too small, the power method truly won't converge to the top eigenvector.
-However, if we change our goal slightly, this is not a problem.
-In particular, no matter how small $\gamma$ is,
-after $T = O \left( \frac{\log d/\epsilon}{\epsilon} \right)$ iterations, we have
-$$
-\| \mathbf{X} - \mathbf{X} \mathbf{z}^{(T)} \mathbf{z}^{(T)^\top} \|_F^2
-\leq (1-\epsilon) \| \mathbf{X} - \mathbf{X} \mathbf{v}_1 \mathbf{v}_1^\top \|_F^2.
-$$
-
-The intution is that, for a good low-rank approximation, we don't actually need to converge to $\mathbf{v}_1$ if $\sigma_1$ and $\sigma_2$ are the same or very close.
-It suffices to return $\mathbf{v}_1$ or $\mathbf{v}_2$ or some linear combination of the two.
-
-## More Iterative Methods
-
-We won't give guarantees for it but we can also use the power method to find the top $k$ singular vectors.
-The power method for larger $k$ is known under many names including the block power method, the simultaneous iteration method, the subspace iteration method, and the orthogonal iteration method.
-
-The difference between the power method for $k=1$ and larger $k$ is that we iterate with a matrix instead of a vector.
-In particular, we intitialize $\mathbf{G} \in \mathbb{R}^{d \times k}$ with i.i.d. Gaussian entries.
-Instead of normalizing, we orthonormalize by finding an orthonormal basis for the column span
-$$
-\mathbf{Z}^{(0)} = \text{orth}(\mathbf{G}
-$$
-The update is then given by
-$$
-\mathbf{Z}^{(t)} = \mathbf{X}^\top (\mathbf{X} \mathbf{Z}^{(t-1)})
-$$
-and we again normalize
-$$
-\mathbf{Z}^{(t)} = \text{orth}(\mathbf{Z}^{(t)}.
-$$
-
-Since the matrices we are orthnormalizing are $d \times k$, we can orthonormalize them in $O(dk^2)$ time.
-The guarantee of the block power method is that, after $T= \left( \frac{\log d/\epsilon}{\gamma} \right)$ iterations, we have
-$$
-\| \mathbf{X} - \mathbf{Z}^{(T)} \mathbf{Z}^{(T)^\top} \|_F^2
-\leq (1+\epsilon) \| \mathbf{X} - \mathbf{X} \mathbf{V}_k \mathbf{V}_k^\top \|_F^2.
-$$
-
-The time complexity is $O(\text{nnz}(\mathbf{X}) k T) \leq O(ndk T)$
-where $\text{nnz}(\mathbf{X})$ is the number of non-zero entries in $\mathbf{X}$.
-
-It is possible to accelerate these methods
-to $T=\left( \frac{\log d /\epsilon}{\sqrt{\epsilon}} \right)$ iterations.
-Generally, the idea is to use all the iterates instead of just the last one.
-
-For Krylov methods, we save the subspace
-$$
-\mathcal{K}_q =
-[\mathbf{g}, (\mathbf{X}^\top \mathbf{X}) \mathbf{g}, \ldots, (\mathbf{X}^\top \mathbf{X})^{q-1} \mathbf{g}].
-$$
-
-The Lanczos method in particular finds an orthonormal span $\mathbf{Q} \in \mathbb{R}^{d \times k}$ for the vectors in $\mathcal{K}_q$.
-We then solve the problem
-$$
-\min_{\mathbf{v} = \mathbf{Qw}} \| \mathbf{X} - \mathbf{X v v}^\top \|_F^2.
-$$
-
-The method finds the best vector in the Krylov subspace, instead of just using the last vector.
-We can run the method in $O(ndk + dk^2)$ time.
-This is the approach implemented in high performance linear algebra functions like $\texttt{svds}$ in MATLAB and $\texttt{eigs}$ in Python.
-
-For a degree $t$ polynomial $p$, let 
-$$\mathbf{v}_p = \frac{p(\mathbf{X}^\top \mathbf{X})\mathbf{g})}{\| p(\mathbf{X}^\top \mathbf{X)) \mathbf{g}\|_2}.$$
-We always have that $\mathbf{v}_p \in \mathcal{K}_t$ since the Krylov subspace contains the first $t$ powers of $\mathbf{X}^\top \mathbf{X}$ applied to $\mathbf{g}$.
-
-The power method simply returns $\mathbf{v}_{x^\top}$
-whereas the Lanczos method returns the best 
-$\mathbf{v}_p^*$
-where
-$$
-p^* = \arg \min_{\text{degree} t p} \| \mathbf{X} - \mathbf{X} \mathbf{v}_p \mathbf{v}_p^\top \|_F^2.
-$$
--->
+<section id="finishing-up" class="level2">
+<h2 class="anchored" data-anchor-id="finishing-up">Finishing Up</h2>
+<p>Finally, we use <strong>Claim 4</strong> to finish the analysis of Lanczos. Consider the vector <span class="math inline">\(\hat{p}\left(\frac{1}{\lambda_1}\mathbf{A}\right)\mathbf{z}^{(0)}\)</span>, which as argued above lies in the Krylov subspace. As discussed before, our job is to prove that: <span class="math display">\[
+\left| \frac{c_j^{(0)}\hat{p}\left(\frac{\lambda_j}{\lambda_1}\right)}{c_1^{(0)}\hat{p}\left(\frac{\lambda_1}{\lambda_1}\right)} \right| \leq \sqrt{\epsilon/d},
+\]</span> for all <span class="math inline">\(j \neq 1\)</span>, as long as <span class="math inline">\(\hat{p}\)</span> is chosen to have degree <span class="math inline">\(q = O\left(\sqrt{\frac{1}{\gamma}}\log\frac{d}{\epsilon}\right)\)</span>.</p>
+<p>Consider the input to the polynomial in the numerator: <span class="math display">\[
+\frac{\lambda_j}{\lambda_1} = 1 - \left(1 - \frac{\lambda_j}{\lambda_1}\right) \leq 1 - \frac{\lambda_1 - \lambda_2}{\lambda_1} = 1-\gamma
+\]</span></p>
+<p>Accordingly, if we set <span class="math inline">\(q = O\left(\sqrt{\frac{1}{\gamma}}\log\frac{1}{\epsilon'}\right)\)</span> where <span class="math inline">\(\epsilon' = \frac{\sqrt{\epsilon/d}}{d^3}\)</span>, then <span class="math inline">\(\hat{p}\left(\frac{\lambda_j}{\lambda_1}\right) \leq \epsilon'\)</span>. The denominator is simply equal to <span class="math inline">\(c_1^{(0)}\hat{p}(1) = c_1^{(0)}\cdot 1\)</span>.</p>
+<p>Since <span class="math inline">\(\left|c_j^{(0)}/c_1^{(0)}\right|\leq d^3\)</span> with high probability, as argued earlier, the inequality holds. Thus <strong>Claim 3</strong> is proven by setting <span class="math inline">\(\mathbf{w} = \hat{p}\left(\frac{1}{\lambda_1} \mathbf{A} \right)\mathbf{z}^{(0)}\)</span>.</p>
 
 
 
-</section>
 </section>
 
 </main> <!-- /main -->
