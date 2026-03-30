@@ -34,7 +34,7 @@ output:
   </div>
 </div>
 
-**Resources**: This class is based on Chris Musco’s phenomenal algorithmic machine learning and data science [course](https://www.chrismusco.com/amlds2023/) at NYU. While we do not have a textbook, I have prepared written notes for every lecture; I highly recommend you **read the notes before each class**.
+**Resources**: This class is based on Chris Musco’s phenomenal algorithmic machine learning and data science [course](https://www.chrismusco.com/amlds2023/) at NYU. While we do not have a textbook, I have prepared written notes for every lecture.
 
 <table style="width: 100%; border-collapse: collapse;">
   <tr>
@@ -126,8 +126,8 @@ output:
   </tr>
   <tr>
     <td>Week 11 (3/31 and 4/2)</td>
-    <td><a href="https://www.linkedin.com/in/suyogsoti">Suyog Soti's Guest Lecture</a></td>
-    <td><a href="notes/14_svd.html">Singular Value Decomposition</a></td>
+    <td><a href="https://www.linkedin.com/in/suyogsoti">Load Balancing at Databricks (Suyog Soti)<a></td>
+    <td><a href="notes/15_power_method.html">Power Method</a></td>
     <td></td>
     <td></td>
   </tr>
@@ -147,7 +147,7 @@ output:
   </tr>
   <tr>
     <td>Week 14 (4/21 and 4/23)</td>
-    <td><a href="">Differential Privacy</a></td>
+    <td><i>Project/Exam Preparation</i></td>
     <td><i>Midterm Exam</i></td>
     <td></td>
     <td></td>
@@ -161,7 +161,7 @@ output:
   </tr>
   <tr>
     <td>Week 16 (5/5 and 5/7)</td>
-    <td><i>Project Preparation</i></td>
+    <td><a href="">TurboQuant</a></td>
     <td><i>Reading Day (No Class)</i></td>
     <td></td>
     <td></td>
