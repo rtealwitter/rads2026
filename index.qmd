@@ -126,7 +126,7 @@ output:
   </tr>
   <tr>
     <td>Week 11 (3/31 and 4/2)</td>
-    <td><a href="https://www.linkedin.com/in/suyogsoti">Load Balancing at Databricks (Suyog Soti)<a></td>
+    <td><a href="slides/Load Balancing.pdf">Load Balancing at Databricks</a> (<a href="https://www.linkedin.com/in/suyogsoti">Suyog Soti</a>)</td>
     <td><a href="notes/15_power_method.html">Power Method</a></td>
     <td></td>
     <td></td>
