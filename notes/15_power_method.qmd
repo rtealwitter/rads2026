@@ -13,10 +13,9 @@ For this application, notice that we didn't really need to find all the singular
 We can save time by computing an approximate solution to the SVD.
 In particular, we will only compute the top $k$ singular vectors and values.
 We can do this with iterative algorithms that achieve time complexity $O(ndk)$ instead of $O(nd^2)$.
-There are many algorithms for this problem:
+Today, we will see two such algorithms: the power method and the Lanczos method.
 
-* **Krylov subspace methods** like the Lanczos method are most commonly used in practice.
-* **Power method** is the simplest Krylov subspace method and still works very well.
+# The Power Method
 
 The power method is a general algorithm for finding the dominant eigenvector of a square matrix. In the context of computing the SVD of a matrix $\mathbf{X} \in \mathbb{R}^{n\times d}$, we apply the power method to the square, symmetric matrix $\mathbf{A} = \mathbf{X}^\top \mathbf{X} \in \mathbb{R}^{d\times d}$. 
 
@@ -128,35 +127,54 @@ $$
 $$ 
 so after $O\left(\frac{\log(d/\epsilon)}{\gamma}\right)$ iterations we get a near optimal low-rank approximation. 
 
-## The Lanczos Method  
+# The Lanczos Method  
 
 We will now see how to improve on the power method using what is known as the Lanczos method. Like the power method, Lanczos is considered a **Krylov subspace method** because it will return a solution **in the span of the Krylov subspace** that we introduced before. 
 
-The power method clearly does this—it returns a scaling of the last column of $\mathbf{K}$. The whole idea behind Lanczos is to avoid "throwing away" information from earlier columns like the power method, but instead to take advantage of the whole space. It turns out that doing so can be very helpful; we will get a bound that depends on $1/\sqrt{\gamma}$ instead of $1/\gamma$. 
+The power method clearly does this—it returns a scaling of the last column of $\mathbf{K}$. The whole idea behind Lanczos is to avoid "throwing away" information from earlier columns like the power method, but instead to take advantage of the whole space. It turns out that doing so can be very helpful; we will get an iteration bound that depends on $1/\sqrt{\gamma}$ instead of $1/\gamma$. 
 
-Specifically, to define the Lanczos method, we will let $\mathbf{Q}\in \mathbb{R}^{d\times q}$ be a matrix with orthonormal columns that spans $\mathbf{K}$. In practice, you need to be careful about how this is computed for numerical stability reasons, but we won't worry about that for now. Imagine your computer has infinite precision and we just compute $\mathbf{Q}$ by orthonormalizing $\mathbf{K}$. 
+Specifically, to define the Lanczos method, we will let $\mathbf{Q}\in \mathbb{R}^{d\times q}$ be a matrix with orthonormal columns that spans our Krylov subspace. In practice, we do not compute the Krylov matrix $\mathbf{K}$ directly and then orthonormalize it, as this is numerically unstable. Instead, because our target matrix $\mathbf{A}$ is symmetric, we can build the columns of $\mathbf{Q}$ iteratively using a highly efficient "three-term recurrence." For now, imagine your computer has infinite precision and we just compute $\mathbf{Q}$ by finding an orthonormal basis for $\mathbf{K}$. 
 
 **Lanczos Method**
 
-* Compute an orthonormal span $\mathbf{Q}$ for the degree $q$ Krylov subspace. 
-* Let $\mathbf{z}$ be the top eigenvector of $\mathbf{Q}^\top \mathbf{A}\mathbf{Q}$. 
+* Let $\mathbf{z}^{(0)}$ be a random initial starting vector. 
+* Compute an orthonormal basis $\mathbf{Q}$ for the degree $q$ Krylov subspace spanned by $\{\mathbf{z}^{(0)}, \mathbf{A}\mathbf{z}^{(0)}, \mathbf{A}^2\mathbf{z}^{(0)}, \dots, \mathbf{A}^{q-1}\mathbf{z}^{(0)}\}$. 
+* Form the $q \times q$ matrix $\mathbf{T} = \mathbf{Q}^\top \mathbf{A}\mathbf{Q}$. (Because $\mathbf{A}$ is symmetric, $\mathbf{T}$ will be a tridiagonal matrix, making it very cheap to store and manipulate).
+* Let $\mathbf{z}$ be the top eigenvector of $\mathbf{T}$. 
 * Return $\mathbf{Q} \mathbf{z}$. 
 
-Importantly, the first step only requires $q$ matrix-vector multiplications with $\mathbf{A}$, each of which can be implemented in $O(nd)$ time (if $\mathbf{A} = \mathbf{X}^\top \mathbf{X}$, we multiply by $\mathbf{X}$ then $\mathbf{X}^\top$). The second step might look a bit circular at first glance. We want an approximation algorithm for computing the top eigenvector of $\mathbf{A}$, and the above method uses a top eigenvector algorithm as a subroutine. But note that $\mathbf{Q}^\top \mathbf{A}\mathbf{Q}$ only has size $q\times q$, where $q\ll d$ is our iteration count. So even if it's too expensive to compute a direct eigendecomposition of $\mathbf{A}$, $\mathbf{Q}^\top\mathbf{A}\mathbf{Q}$ can be computed in $O(q^3)$ time.
+Importantly, the step to build $\mathbf{Q}$ only requires $q$ matrix-vector multiplications with $\mathbf{A}$, each of which can be implemented in $O(nd)$ time (if $\mathbf{A} = \mathbf{X}^\top \mathbf{X}$, we multiply by $\mathbf{X}$ then $\mathbf{X}^\top$). The step to find $\mathbf{z}$ might look a bit circular at first glance. We want an approximation algorithm for computing the top eigenvector of $\mathbf{A}$, and the above method uses a top eigenvector algorithm as a subroutine. But note that $\mathbf{T} = \mathbf{Q}^\top \mathbf{A}\mathbf{Q}$ only has size $q\times q$, where $q\ll d$ is our iteration count. So even if it's too expensive to compute a direct eigendecomposition of $\mathbf{A}$, the eigendecomposition of the small tridiagonal matrix $\mathbf{T}$ can be computed in just $O(q^3)$ time.
 
-## Analysis Preliminaries 
+## Analysis Preliminaries  
 
 Our first claim is that Lanczos returns the *best* approximate eigenvector in the span of the Krylov subspace. Then we will argue that there always exists *some* vector in the span of the subspace that is significantly better than what the power method returns, so the Lanczos solution must be significantly better as well.  
 
-**Claim 2**: Amongst all vectors in the span of the Krylov subspace (i.e., any vector $\mathbf{y}$ that can be written as $\mathbf{y} = \mathbf{Q}\mathbf{x}$ for some $\mathbf{x}\in \mathbb{R}^q$), $\mathbf{y}^* = \mathbf{Q}\mathbf{z}$ maximizes $\mathbf{y}^\top \mathbf{A} \mathbf{y}$ (which minimizes the low-rank approximation error $\|\mathbf{X} - \mathbf{X}\mathbf{y}\mathbf{y}^\top\|_F^2$). 
+**Claim 2**: Amongst all vectors in the span of the Krylov subspace (i.e., any vector $\mathbf{y}$ that can be written as $\mathbf{y} = \mathbf{Q}\mathbf{x}$ for some $\mathbf{x}\in \mathbb{R}^q$), $\mathbf{y}^* = \mathbf{Q}\mathbf{z}$ maximizes $\mathbf{y}^\top \mathbf{A} \mathbf{y}$ (which equivalently minimizes the low-rank approximation error $\|\mathbf{X} - \mathbf{X}\mathbf{y}\mathbf{y}^\top\|_F^2$). 
 
 ::: {.proof-block}
 <details open>
 <summary>Proof of Claim 2</summary>
 
-First, we can prove that $\mathbf{y}$ should always be chosen to have unit norm, so that $\mathbf{y}\mathbf{y}^\top$ is a projection matrix (an outer product representing projection onto $\mathbf{y}$). Accordingly, it must also be that $\mathbf{x} = \mathbf{Q}^\top\mathbf{y}$ has unit norm because $\mathbf{Q}$ has orthonormal columns. 
+To minimize the approximation error $\|\mathbf{X} - \mathbf{X}\mathbf{y}\mathbf{y}^\top\|_F^2$, the expression $\mathbf{X}\mathbf{y}\mathbf{y}^\top$ must represent a valid orthogonal projection of the data onto the vector $\mathbf{y}$. The outer product $\mathbf{y}\mathbf{y}^\top$ is only a valid projection matrix if $\mathbf{y}$ is a unit vector (meaning its length, or norm, is exactly $1$). 
 
-Proving the claim above is equivalent to proving that $\mathbf{y}^* = \mathbf{Q}\mathbf{z}$ maximizes $\mathbf{y}^\top \mathbf{A} \mathbf{y} = (\mathbf{Q}\mathbf{x})^\top \mathbf{A} (\mathbf{Q}\mathbf{x}) = \mathbf{x}^\top (\mathbf{Q}^\top \mathbf{A} \mathbf{Q}) \mathbf{x}$. By the definition of eigenvectors, the unit vector $\mathbf{x}$ that maximizes this quadratic form is exactly the top eigenvector of $\mathbf{Q}^\top \mathbf{A} \mathbf{Q}$.
+Because we define $\mathbf{y} = \mathbf{Q}\mathbf{x}$, the length of $\mathbf{y}$ depends on $\mathbf{x}$. Since the matrix $\mathbf{Q}$ is orthonormal, multiplying by $\mathbf{Q}$ preserves the length of any vector. Therefore, for $\mathbf{y}$ to be a unit vector, $\mathbf{x}$ must also be a unit vector ($\|\mathbf{x}\|_2 = 1$).
+
+To see why minimizing the approximation error is equivalent to maximizing the quadratic form, we apply the Pythagorean theorem for matrices. Projecting $\mathbf{X}$ onto a unit vector $\mathbf{y}$ separates $\mathbf{X}$ into orthogonal components:
+$$
+\|\mathbf{X}\|_F^2 = \|\mathbf{X}\mathbf{y}\mathbf{y}^\top\|_F^2 + \|\mathbf{X} - \mathbf{X}\mathbf{y}\mathbf{y}^\top\|_F^2
+$$
+Therefore, minimizing the residual error $\|\mathbf{X} - \mathbf{X}\mathbf{y}\mathbf{y}^\top\|_F^2$ is exactly equivalent to maximizing the norm of the projection:
+$$
+\|\mathbf{X}\mathbf{y}\mathbf{y}^\top\|_F^2 = \|\mathbf{X}\mathbf{y}\|_2^2 = (\mathbf{X}\mathbf{y})^\top(\mathbf{X}\mathbf{y}) = \mathbf{y}^\top \mathbf{X}^\top \mathbf{X} \mathbf{y} = \mathbf{y}^\top \mathbf{A} \mathbf{y}
+$$
+
+Proving the claim above is now equivalent to finding the unit vector $\mathbf{y}$ that maximizes $\mathbf{y}^\top \mathbf{A} \mathbf{y}$. Substituting $\mathbf{y} = \mathbf{Q}\mathbf{x}$, we want to maximize:
+$$
+(\mathbf{Q}\mathbf{x})^\top \mathbf{A} (\mathbf{Q}\mathbf{x}) = \mathbf{x}^\top (\mathbf{Q}^\top \mathbf{A} \mathbf{Q}) \mathbf{x}
+$$
+By the definition of eigenvectors, the unit vector $\mathbf{x}$ that maximizes this quadratic form is exactly the top eigenvector of the $q \times q$ matrix $\mathbf{Q}^\top \mathbf{A} \mathbf{Q}$. 
+
+Recall from our algorithm definition that we explicitly defined $\mathbf{z}$ to be the top eigenvector of $\mathbf{T} = \mathbf{Q}^\top \mathbf{A} \mathbf{Q}$. Therefore, the $\mathbf{x}$ that maximizes our objective is exactly $\mathbf{z}$. Thus, the optimal vector in the subspace is $\mathbf{y}^* = \mathbf{Q}\mathbf{z}$.
 </details>
 :::
 
@@ -164,13 +182,13 @@ Proving the claim above is equivalent to proving that $\mathbf{y}^* = \mathbf{Q}
 
 In other words, there is some $\mathbf{w}$ in the Krylov subspace that has a large inner product with the true top eigenvector $\mathbf{v}_1$. As seen earlier for the power method, this can be used to prove that e.g. $\mathbf{w}^\top \mathbf{A} \mathbf{w}$ is large, and from **Claim 2**, we know that the vector returned by Lanczos can only do better. So, we focus on proving **Claim 3**. 
 
-## Heart of the Analysis 
+## Heart of the Analysis  
 
 The key idea is to observe that any vector in the span of the Krylov subspace of size $q$—i.e., any vector $\mathbf{w}$ that can be written $\mathbf{w} = \mathbf{Q}\mathbf{x}$—is equal to:
 $$
 \mathbf{w} = p(\mathbf{A})\mathbf{z}^{(0)},
 $$
-for some **degree $q-1$ polynomial** $p$. For example, we might have $p(\mathbf{A}) = 2\mathbf{A}^2 - 4\mathbf{A}^3 + \mathbf{A}^6$. For any degree $q-1$ polynomial $p$, there is *some* $\mathbf{x}$ such that $\mathbf{Q}\mathbf{x} = p(\mathbf{A})\mathbf{z}^{(0)}$. This is because all monomials $\mathbf{z}^{(0)}, \mathbf{A}\mathbf{z}^{(0)}, \ldots, \mathbf{A}^{q-1}\mathbf{z}^{(0)}$ lie in the span of $\mathbf{Q}$, so any linear combination does as well. 
+for some **degree $q-1$ polynomial** $p$. For example, we might have $p(\mathbf{A}) = 2\mathbf{A}^2 - 4\mathbf{A}^3 + \mathbf{A}^6$. For any degree $q-1$ polynomial $p$, there is *some* $\mathbf{x}$ such that $\mathbf{Q}\mathbf{x} = p(\mathbf{A})\mathbf{z}^{(0)}$. This is because all monomials $\mathbf{z}^{(0)}, \mathbf{A}\mathbf{z}^{(0)}, \ldots, \mathbf{A}^{q-1}\mathbf{z}^{(0)}$ form the basis of our subspace $\mathbf{Q}$, so any linear combination of them naturally lies within that span. 
 
 This means that finding a good approximate top eigenvector $\mathbf{w}$ in the span of the Krylov subspace reduces to finding a **good polynomial $p(\mathbf{A})$**. 
 
@@ -189,9 +207,11 @@ p(\mathbf{A})\mathbf{z}^{(0)}
 \end{align*}
 $$
 
-Letting $g_j = c_j^{(0)}p(\lambda_j)$, our goal is identical to the power method: we want to show that $g_1$ is *much larger* than $g_j$ for all $j \neq 1$. In other words, we want to find a polynomial such that $p(t)$ is small for all values of $0\leq t< \lambda_1$, but then suddenly **jumps** to be large at $\lambda_1$. 
+Letting $g_j = c_j^{(0)}p(\lambda_j)$, our goal is identical to the power method: we want to show that the coefficient $g_1$ (associated with the top eigenvector) is *much larger* than $g_j$ for all $j \neq 1$. In other words, we want to find a polynomial such that $p(t)$ is small for all values of $0\leq t \leq \lambda_2$ (the sub-dominant eigenvalues), but then suddenly **jumps** to be large at $\lambda_1$. 
 
-The simplest degree $q$ polynomial that does this is $p(t) = t^q$ (which is exactly what the power method uses). However, it turns out there are more *sharply* jumping polynomials, which can be obtained by shifting/scaling a type of polynomials known as a [Chebyshev polynomial](https://en.wikipedia.org/wiki/Chebyshev_polynomials). An example that jumps at $1$ is shown below. The difference from $t^q$ is remarkable—even though the polynomial $p$ shown below is nearly as small for all $0\leq t< 1$, it is much larger at $t=1$. 
+The simplest degree $q$ polynomial that does this is $p(t) = t^q$ (which is exactly what the power method uses). However, it turns out there are much more *sharply* jumping polynomials. This is achieved by shifting and scaling a [Chebyshev polynomial](https://en.wikipedia.org/wiki/Chebyshev_polynomials). Chebyshev polynomials are famous in approximation theory because they minimize the maximum absolute value over a specific interval (in this case, suppressing the lesser eigenvalues between $0$ and $1-\gamma$) while growing extremely fast outside of it. 
+
+An example that jumps at $1$ is shown below. The difference from $t^q$ is remarkable—even though the polynomial $p$ shown below is nearly as small for all $0\leq t< 1$, it is much larger at $t=1$. 
 
 <p align="center">
 <img src="images/basic_jump.png" width="400px">
@@ -205,13 +225,13 @@ Concretely we can claim the following, which is a bit tricky to prove, but well 
 
 **Claim 4:** There is a degree $O\left(\sqrt{\frac{1}{\gamma}}\log\frac{d}{\epsilon}\right)$ polynomial $\hat{p}$ such that $\hat{p}(1) = 1$ and $|\hat{p}(t)| \leq \epsilon$ for $0 \leq t \leq 1-\gamma$. 
 
-In contrast, to ensure that $t^q$ satisfies the above, we would need degree $q = O\left({\frac{1}{\gamma}\log\frac{d}{\epsilon}}\right)$—a quadratically worse bound. This accounts for the quadratic difference in performance between the Lanczos and Power Methods. 
+In contrast, to ensure that $t^q$ satisfies the above bounds, we would need degree $q = O\left({\frac{1}{\gamma}\log\frac{d}{\epsilon}}\right)$—a quadratically worse bound. This explicitly accounts for the quadratic difference in iteration performance between the Lanczos and Power Methods. 
 
 ## Finishing Up
 
-Finally, we use **Claim 4** to finish the analysis of Lanczos. Consider the vector $\hat{p}\left(\frac{1}{\lambda_1}\mathbf{A}\right)\mathbf{z}^{(0)}$, which as argued above lies in the Krylov subspace. As discussed before, our job is to prove that:
+Finally, we use **Claim 4** to finish the analysis of Lanczos. Consider the vector $\mathbf{w} = \hat{p}\left(\frac{1}{\lambda_1}\mathbf{A}\right)\mathbf{z}^{(0)}$, which as argued above lies in the Krylov subspace. As discussed before, our job is to prove that the coordinates along the lesser eigenvectors ($j \neq 1$) become vanishingly small compared to the coordinate along $\mathbf{v}_1$. Specifically, we want:
 $$
-\left| \frac{c_j^{(0)}\hat{p}\left(\frac{\lambda_j}{\lambda_1}\right)}{c_1^{(0)}\hat{p}\left(\frac{\lambda_1}{\lambda_1}\right)} \right| \leq \sqrt{\epsilon/d},
+\left| \frac{w_j}{w_1} \right| = \left| \frac{c_j^{(0)}\hat{p}\left(\frac{\lambda_j}{\lambda_1}\right)}{c_1^{(0)}\hat{p}\left(\frac{\lambda_1}{\lambda_1}\right)} \right| \leq \sqrt{\epsilon/d},
 $$
 for all $j \neq 1$, as long as $\hat{p}$ is chosen to have degree $q = O\left(\sqrt{\frac{1}{\gamma}}\log\frac{d}{\epsilon}\right)$. 
 
@@ -220,6 +240,23 @@ $$
 \frac{\lambda_j}{\lambda_1} = 1 - \left(1 - \frac{\lambda_j}{\lambda_1}\right) \leq 1 - \frac{\lambda_1 - \lambda_2}{\lambda_1} = 1-\gamma
 $$
 
-Accordingly, if we set $q = O\left(\sqrt{\frac{1}{\gamma}}\log\frac{1}{\epsilon'}\right)$ where $\epsilon' = \frac{\sqrt{\epsilon/d}}{d^3}$, then $\hat{p}\left(\frac{\lambda_j}{\lambda_1}\right) \leq \epsilon'$. The denominator is simply equal to $c_1^{(0)}\hat{p}(1) = c_1^{(0)}\cdot 1$. 
+Because the ratio $\frac{\lambda_j}{\lambda_1}$ is bounded by $1-\gamma$, we can use Claim 4. If we construct our Chebyshev polynomial with an error bound of $\epsilon' = \frac{\sqrt{\epsilon/d}}{d^3}$, then $\hat{p}\left(\frac{\lambda_j}{\lambda_1}\right) \leq \epsilon'$. 
 
-Since $\left|c_j^{(0)}/c_1^{(0)}\right|\leq d^3$ with high probability, as argued earlier, the inequality holds. Thus **Claim 3** is proven by setting $\mathbf{w} = \hat{p}\left(\frac{1}{\lambda_1} \mathbf{A} \right)\mathbf{z}^{(0)}$.
+The denominator evaluated at the top eigenvalue simplifies because $\lambda_1/\lambda_1 = 1$, and Claim 4 guarantees that $\hat{p}(1) = 1$. So the denominator is just $c_1^{(0)}\cdot 1$. 
+
+Assuming our random initialization $\mathbf{z}^{(0)}$ is not perfectly orthogonal to the top eigenvector, it is a standard probabilistic fact that $\left|c_j^{(0)}/c_1^{(0)}\right|\leq d^3$ with high probability. Substituting these bounds into our ratio gives:
+$$
+\left| \frac{w_j}{w_1} \right| = \left| \frac{c_j^{(0)}\hat{p}\left(\frac{\lambda_j}{\lambda_1}\right)}{c_1^{(0)}\hat{p}(1)} \right| \leq d^3 \cdot \epsilon' = d^3 \cdot \frac{\sqrt{\epsilon/d}}{d^3} = \sqrt{\frac{\epsilon}{d}}
+$$
+
+This bounds the coefficients. To conclude **Claim 3**, we normalize our vector $\bar{\mathbf{w}} = \mathbf{w} / \|\mathbf{w}\|_2$ and check its inner product with $\mathbf{v}_1$. We can bound the total squared norm of $\mathbf{w}$ using our coordinate bounds. Since $|w_j / w_1| \leq \sqrt{\epsilon/d}$, squaring both sides gives $w_j^2 \leq w_1^2(\epsilon/d)$. We sum this over all $d-1$ remaining dimensions:
+$$
+\|\mathbf{w}\|_2^2 = w_1^2 + \sum_{j=2}^d w_j^2 \leq w_1^2 + (d-1) \left( \frac{\epsilon}{d} w_1^2 \right) < w_1^2(1 + \epsilon)
+$$
+
+Finally, the inner product of our normalized approximation with the true eigenvector is exactly the normalized first coordinate:
+$$
+\langle\mathbf{v}_1, \bar{\mathbf{w}}\rangle = \frac{w_1}{\|\mathbf{w}\|_2} \geq \frac{w_1}{\sqrt{w_1^2(1+\epsilon)}} = \frac{1}{\sqrt{1+\epsilon}}
+$$
+
+For small values of $\epsilon$, by Taylor expansion, $\frac{1}{\sqrt{1+\epsilon}} \approx 1 - \epsilon/2$, which is strictly greater than the $1-\epsilon$ bound we set out to prove. Thus, **Claim 3** is proven: there exists a vector in the Krylov subspace exceedingly close to the true top eigenvector.
