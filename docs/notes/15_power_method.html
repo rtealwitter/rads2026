@@ -238,10 +238,10 @@ window.Quarto = {
 \end{align*}
 \]</span></p>
 <p>Because <span class="math inline">\(\mathbf{z}^{(i)} = \frac{1}{n_i} \mathbf{A} \mathbf{z}^{(i-1)}\)</span>, we can see exactly how the coefficients update: <span class="math display">\[
-c_j^{(i)} = \frac{1}{n_i}\lambda_j c^{(i-1)}_j
+c_j^{(i)} = \frac{1}{n_i}\lambda_j c^{(i-1)}_j.
 \]</span></p>
-<p>Intuitively, we expect the relative size of <span class="math inline">\(c_1^{(i)}\)</span> to <strong>increase</strong> in comparison to the other coefficients as <span class="math inline">\(i\)</span> increases, because <span class="math inline">\(\mathbf{z}^{(q)}\)</span> will start looking more and more like <span class="math inline">\(\mathbf{v}_1\)</span>. The <span class="math inline">\(\frac{1}{n_i}\)</span> term is fixed for all <span class="math inline">\(j\)</span>, but the <span class="math inline">\(\lambda_j\)</span> term will be largest for <span class="math inline">\(j=1\)</span>, and thus <span class="math inline">\(c_1^{(i)}\)</span> will increase in size more than any other term. We will analyze this formally soon.</p>
-<p>First however, let’s see what it suffices to prove.</p>
+<p>The <span class="math inline">\(\frac{1}{n_i}\)</span> term is fixed for all <span class="math inline">\(j\)</span>, but the <span class="math inline">\(\lambda_j\)</span> term will be largest for <span class="math inline">\(j=1\)</span>, and thus <span class="math inline">\(c_1^{(i)}\)</span> will increase in size more than any other term. We will analyze this formally soon.</p>
+<p>First, however, let’s see what it suffices to prove.</p>
 <p><strong>Claim 1</strong>: If <span class="math inline">\(\left|c_j^{(q)}/c_1^{(q)}\right| \leq \sqrt{\epsilon/d}\)</span> for all <span class="math inline">\(j\neq 1\)</span> then either <span class="math inline">\(\|\mathbf{v}_1 -\mathbf{z}^{(q)}\|_2^2\leq 2\epsilon\)</span> or <span class="math inline">\(\|-\mathbf{v}_1 - \mathbf{z}^{(q)}\|_2^2\leq 2\epsilon\)</span>.</p>
 <div class="proof-block">
 <details open="">
@@ -282,9 +282,12 @@ q = \frac{\log(d^3\sqrt{d/\epsilon})}{\gamma} = O\left(\frac{\log(d/\epsilon)}{\
 </section>
 <section id="the-lanczos-method" class="level1">
 <h1>The Lanczos Method</h1>
-<p>We will now see how to improve on the power method using what is known as the Lanczos method. Like the power method, Lanczos is considered a <strong>Krylov subspace method</strong> because it will return a solution <strong>in the span of the Krylov subspace</strong> that we introduced before.</p>
+<p>We will now see how to improve on the power method using what is known as the Lanczos method. Like the power method, Lanczos is considered a <strong>Krylov subspace method</strong> because it will return a solution <strong>in the span of the Krylov subspace</strong>:</p>
+<p><span class="math display">\[
+\mathbf{K} = \begin{bmatrix} \mathbf{z}^{(0)} &amp; \mathbf{A}\mathbf{z}^{(0)} &amp; \mathbf{A}^2 \mathbf{z}^{(0)} &amp; \mathbf{A}^3\mathbf{z}^{(0)} \ldots \mathbf{A}^{q-1} \mathbf{z}^{(0)}\end{bmatrix}.
+\]</span></p>
 <p>The power method clearly does this—it returns a scaling of the last column of <span class="math inline">\(\mathbf{K}\)</span>. The whole idea behind Lanczos is to avoid “throwing away” information from earlier columns like the power method, but instead to take advantage of the whole space. It turns out that doing so can be very helpful; we will get an iteration bound that depends on <span class="math inline">\(1/\sqrt{\gamma}\)</span> instead of <span class="math inline">\(1/\gamma\)</span>.</p>
-<p>Specifically, to define the Lanczos method, we will let <span class="math inline">\(\mathbf{Q}\in \mathbb{R}^{d\times q}\)</span> be a matrix with orthonormal columns that spans our Krylov subspace. In practice, we do not compute the Krylov matrix <span class="math inline">\(\mathbf{K}\)</span> directly and then orthonormalize it, as this is numerically unstable. Instead, because our target matrix <span class="math inline">\(\mathbf{A}\)</span> is symmetric, we can build the columns of <span class="math inline">\(\mathbf{Q}\)</span> iteratively using a highly efficient “three-term recurrence.” For now, imagine your computer has infinite precision and we just compute <span class="math inline">\(\mathbf{Q}\)</span> by finding an orthonormal basis for <span class="math inline">\(\mathbf{K}\)</span>.</p>
+<p>Specifically, to define the Lanczos method, we will let <span class="math inline">\(\mathbf{Q}\in \mathbb{R}^{d\times q}\)</span> be a matrix with orthonormal columns that spans our Krylov subspace. In practice, we do not compute the Krylov matrix <span class="math inline">\(\mathbf{K}\)</span> directly and then orthonormalize it, as this is numerically unstable. Instead, because our target matrix <span class="math inline">\(\mathbf{A}\)</span> is symmetric, we can build the columns of <span class="math inline">\(\mathbf{Q}\)</span> iteratively using a highly efficient “three-term recurrence.”</p>
 <p><strong>Lanczos Method</strong></p>
 <ul>
 <li>Let <span class="math inline">\(\mathbf{z}^{(0)}\)</span> be a random initial starting vector.</li>

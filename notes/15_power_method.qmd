@@ -66,12 +66,12 @@ $$
 
 Because $\mathbf{z}^{(i)} = \frac{1}{n_i} \mathbf{A} \mathbf{z}^{(i-1)}$, we can see exactly how the coefficients update:
 $$
-c_j^{(i)} = \frac{1}{n_i}\lambda_j c^{(i-1)}_j
+c_j^{(i)} = \frac{1}{n_i}\lambda_j c^{(i-1)}_j.
 $$
 
-Intuitively, we expect the relative size of $c_1^{(i)}$ to **increase** in comparison to the other coefficients as $i$ increases, because $\mathbf{z}^{(q)}$ will start looking more and more like $\mathbf{v}_1$. The $\frac{1}{n_i}$ term is fixed for all $j$, but the $\lambda_j$ term will be largest for $j=1$, and thus $c_1^{(i)}$ will increase in size more than any other term. We will analyze this formally soon.
+The $\frac{1}{n_i}$ term is fixed for all $j$, but the $\lambda_j$ term will be largest for $j=1$, and thus $c_1^{(i)}$ will increase in size more than any other term. We will analyze this formally soon.
 
-First however, let's see what it suffices to prove.
+First, however, let's see what it suffices to prove.
 
 **Claim 1**: If $\left|c_j^{(q)}/c_1^{(q)}\right| \leq \sqrt{\epsilon/d}$ for all $j\neq 1$ then either $\|\mathbf{v}_1 -\mathbf{z}^{(q)}\|_2^2\leq 2\epsilon$ or $\|-\mathbf{v}_1 - \mathbf{z}^{(q)}\|_2^2\leq 2\epsilon$. 
 
@@ -129,11 +129,15 @@ so after $O\left(\frac{\log(d/\epsilon)}{\gamma}\right)$ iterations we get a nea
 
 # The Lanczos Method  
 
-We will now see how to improve on the power method using what is known as the Lanczos method. Like the power method, Lanczos is considered a **Krylov subspace method** because it will return a solution **in the span of the Krylov subspace** that we introduced before. 
+We will now see how to improve on the power method using what is known as the Lanczos method. Like the power method, Lanczos is considered a **Krylov subspace method** because it will return a solution **in the span of the Krylov subspace**:
+
+$$
+\mathbf{K} = \begin{bmatrix} \mathbf{z}^{(0)} & \mathbf{A}\mathbf{z}^{(0)} & \mathbf{A}^2 \mathbf{z}^{(0)} & \mathbf{A}^3\mathbf{z}^{(0)} \ldots \mathbf{A}^{q-1} \mathbf{z}^{(0)}\end{bmatrix}.
+$$
 
 The power method clearly does this—it returns a scaling of the last column of $\mathbf{K}$. The whole idea behind Lanczos is to avoid "throwing away" information from earlier columns like the power method, but instead to take advantage of the whole space. It turns out that doing so can be very helpful; we will get an iteration bound that depends on $1/\sqrt{\gamma}$ instead of $1/\gamma$. 
 
-Specifically, to define the Lanczos method, we will let $\mathbf{Q}\in \mathbb{R}^{d\times q}$ be a matrix with orthonormal columns that spans our Krylov subspace. In practice, we do not compute the Krylov matrix $\mathbf{K}$ directly and then orthonormalize it, as this is numerically unstable. Instead, because our target matrix $\mathbf{A}$ is symmetric, we can build the columns of $\mathbf{Q}$ iteratively using a highly efficient "three-term recurrence." For now, imagine your computer has infinite precision and we just compute $\mathbf{Q}$ by finding an orthonormal basis for $\mathbf{K}$. 
+Specifically, to define the Lanczos method, we will let $\mathbf{Q}\in \mathbb{R}^{d\times q}$ be a matrix with orthonormal columns that spans our Krylov subspace. In practice, we do not compute the Krylov matrix $\mathbf{K}$ directly and then orthonormalize it, as this is numerically unstable. Instead, because our target matrix $\mathbf{A}$ is symmetric, we can build the columns of $\mathbf{Q}$ iteratively using a highly efficient "three-term recurrence."
 
 **Lanczos Method**
 
