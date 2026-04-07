@@ -189,7 +189,7 @@ window.Quarto = {
 </header>
 
 
-<p>The main idea of spectral graph theory is to understand graph data by constructing natural matrix representations and studying their spectrums.</p>
+<p>The main idea of spectral graph theory is to understand graph data by constructing natural matrix representations and studying their spectra.</p>
 <p>There are many natural datasets that appear naturally as graphs:</p>
 <ul>
 <li><p>Social networks like Facebook and Twitter.</p></li>
@@ -203,13 +203,12 @@ window.Quarto = {
 </p>
 <p>It is also common to look at normalized versions of both matrices <span class="math display">\[
 \bar{\mathbf{A}} = \mathbf{D}^{-1/2} \mathbf{AD}^{-1/2} \qquad
-\mathbf{L} = \mathbf{I} - \bar{\mathbf{A}}.
+\bar{\mathbf{L}} = \mathbf{I} - \bar{\mathbf{A}}.
 \]</span></p>
 <p>The adjacency and Laplacian matrices contain a lot of information about the graph.</p>
 <ul>
 <li><p>If <span class="math inline">\(\mathbf{L}\)</span> has <span class="math inline">\(k\)</span> eigenvalues equal to <span class="math inline">\(0\)</span>, then the graph <span class="math inline">\(G\)</span> has <span class="math inline">\(k\)</span> connected components.</p></li>
 <li><p>The sum of cubes of the adjacency matrix’s eigenvalues is equal to the number of triangles in the graph times 6.</p></li>
-<li><p>The sum of eigenvalues to the power <span class="math inline">\(q\)</span> is proportional to the number of <span class="math inline">\(q\)</span> cycles.</p></li>
 </ul>
 <p>Today, we’ll see how eigenvectors are useful for clustering and visualizing graphs.</p>
 <p>We’ll use the edge-incidence matrix <span class="math inline">\(\mathbf{B} \in \mathbb{R}^{m \times n}\)</span> where <span class="math inline">\(m\)</span> is the number of edges in the graph. Consider the edge <span class="math inline">\((i,j) \in [m]\)</span> and the node <span class="math inline">\(k \in V\)</span>, then <span class="math display">\[
@@ -245,7 +244,7 @@ B_{(i,j),k} = \begin{cases}
 <p align="center">
 <img src="images/smooth_graph.png" width="400px">
 </p>
-<p>We can formally see this connection through the the Courant-Fischer min-max principle. Let <span class="math inline">\(\mathbf{V} = [\mathbf{v}_1, \ldots, \mathbf{v}_n]\)</span> be the eigenvectors of <span class="math inline">\(\mathbf{L}\)</span> where <span class="math inline">\(\mathbf{v}_n\)</span> corresponds to the smallest eigenvalue <span class="math inline">\(\lambda_n\)</span>. Then <span class="math display">\[\begin{align*}
+<p>We can formally see this connection through the Courant-Fischer min-max principle. Let <span class="math inline">\(\mathbf{V} = [\mathbf{v}_1, \ldots, \mathbf{v}_n]\)</span> be the eigenvectors of <span class="math inline">\(\mathbf{L}\)</span> where <span class="math inline">\(\mathbf{v}_n\)</span> corresponds to the smallest eigenvalue <span class="math inline">\(\lambda_n\)</span>. Then <span class="math display">\[\begin{align*}
 \mathbf{v}_n &amp;= \arg \min_{\|\mathbf{v}\|_2 =1}
 \mathbf{v}^\top \mathbf{L} \mathbf{v} \\
 \mathbf{v}_{n-1} &amp;= \arg \min_{\|\mathbf{v}\|_2 =1, \mathbf{v} \perp \mathbf{v}_n}
@@ -261,7 +260,7 @@ B_{(i,j),k} = \begin{cases}
 \end{align*}\]</span></p>
 <section id="spectral-clustering" class="level2">
 <h2 class="anchored" data-anchor-id="spectral-clustering">Spectral Clustering</h2>
-<p>We can draw another conclusion from our observation that <span class="math inline">\(\mathbf{L} = \mathbf{B}^\top \mathbf{B}\)</span>. Let <span class="math inline">\(\mathbf{c} \in \{-1, 1\}^n\)</span> be a cut indicator vector. Consider a set of vertices <span class="math inline">\(S \subseteq V\)</span>. We set <span class="math inline">\(\mathbf{c}_i = 1\)</span> if <span class="math inline">\(i \in S\)</span> and <span class="math inline">\(\mathbf{c}_i = -1\)</span> otherwise. Then <span class="math display">\[\begin{align*}
+<p>We can draw another conclusion from our observation that <span class="math inline">\(\mathbf{L} = \mathbf{B}^\top \mathbf{B}\)</span>. Let <span class="math inline">\(\mathbf{c} \in \{-1, 1\}^n\)</span> be a cut indicator vector. Consider a set of vertices <span class="math inline">\(S \subseteq V\)</span>. We set <span class="math inline">\(c_i = 1\)</span> if <span class="math inline">\(i \in S\)</span> and <span class="math inline">\(c_i = -1\)</span> otherwise. Then <span class="math display">\[\begin{align*}
 \mathbf{c}^\top \mathbf{L} \mathbf{c}
 &amp;= \mathbf{c}^\top \mathbf{B}^\top \mathbf{B} \mathbf{c} \\
 &amp;= \sum_{(i,j) \in E} (c_i - c_j)^2 \\
@@ -331,10 +330,10 @@ B_{(i,j),k} = \begin{cases}
 <p><strong>Claim:</strong> The solution to the relaxed perfectly balanced cut problem is the second smallest eigenvector <span class="math inline">\(\mathbf{v}_{n-1}\)</span> of <span class="math inline">\(\mathbf{L}\)</span>.</p>
 <p><strong>Proof:</strong> By the Courant-Fischer min-max principle, the smallest eigenvector of a graph Laplacian <span class="math inline">\(\mathbf{L}\)</span> is <span class="math display">\[\begin{align*}
 \mathbf{v}_n = \arg \min_{\mathbf{v}: \|\mathbf{v}\|_2 = 1} \mathbf{v}^\top \mathbf{L} \mathbf{v}
-\end{align*}\]</span>. The smallest eigenvector is the constant vector <span class="math inline">\(\mathbf{1} \cdot \frac1{\sqrt{n}}\)</span>.</p>
+\end{align*}\]</span>. The smallest eigenvector is the constant vector <span class="math inline">\(\frac1{\sqrt{n}} \mathbf{1}\)</span>.</p>
 <p>Again by the Courant-Fischer min-max principle, the second smallest eigenvector is <span class="math display">\[\begin{align*}
 \mathbf{v}_{n-1} = \arg \min_{\mathbf{v}: \|\mathbf{v}\|_2 = 1, \mathbf{v}^\top \mathbf{v}_n=0} \mathbf{v}^\top \mathbf{L} \mathbf{v}.
-\end{align*}\]</span> Since we know that <span class="math inline">\(\mathbf{v}_n = \mathbf{1} \cdot \frac1{\sqrt{n}}\)</span>, we know that <span class="math display">\[\begin{align*}
+\end{align*}\]</span> Since we know that <span class="math inline">\(\mathbf{v}_n = \frac1{\sqrt{n}} \mathbf{1}\)</span>, we know that <span class="math display">\[\begin{align*}
 \mathbf{v}_{n-1} = \arg \min_{\mathbf{v}: \|\mathbf{v}\|_2 = 1, \mathbf{v}^\top \mathbf{1}=0} \mathbf{v}^\top \mathbf{L} \mathbf{v}.
 \end{align*}\]</span> Notice this is exactly the relaxed perfectly balanced cut problem.</p>
 <p>Our approach will be to find <span class="math inline">\(\mathbf{v}_{n-1}\)</span>. Then we will define <span class="math inline">\(S\)</span> as all the nodes with positive entries in <span class="math inline">\(\mathbf{v}_{n-1}\)</span>. Succinctly, we will set the cut indicator vector <span class="math inline">\(\mathbf{c} = \text{sign}(\mathbf{v}_{n-1})\)</span>.</p>
@@ -358,7 +357,7 @@ B_{(i,j),k} = \begin{cases}
 \]</span> is small. The embedding explicitly encourages nodes connected by an edge to be placed in nearby locations in the embedding.</p>
 <section id="average-case-analysis" class="level3">
 <h3 class="anchored" data-anchor-id="average-case-analysis">Average Case Analysis</h3>
-<p>So far, we showed that spectral clustering partitions a graph along a small cut between large pieces. Unfortunately, there are no formal guarantees on the quality of the partioning and it can fail for worst case input graphs.</p>
+<p>So far, we showed that spectral clustering partitions a graph along a small cut between large pieces. Unfortunately, there are no formal guarantees on the quality of the partitioning and it can fail for worst case input graphs.</p>
 <p>We will consider a generative model that produces <em>random but realistic</em> inputs and analyze how the algorithm performs on graphs from this model. The general idea is common in algorithm design and analysis. Often, the approach is our best hope for understanding why some algorithms just work in practice. For example, linear regression is motivated by “average case” Bayesian modeling.</p>
 <p>We will consider the stochastic block model (SBM) which is a random graph model that is commonly used to model social networks.</p>
 <p><strong>Stochastic Block Model:</strong> Let <span class="math inline">\(0&lt;q &lt; p &lt; 1\)</span>. We will call <span class="math inline">\(G_n(p,q)\)</span> a distribution over graphs on <span class="math inline">\(n\)</span> nodes. Each graph is split equally into two blocks <span class="math inline">\(B\)</span> and <span class="math inline">\(C\)</span> each with <span class="math inline">\(\frac{n}{2}\)</span> nodes. Any two nodes in the <em>same group</em> are connected with probability <span class="math inline">\(p\)</span> (including self-loops) and any two nodes in <em>different groups</em> are connected with probability <span class="math inline">\(q\)</span>.</p>
@@ -378,7 +377,7 @@ B_{(i,j),k} = \begin{cases}
 <p>Notice that if we correctly compute the second eigenvector <span class="math inline">\(\mathbf{v}_2\)</span>, then we can exactly recover the ground truth partition <span class="math inline">\(B\)</span> and <span class="math inline">\(C\)</span>.</p>
 <p>Because <span class="math inline">\(\mathbb{E}[\mathbf{L}] = \mathbb{E}[\mathbf{D}] - \mathbb{E}[\mathbf{A}]\)</span>, the second smallest eigenvector of <span class="math inline">\(\mathbb{E}[\mathbf{L}]\)</span> is the second largest eigenvector of <span class="math inline">\(\mathbb{E}[\mathbf{A}]\)</span>. So we know that the cut indicator vector <span class="math inline">\(\mathbf{c}\)</span> is the second smallest eigenvector of <span class="math inline">\(\mathbb{E}[\mathbf{L}]\)</span>.</p>
 <p>If the random graph <span class="math inline">\(G\)</span> drawn from the stochastic block model <span class="math inline">\(G_n(p,q)\)</span> were exactly equal to its expectation, we could recover the ground truth partition <span class="math inline">\(B\)</span> and <span class="math inline">\(C\)</span>. However, the graph <span class="math inline">\(G\)</span> is not exactly equal to its expectation because of the randomness in the generative process.</p>
-<p>Nonetheless, we will use matrix concentration to show that the eigenvectors of <span class="math inline">\(\mathbf{L}\)</span> are close to the eigenvectors of <span class="math inline">\(\mathbb{E}[\mathbf{L}]\)</span>. The approach is analagous to scalar concentration inequalities that we’ve seen before like Markov’s, Chebyshev’s, and Chernoff’s inequalities.</p>
+<p>Nonetheless, we will use matrix concentration to show that the eigenvectors of <span class="math inline">\(\mathbf{L}\)</span> are close to the eigenvectors of <span class="math inline">\(\mathbb{E}[\mathbf{L}]\)</span>. The approach is analogous to scalar concentration inequalities that we’ve seen before like Markov’s, Chebyshev’s, and Chernoff’s inequalities.</p>
 <p><strong><a href="https://link.springer.com/content/pdf/10.1007/BF02785860.pdf">Matrix Concentration Inequality</a>:</strong> If <span class="math inline">\(p \geq O \left( \frac{\log^4 n}{n} \right)\)</span>, then with high probability <span class="math display">\[\begin{align*}
 \| \mathbf{A} - \mathbb{E}[ \mathbf{A} ] \|_2 \leq O \left( \sqrt{pn} \right)
 \end{align*}\]</span> where <span class="math inline">\(\| \cdot \|_2\)</span> is the matrix spectral norm.</p>
@@ -390,7 +389,7 @@ B_{(i,j),k} = \begin{cases}
 <p><strong>Davis-Kahan Eigenvector Perturbation Theorem:</strong> Suppose <span class="math inline">\(\mathbf{A}, \bar{\mathbf{A}} \in \mathbb{R}^{n \times n}\)</span> are symmetric matrices with eigenvectors <span class="math inline">\(\mathbf{v}_1, \ldots, \mathbf{v}_n\)</span> and <span class="math inline">\(\bar{\mathbf{v}}_1, \ldots, \bar{\mathbf{v}}_n\)</span>, respectively. Let <span class="math inline">\(\theta(\mathbf{v}, \bar{\mathbf{v}})\)</span> denote the angle between two vectors <span class="math inline">\(\mathbf{v}\)</span> and <span class="math inline">\(\bar{\mathbf{v}}\)</span>. Then <span class="math display">\[\begin{align*}
 \sin \theta(\mathbf{v}_i, \bar{\mathbf{v}}_i)
 \leq \frac{\| \mathbf{A} - \bar{\mathbf{A}} \|_2 }{\min_{j \neq i} |\lambda_i - \lambda_j|}
-\end{align*}\]</span> where <span class="math inline">\(\lambda_1 \geq \ldots \geq \lambda_n\)</span> and are the eigenvalues of <span class="math inline">\(\bar{\mathbf{A}}\)</span>.</p>
+\end{align*}\]</span> where <span class="math inline">\(\lambda_1 \geq \ldots \geq \lambda_n\)</span> are the eigenvalues of <span class="math inline">\(\bar{\mathbf{A}}\)</span>.</p>
 <p>We can exhibit a matrix where the bound is tight. Let <span class="math inline">\(\mathbf{A}\)</span> and <span class="math inline">\(\bar{\mathbf{A}}\)</span> be the matrices in the figure below. The top eigenvector <span class="math inline">\(\mathbf{v}_1\)</span> is <span class="math inline">\([1,0]\)</span> whereas the top eigenvector <span class="math inline">\(\bar{\mathbf{v}}_1\)</span> is <span class="math inline">\([0,1]\)</span>. The angle between these two vectors is <span class="math inline">\(\frac{\pi}{2}\)</span> so <span class="math inline">\(\sin(\theta(\mathbf{v}_1, \bar{\mathbf{v}}_1)) = 1\)</span>. Since <span class="math inline">\(\lambda_1 = 1+\epsilon\)</span> and <span class="math inline">\(\lambda_2 = 1\)</span>, the bound gives <span class="math inline">\(\frac{\epsilon}{\epsilon} = 1\)</span>.</p>
 <p align="center">
 <img src="images/matrix_perturbation.png" width="400px">
@@ -409,7 +408,7 @@ B_{(i,j),k} = \begin{cases}
 &amp;= \| \mathbf{a} \|_2^2 + \| \mathbf{b} \|_2^2 - 2 \mathbf{a}^\top \mathbf{b} \\
 &amp;= 2 - 2 \cos(\theta) \\
 &amp;= 2 - 2 \sqrt{1-\sin^2(\theta)} \\
-&amp;\leq 2 - 2 (1-\sin^2(\theta) \\
+&amp;\leq 2 - 2 (1-\sin^2(\theta)) \\
 &amp; = 2 \sin^2(\theta)
 \end{align*}\]</span> where the inequality follows since <span class="math inline">\(\sin^2(\theta) \leq 1\)</span>. Then <span class="math display">\[\begin{align*}
 \| \mathbf{v}_2 - \bar{\mathbf{v}}_2 \|_2^2 \leq

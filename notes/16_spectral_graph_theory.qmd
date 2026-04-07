@@ -7,7 +7,7 @@ format:
     include-after-body: readtime.html
 ---
 
-The main idea of spectral graph theory is to understand graph data by constructing natural matrix representations and studying their spectrums.
+The main idea of spectral graph theory is to understand graph data by constructing natural matrix representations and studying their spectra.
 
 There are many natural datasets that appear naturally as graphs:
 
@@ -30,7 +30,7 @@ The second is an $n \times n$ Laplacian matrix $\mathbf{L} = \mathbf{D} - \mathb
 It is also common to look at normalized versions of both matrices
 $$
 \bar{\mathbf{A}} = \mathbf{D}^{-1/2} \mathbf{AD}^{-1/2} \qquad
-\mathbf{L} = \mathbf{I} - \bar{\mathbf{A}}.
+\bar{\mathbf{L}} = \mathbf{I} - \bar{\mathbf{A}}.
 $$
 
 The adjacency and Laplacian matrices contain a lot of information about the graph.
@@ -38,8 +38,6 @@ The adjacency and Laplacian matrices contain a lot of information about the grap
 * If $\mathbf{L}$ has $k$ eigenvalues equal to $0$, then the graph $G$ has $k$ connected components.
 
 * The sum of cubes of the adjacency matrix's eigenvalues is equal to the number of triangles in the graph times 6.
-
-* The sum of eigenvalues to the power $q$ is proportional to the number of $q$ cycles.
 
 Today, we'll see how eigenvectors are useful for clustering and visualizing graphs.
 
@@ -94,7 +92,7 @@ if we plug a small eigenvector into $f$, we get a small value.
 <img src="images/smooth_graph.png" width="400px">
 </p>
 
-We can formally see this connection through the
+We can formally see this connection through
 the Courant-Fischer min-max principle.
 Let $\mathbf{V} = [\mathbf{v}_1, \ldots, \mathbf{v}_n]$ be the eigenvectors of $\mathbf{L}$
 where $\mathbf{v}_n$ corresponds to the smallest eigenvalue $\lambda_n$.
@@ -121,7 +119,7 @@ Similarly,
 We can draw another conclusion from our observation that $\mathbf{L} = \mathbf{B}^\top \mathbf{B}$.
 Let $\mathbf{c} \in \{-1, 1\}^n$ be a cut indicator vector.
 Consider a set of vertices $S \subseteq V$.
-We set $\mathbf{c}_i = 1$ if $i \in S$ and $\mathbf{c}_i = -1$ otherwise.
+We set $c_i = 1$ if $i \in S$ and $c_i = -1$ otherwise.
 Then
 \begin{align*}
 \mathbf{c}^\top \mathbf{L} \mathbf{c}
@@ -167,7 +165,7 @@ Often, we can construct a synthetic graph for data that is hard to cluster.
 <img src="images/cut_clustering.png" width="400px">
 </p>
 
-Balanced cut algorithms are also used in many other applications including distributing data in graph databases, partitioning finite element meshes  in scientific computing (e.g., that arise when solving differential equations), and more.
+Balanced cut algorithms are also used in many other applications including distributing data in graph databases, partitioning finite element meshes in scientific computing (e.g., that arise when solving differential equations), and more.
 
 There are many ways to formalize the balanced cut problem.
 
@@ -246,14 +244,14 @@ the smallest eigenvector of a graph Laplacian $\mathbf{L}$ is
 \begin{align*}
 \mathbf{v}_n = \arg \min_{\mathbf{v}: \|\mathbf{v}\|_2 = 1} \mathbf{v}^\top \mathbf{L} \mathbf{v}
 \end{align*}.
-The smallest eigenvector is the constant vector $\mathbf{1} \cdot \frac1{\sqrt{n}}$.
+The smallest eigenvector is the constant vector $\frac1{\sqrt{n}} \mathbf{1}$.
 
 Again by the Courant-Fischer min-max principle,
 the second smallest eigenvector is 
 \begin{align*}
 \mathbf{v}_{n-1} = \arg \min_{\mathbf{v}: \|\mathbf{v}\|_2 = 1, \mathbf{v}^\top \mathbf{v}_n=0} \mathbf{v}^\top \mathbf{L} \mathbf{v}.
 \end{align*}
-Since we know that $\mathbf{v}_n = \mathbf{1} \cdot \frac1{\sqrt{n}}$,
+Since we know that $\mathbf{v}_n = \frac1{\sqrt{n}} \mathbf{1}$,
 we know that
 \begin{align*}
 \mathbf{v}_{n-1} = \arg \min_{\mathbf{v}: \|\mathbf{v}\|_2 = 1, \mathbf{v}^\top \mathbf{1}=0} \mathbf{v}^\top \mathbf{L} \mathbf{v}.
@@ -297,7 +295,7 @@ The embedding explicitly encourages nodes connected by an edge to be placed in n
 
 ### Average Case Analysis
 So far, we showed that spectral clustering partitions a graph along a small cut between large pieces.
-Unfortunately, there are no formal guarantees on the quality of the partioning and it can fail for worst case input graphs.
+Unfortunately, there are no formal guarantees on the quality of the partitioning and it can fail for worst case input graphs.
 
 We will consider a generative model that produces *random but realistic* inputs and analyze how the algorithm performs on graphs from this model.
 The general idea is common in algorithm design and analysis.
@@ -352,7 +350,7 @@ However, the graph $G$ is not exactly equal to its expectation because of the ra
 
 Nonetheless,
 we will use matrix concentration to show that the eigenvectors of $\mathbf{L}$ are close to the eigenvectors of $\mathbb{E}[\mathbf{L}]$.
-The approach is analagous to scalar concentration inequalities that we've seen before like Markov's, Chebyshev's, and Chernoff's inequalities.
+The approach is analogous to scalar concentration inequalities that we've seen before like Markov's, Chebyshev's, and Chernoff's inequalities.
 
 **[Matrix Concentration Inequality](https://link.springer.com/content/pdf/10.1007/BF02785860.pdf):**
 If $p \geq O \left( \frac{\log^4 n}{n} \right)$, then with high probability
@@ -383,7 +381,7 @@ Then
 \sin \theta(\mathbf{v}_i, \bar{\mathbf{v}}_i)
 \leq \frac{\| \mathbf{A} - \bar{\mathbf{A}} \|_2 }{\min_{j \neq i} |\lambda_i - \lambda_j|}
 \end{align*}
-where $\lambda_1 \geq \ldots \geq \lambda_n$ and are the eigenvalues of $\bar{\mathbf{A}}$.
+where $\lambda_1 \geq \ldots \geq \lambda_n$ are the eigenvalues of $\bar{\mathbf{A}}$.
 
 We can exhibit a matrix where the bound is tight.
 Let $\mathbf{A}$ and $\bar{\mathbf{A}}$ be the matrices in the figure below.
@@ -418,7 +416,7 @@ We have
 &= \| \mathbf{a} \|_2^2 + \| \mathbf{b} \|_2^2 - 2 \mathbf{a}^\top \mathbf{b} \\
 &= 2 - 2 \cos(\theta) \\
 &= 2 - 2 \sqrt{1-\sin^2(\theta)} \\
-&\leq 2 - 2 (1-\sin^2(\theta) \\
+&\leq 2 - 2 (1-\sin^2(\theta)) \\
 & = 2 \sin^2(\theta)
 \end{align*}
 where the inequality follows since $\sin^2(\theta) \leq 1$.
