@@ -142,7 +142,7 @@ output:
     <td>Week 13 (4/14 and 4/16)</td>
     <td><a href="notes/17_sketched_regression.html">Sketched Regression</a></td>
     <td><a href="notes/17_sketched_regression.html">Sketched Regression</a></td>
-    <td></td>
+    <td><a href="slides/Week13.pdf">Slides</a></td>
     <td></td>
   </tr>
   <tr>
