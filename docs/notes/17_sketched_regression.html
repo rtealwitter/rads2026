@@ -232,16 +232,7 @@ window.Quarto = {
 \leq (1+\epsilon) \| \mathbf{y} \|_2^2
 \]</span> for all <span class="math inline">\(\mathbf{y} \in \mathcal{U}\)</span> as long as <span class="math inline">\(m = O \left( \frac{d \log(1/\epsilon) + \log(1/\delta)}{\epsilon^2} \right)\)</span>.</p>
 <p>It is possible to obtain a slightly tighter bound of <span class="math inline">\(O \left( \frac{d + \log(1/\delta)}{\epsilon^2} \right)\)</span> by using a more careful analysis.</p>
-<p>If we can prove the subspace embedding theorem, the following corollary will follow.</p>
-<p><strong>Corollary:</strong> If we choose <span class="math inline">\(\mathbf{\Pi}\)</span> and properly scale, then with <span class="math inline">\(O(d/\epsilon^2)\)</span> rows, <span class="math display">\[
-(1-\epsilon) \| \mathbf{Ax - b} \|_2^2
-\leq \| \mathbf{\Pi A x} - \mathbf{\Pi b} \|_2^2
-\leq (1+\epsilon) \| \mathbf{Ax - b} \|_2^2
-\]</span> for all <span class="math inline">\(\mathbf{x}\)</span> and therefore <span class="math display">\[
-\| \mathbf{A} \tilde{\mathbf{x}} - \mathbf{b} \|_2^2
-\leq (1+O(\epsilon)) \| \mathbf{A} \mathbf{x}^* - \mathbf{b} \|_2^2.
-\]</span></p>
-<p>We can prove the corollary by applying the subspace embedding theorem to the <span class="math inline">\(d+1\)</span> dimensional subspace spanned by the <span class="math inline">\(d\)</span> columns of <span class="math inline">\(\mathbf{A}\)</span> and <span class="math inline">\(\mathbf{b}\)</span>. Every vector <span class="math inline">\(\mathbf{A x -b}\)</span> lies in this space.</p>
+<p>With the subspace embedding theorem, the claim follows by applying the theorem to the <span class="math inline">\(d+1\)</span> dimensional subspace spanned by the <span class="math inline">\(d\)</span> columns of <span class="math inline">\(\mathbf{A}\)</span> and <span class="math inline">\(\mathbf{b}\)</span>.</p>
 <p>The first observation in proving the subspace embedding theorem is that it suffices to prove it for all vectors <span class="math inline">\(\mathbf{w}\)</span> on the unit sphere in <span class="math inline">\(\mathcal{U}\)</span>. This observation follows from linearity: Any point <span class="math inline">\(\mathbf{v} \in \mathcal{U}\)</span> can be written as <span class="math inline">\(c \mathbf{w}\)</span> for some scalar <span class="math inline">\(c\)</span> and some point <span class="math inline">\(\mathbf{w}\)</span> on the sphere <span class="math inline">\(S_{\mathcal{U}} = \{ \mathbf{w} \in \mathcal{U} : \| \mathbf{w} \|_2 = 1 \}\)</span>. If <span class="math display">\[\begin{align*}
 (1-\epsilon) \| \mathbf{w} \|_2
 \leq \| \mathbf{\Pi} \mathbf{w} \|_2

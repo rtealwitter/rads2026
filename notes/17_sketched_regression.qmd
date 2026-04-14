@@ -106,23 +106,7 @@ for all $\mathbf{y} \in \mathcal{U}$ as long as $m = O \left( \frac{d \log(1/\ep
 
 It is possible to obtain a slightly tighter bound of $O \left( \frac{d + \log(1/\delta)}{\epsilon^2} \right)$ by using a more careful analysis.
 
-If we can prove the subspace embedding theorem, the following corollary will follow.
-
-**Corollary:**
-If we choose $\mathbf{\Pi}$ and properly scale, then with $O(d/\epsilon^2)$ rows,
-$$
-(1-\epsilon) \| \mathbf{Ax - b} \|_2^2
-\leq \| \mathbf{\Pi A x} - \mathbf{\Pi b} \|_2^2
-\leq (1+\epsilon) \| \mathbf{Ax - b} \|_2^2
-$$
-for all $\mathbf{x}$ and therefore
-$$
-\| \mathbf{A} \tilde{\mathbf{x}} - \mathbf{b} \|_2^2
-\leq (1+O(\epsilon)) \| \mathbf{A} \mathbf{x}^* - \mathbf{b} \|_2^2.
-$$
-
-We can prove the corollary by applying the subspace embedding theorem to the $d+1$ dimensional subspace spanned by the $d$ columns of $\mathbf{A}$ and $\mathbf{b}$.
-Every vector $\mathbf{A x -b}$ lies in this space.
+With the subspace embedding theorem, the claim follows by applying the theorem to the $d+1$ dimensional subspace spanned by the $d$ columns of $\mathbf{A}$ and $\mathbf{b}$.
 
 The first observation in proving the subspace embedding theorem is that it suffices to prove it for all vectors $\mathbf{w}$ on the unit sphere in $\mathcal{U}$.
 This observation follows from linearity:
