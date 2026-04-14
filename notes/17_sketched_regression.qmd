@@ -85,7 +85,7 @@ $$
 \leq \| \mathbf{\Pi} \mathbf{y} \|_2^2
 \leq (1+\epsilon) \| \mathbf{y} \|_2^2
 $$
-with probabiity $1-\delta$.
+with probability $1-\delta$.
 
 The challenge in going from the distributional JL lemma to the claim is that the JL lemma only holds for a fixed vector $\mathbf{y}$ whereas we need it to hold for an *infinite* number of vectors.
 
@@ -112,7 +112,7 @@ If we can prove the subspace embedding theorem, the following corollary will fol
 If we choose $\mathbf{\Pi}$ and properly scale, then with $O(d/\epsilon^2)$ rows,
 $$
 (1-\epsilon) \| \mathbf{Ax - b} \|_2^2
-\leq \| \mathbf{\Pi} \mathbf{Ax - \Pi b} \|_2^2
+\leq \| \mathbf{\Pi A x} - \mathbf{\Pi b} \|_2^2
 \leq (1+\epsilon) \| \mathbf{Ax - b} \|_2^2
 $$
 for all $\mathbf{x}$ and therefore
@@ -126,7 +126,7 @@ Every vector $\mathbf{A x -b}$ lies in this space.
 
 The first observation in proving the subspace embedding theorem is that it suffices to prove it for all vectors $\mathbf{w}$ on the unit sphere in $\mathcal{U}$.
 This observation follows from linearity:
-Any point $\mathbf{v} \in \mathcal{U}$ can be written as $c \mathbf{w}$ for some sclar $c$ and some point $\mathbf{w}$ the sphere
+Any point $\mathbf{v} \in \mathcal{U}$ can be written as $c \mathbf{w}$ for some scalar $c$ and some point $\mathbf{w}$ on the sphere
 $S_{\mathcal{U}} = \{ \mathbf{w} \in \mathcal{U} : \| \mathbf{w} \|_2 = 1 \}$.
 If 
 \begin{align*}
@@ -147,7 +147,7 @@ and therefore
 \leq (1+\epsilon) \| c \mathbf{w} \|_2.
 \end{align*}
 
-Now that we have restricted our problem to proving the theorem on the unit sphere, our intuiton is that there are not too many "different" points on a $d$-dimensional sphere.
+Now that we have restricted our problem to proving the theorem on the unit sphere, our intuition is that there are not too many "different" points on a $d$-dimensional sphere.
 
 <p align="center">
 <img src="images/epsilon_net.png" width="200px">
@@ -163,15 +163,17 @@ If we can prove that
 for all points $\mathbf{w} \in \mathcal{N}_\epsilon$, we can hopefully extend the result to all points on the sphere.
 
 **Lemma (Epsilon Net):**
-For any $\epsilon \leq 1$, there exists a set $\mathcal{N}_\epsilon \subset S_\mathcal{U}$ with $| \mathcal{N}_\epsilon | \leq \left( \frac{4}{\epsilon} \right)^d$ such that for all $\mathbf{v} \in \mathcal{S}$,
+For any $\epsilon \leq 1$, there exists a set $\mathcal{N}_\epsilon \subset S_\mathcal{U}$ with $| \mathcal{N}_\epsilon | \leq \left( \frac{3}{\epsilon} \right)^d$ such that for all $\mathbf{v} \in S_\mathcal{U}$,
 $$
 \min_{\mathbf{w} \in \mathcal{N}_\epsilon} \| \mathbf{v} - \mathbf{w} \|_2 \leq \epsilon.
 $$
 
-**Proof:**
+::: {.proof-block}
+<details open>
+<summary>Proof</summary>
 
 We will construct the $\epsilon$-net by a greedy algorithm.
-Initially, the epsilon $\mathcal{N}_\epsilon$ is empty.
+Initially, the $\epsilon$-net $\mathcal{N}_\epsilon$ is empty.
 While there is a point $\mathbf{v}$ on the sphere that is not within $\epsilon$ of any point in $\mathcal{N}_\epsilon$, we will add $\mathbf{v}$ to $\mathcal{N}_\epsilon$.
 After running the algorithm, we will have a set $\mathcal{N}_\epsilon$ such that
 $$
@@ -203,10 +205,12 @@ Because all the small balls are non-overlapping and live in the larger ball, we 
 &\leq \frac{(1+\frac{\epsilon}{2})^d}{(\frac{\epsilon}{2})^d} \leq \left( \frac{3}{\epsilon} \right)^d
 \end{align*}
 
+</details>
+:::
+
 With this claim in hand,
 we will first consider how to preserve the norms of all points in the net $\mathcal{N}_\epsilon$.
-Set $\delta' = \frac1{|\mathcal{N}_\epsilon|} \delta
-= \left(\frac{\epsilon}{4} \right)^d \delta$.
+To ensure the bound holds for all points in the net, we require a failure probability of at most $\delta / |\mathcal{N}_\epsilon|$ per point. Since $| \mathcal{N}_\epsilon | \leq \left( \frac{3}{\epsilon} \right)^d$, we can set $\delta' = \left(\frac{\epsilon}{3} \right)^d \delta$.
 As long as $\mathbf{\Pi}$ has 
 
 $$O \left( \frac{\log(1/\delta')}{\epsilon^2} \right) = 
@@ -217,10 +221,16 @@ $$
 \leq \| \mathbf{\Pi} \mathbf{w} \|_2^2
 \leq (1+\epsilon) \| \mathbf{w} \|_2^2
 $$
-for all $\mathbf{w} \in \mathcal{N}_\epsilon$ with probability $1-\delta$.
+for all $\mathbf{w} \in \mathcal{N}_\epsilon$ with probability $1-\delta$. 
+Taking the square root and adjusting $\epsilon$ by a constant factor, we can assume this implies a bound on the standard norm:
+$$
+(1-\epsilon) \| \mathbf{w} \|_2
+\leq \| \mathbf{\Pi} \mathbf{w} \|_2
+\leq (1+\epsilon) \| \mathbf{w} \|_2
+$$
 
 Next, we will extend the result to all points on the sphere.
-For some set of points in the net $\mathbf{w}_0, \mathbf{w}_1, \mathbf{w}_2, \ldots, \in \mathcal{N}_\epsilon$, any point on the sphere $\mathbf{v} \in S_\mathcal{U}$ can be written as
+For some set of points in the net $\mathbf{w}_0, \mathbf{w}_1, \mathbf{w}_2, \ldots \in \mathcal{N}_\epsilon$, any point on the sphere $\mathbf{v} \in S_\mathcal{U}$ can be written as
 $$
 \mathbf{v} = \mathbf{w}_0 + c_1 \mathbf{w}_1 + c_2 \mathbf{w}_2 + \ldots
 $$
@@ -229,7 +239,7 @@ for constants $c_1, c_2, \ldots$ where $|c_i| \leq \epsilon^i$.
 We can prove this through a greedy construction and the $\epsilon$-net property.
 \begin{align*}
 \mathbf{w}_0 &= \arg \min_{\mathbf{w} \in \mathcal{N}_\epsilon} \| \mathbf{v} - \mathbf{w} \|_2
-\qquad \mathbf{r}_0 = \mathbf{v} - \mathbf{w}_0 \qquad c_1 = \| \mathbf{r_0} \|_2 \\
+\qquad \mathbf{r}_0 = \mathbf{v} - \mathbf{w}_0 \qquad c_1 = \| \mathbf{r}_0 \|_2 \\
 \mathbf{w}_1 &= \arg \min_{\mathbf{w} \in \mathcal{N}_\epsilon} \| \frac{\mathbf{r}_0}{c_1} - \mathbf{w} \|_2
 \qquad \mathbf{r}_1 = \mathbf{v} - \mathbf{w}_0 - c_1 \mathbf{w}_1 
 \qquad c_2 = \| \mathbf{r}_1 \|_2  \\
@@ -274,9 +284,11 @@ By repeatedly applying this inequality, we have that
 \| \mathbf{\Pi w}_0 + c_1 \mathbf{\Pi w}_1 + c_2 \mathbf{\Pi w}_2 + \ldots \|_2 \\
 &\geq \| \mathbf{\Pi w}_0 \|_2 - c_1 \| \mathbf{\Pi w}_1 \|_2 - c_2 \| \mathbf{\Pi w}_2 \|_2 - \ldots \\
 &\geq \| \mathbf{\Pi w}_0 \|_2 - \epsilon \| \mathbf{\Pi w}_1 \|_2 - \epsilon^2 \| \mathbf{\Pi w}_2 \|_2 - \ldots \\
-&\geq (1-\epsilon) \| \mathbf{w}_0 \|_2 - \epsilon (1-\epsilon) \| \mathbf{w}_1 \|_2 - \epsilon^2 (1-\epsilon) \| \mathbf{w}_2 \|_2 - \ldots \\
-&= 1 - 2 \epsilon + 2 \epsilon^2 - 2 \epsilon^3 \ldots \\
-&\geq \frac{1}{1+2\epsilon} \geq 1 - 4\epsilon.
+&\geq (1-\epsilon) \| \mathbf{w}_0 \|_2 - \epsilon (1+\epsilon) \| \mathbf{w}_1 \|_2 - \epsilon^2 (1+\epsilon) \| \mathbf{w}_2 \|_2 - \ldots \\
+&= (1-\epsilon) - (1+\epsilon)(\epsilon + \epsilon^2 + \epsilon^3 + \ldots) \\
+&= (1-\epsilon) - (1+\epsilon)\frac{\epsilon}{1-\epsilon} \\
+&= \frac{1 - 3\epsilon}{1-\epsilon} \\
+&\geq 1 - 4\epsilon.
 \end{align*}
 
 So we have proven that
@@ -287,4 +299,3 @@ So we have proven that
 \end{align*}
 for all vectors $\mathbf{v}$ on the sphere.
 Adjusting $\epsilon$ gives the subspace embedding theorem.
-
