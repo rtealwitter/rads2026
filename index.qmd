@@ -143,7 +143,7 @@ output:
     <td><a href="notes/17_sketched_regression.html">Sketched Regression</a></td>
     <td><a href="notes/17_sketched_regression.html">Sketched Regression</a></td>
     <td><a href="slides/Week13.pdf">Slides</a></td>
-    <td></td>
+    <td><a href="https://colab.research.google.com/drive/19zPXyyDEFFtQ04rdEqAKh5Osd2ybwI1S?usp=sharing">Problem 19</a></td>
   </tr>
   <tr>
     <td>Week 14 (4/21 and 4/23)</td>
