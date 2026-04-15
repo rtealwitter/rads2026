@@ -206,7 +206,7 @@ window.Quarto = {
 \]</span></p>
 <p>We will prove the theorem using an <span class="math inline">\(\epsilon\)</span>-net argument. The technique is a popular approach for applying our standard concentration inequality and union bound argument to an infinite number of events. While the result we consider today is interesting, our real motivation is to explore this kind of argument because it appears in many other contexts in theoretical computer science and machine learning.</p>
 <p>In order to prove the theorem, we will prove the following claim.</p>
-<p><strong>Claim:</strong> For all <span class="math inline">\(\mathbf{x} \in \mathbb{R}^d\)</span>, <span class="math display">\[\begin{align*}
+<p><strong>Claim:</strong> Under the same conditions as the theorem, for all <span class="math inline">\(\mathbf{x} \in \mathbb{R}^d\)</span>, <span class="math display">\[\begin{align*}
 (1-\epsilon) \| \mathbf{A} \mathbf{x} - \mathbf{b} \|_2^2
 \leq \| \mathbf{\Pi} \mathbf{A} \mathbf{x} - \mathbf{\Pi} \mathbf{b} \|_2^2
 \leq (1+\epsilon) \| \mathbf{A} \mathbf{x} - \mathbf{b} \|_2^2.

@@ -59,7 +59,7 @@ it appears in many other contexts in theoretical computer science and machine le
 In order to prove the theorem, we will prove the following claim.
 
 **Claim:**
-For all $\mathbf{x} \in \mathbb{R}^d$,
+Under the same conditions as the theorem, for all $\mathbf{x} \in \mathbb{R}^d$,
 \begin{align*}
 (1-\epsilon) \| \mathbf{A} \mathbf{x} - \mathbf{b} \|_2^2
 \leq \| \mathbf{\Pi} \mathbf{A} \mathbf{x} - \mathbf{\Pi} \mathbf{b} \|_2^2
