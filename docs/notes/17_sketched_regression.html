@@ -293,24 +293,24 @@ O \left( \frac{d \log(1/\epsilon) + \log(1/\delta)}{\epsilon^2} \right)\]</span>
 \]</span></p>
 <p>Next, we will extend the result to all points on the sphere. For some set of points in the net <span class="math inline">\(\mathbf{w}_0, \mathbf{w}_1, \mathbf{w}_2, \ldots \in \mathcal{N}_\epsilon\)</span>, any point on the sphere <span class="math inline">\(\mathbf{v} \in S_\mathcal{U}\)</span> can be written as <span class="math display">\[
 \mathbf{v} = \mathbf{w}_0 + c_1 \mathbf{w}_1 + c_2 \mathbf{w}_2 + \ldots
-\]</span> for constants <span class="math inline">\(c_1, c_2, \ldots\)</span> where <span class="math inline">\(|c_i| \leq \epsilon^i\)</span>.</p>
+\]</span> for constants <span class="math inline">\(c_1, c_2, \ldots\)</span> where <span class="math inline">\(|c_\ell| \leq \epsilon^\ell\)</span>.</p>
 <p>We can prove this through a greedy construction and the <span class="math inline">\(\epsilon\)</span>-net property. <span class="math display">\[\begin{align*}
 \mathbf{w}_0 &amp;= \arg \min_{\mathbf{w} \in \mathcal{N}_\epsilon} \| \mathbf{v} - \mathbf{w} \|_2
-\qquad \mathbf{r}_0 = \mathbf{v} - \mathbf{w}_0 \qquad c_1 = \| \mathbf{r}_0 \|_2 \\
-\mathbf{w}_1 &amp;= \arg \min_{\mathbf{w} \in \mathcal{N}_\epsilon} \| \frac{\mathbf{r}_0}{c_1} - \mathbf{w} \|_2
-\qquad \mathbf{r}_1 = \mathbf{v} - \mathbf{w}_0 - c_1 \mathbf{w}_1
-\qquad c_2 = \| \mathbf{r}_1 \|_2  \\
-\mathbf{w}_2 &amp;= \arg \min_{\mathbf{w} \in \mathcal{N}_\epsilon} \| \frac{\mathbf{r}_1}{c_2} - \mathbf{w} \|_2
-\qquad \mathbf{r}_2 = \mathbf{v} - \mathbf{w}_0 - c_1 \mathbf{w}_1 - c_2 \mathbf{w}_2
-\qquad c_3 = \| \mathbf{r}_2 \|_2 \\
+\qquad \mathbf{r}_1 = \mathbf{v} - \mathbf{w}_0 \qquad c_1 = \| \mathbf{r}_1 \|_2 \\
+\mathbf{w}_1 &amp;= \arg \min_{\mathbf{w} \in \mathcal{N}_\epsilon} \| \frac{\mathbf{r}_1}{c_1} - \mathbf{w} \|_2
+\qquad \mathbf{r}_2 = \mathbf{v} - \mathbf{w}_0 - c_1 \mathbf{w}_1
+\qquad c_2 = \| \mathbf{r}_2 \|_2  \\
+\mathbf{w}_2 &amp;= \arg \min_{\mathbf{w} \in \mathcal{N}_\epsilon} \| \frac{\mathbf{r}_2}{c_2} - \mathbf{w} \|_2
+\qquad \mathbf{r}_3 = \mathbf{v} - \mathbf{w}_0 - c_1 \mathbf{w}_1 - c_2 \mathbf{w}_2
+\qquad c_3 = \| \mathbf{r}_3 \|_2 \\
 &amp;\vdots
-\end{align*}\]</span> We will inductively prove that <span class="math inline">\(\| \mathbf{r}_i \|_2 \leq \epsilon^i\)</span>. To see this, observe that <span class="math display">\[\begin{align*}
-\left\| \frac{\mathbf{r}_{i-1}}{c_{i}} - \mathbf{w}_i \right\|_2
+\end{align*}\]</span> We will inductively prove that <span class="math inline">\(\| \mathbf{r}_\ell \|_2 \leq \epsilon^\ell\)</span>. To see this, observe that <span class="math display">\[\begin{align*}
+\left\| \frac{\mathbf{r}_{\ell}}{c_{\ell}} - \mathbf{w}_\ell \right\|_2
 \leq \epsilon
-\end{align*}\]</span> by the property of the <span class="math inline">\(\epsilon\)</span>-net. Multiplying by <span class="math inline">\(\| \mathbf{r}_{i-1} \|_2\)</span> gives <span class="math display">\[\begin{align*}
-\| \mathbf{r}_i \|_2 =
-\| \mathbf{r}_{i-1} - c_i \mathbf{w}_i \|_2
-\leq \epsilon c_i = \epsilon \| \mathbf{r}_{i-1} \|_2
+\end{align*}\]</span> by the property of the <span class="math inline">\(\epsilon\)</span>-net. Multiplying by <span class="math inline">\(|c_\ell|\)</span> gives <span class="math display">\[\begin{align*}
+\| \mathbf{r}_\ell \|_2 =
+\| \mathbf{r}_{\ell} - c_\ell \mathbf{w}_\ell \|_2
+\leq \epsilon c_\ell = \epsilon \| \mathbf{r}_{\ell-1} \|_2
 \end{align*}\]</span> The inductive claim follows.</p>
 <p>Applying triangle inequality, we have that <span class="math display">\[\begin{align*}
 \| \mathbf{\Pi v} \|_2 &amp;=

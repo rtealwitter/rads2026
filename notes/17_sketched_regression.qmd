@@ -218,32 +218,32 @@ For some set of points in the net $\mathbf{w}_0, \mathbf{w}_1, \mathbf{w}_2, \ld
 $$
 \mathbf{v} = \mathbf{w}_0 + c_1 \mathbf{w}_1 + c_2 \mathbf{w}_2 + \ldots
 $$
-for constants $c_1, c_2, \ldots$ where $|c_i| \leq \epsilon^i$.
+for constants $c_1, c_2, \ldots$ where $|c_\ell| \leq \epsilon^\ell$.
 
 We can prove this through a greedy construction and the $\epsilon$-net property.
 \begin{align*}
 \mathbf{w}_0 &= \arg \min_{\mathbf{w} \in \mathcal{N}_\epsilon} \| \mathbf{v} - \mathbf{w} \|_2
-\qquad \mathbf{r}_0 = \mathbf{v} - \mathbf{w}_0 \qquad c_1 = \| \mathbf{r}_0 \|_2 \\
-\mathbf{w}_1 &= \arg \min_{\mathbf{w} \in \mathcal{N}_\epsilon} \| \frac{\mathbf{r}_0}{c_1} - \mathbf{w} \|_2
-\qquad \mathbf{r}_1 = \mathbf{v} - \mathbf{w}_0 - c_1 \mathbf{w}_1 
-\qquad c_2 = \| \mathbf{r}_1 \|_2  \\
-\mathbf{w}_2 &= \arg \min_{\mathbf{w} \in \mathcal{N}_\epsilon} \| \frac{\mathbf{r}_1}{c_2} - \mathbf{w} \|_2
-\qquad \mathbf{r}_2 = \mathbf{v} - \mathbf{w}_0 - c_1 \mathbf{w}_1 - c_2 \mathbf{w}_2
-\qquad c_3 = \| \mathbf{r}_2 \|_2 \\
+\qquad \mathbf{r}_1 = \mathbf{v} - \mathbf{w}_0 \qquad c_1 = \| \mathbf{r}_1 \|_2 \\
+\mathbf{w}_1 &= \arg \min_{\mathbf{w} \in \mathcal{N}_\epsilon} \| \frac{\mathbf{r}_1}{c_1} - \mathbf{w} \|_2
+\qquad \mathbf{r}_2 = \mathbf{v} - \mathbf{w}_0 - c_1 \mathbf{w}_1 
+\qquad c_2 = \| \mathbf{r}_2 \|_2  \\
+\mathbf{w}_2 &= \arg \min_{\mathbf{w} \in \mathcal{N}_\epsilon} \| \frac{\mathbf{r}_2}{c_2} - \mathbf{w} \|_2
+\qquad \mathbf{r}_3 = \mathbf{v} - \mathbf{w}_0 - c_1 \mathbf{w}_1 - c_2 \mathbf{w}_2
+\qquad c_3 = \| \mathbf{r}_3 \|_2 \\
 &\vdots
 \end{align*}
-We will inductively prove that $\| \mathbf{r}_i \|_2 \leq \epsilon^i$.
+We will inductively prove that $\| \mathbf{r}_\ell \|_2 \leq \epsilon^\ell$.
 To see this, observe that
 \begin{align*}
-\left\| \frac{\mathbf{r}_{i-1}}{c_{i}} - \mathbf{w}_i \right\|_2
+\left\| \frac{\mathbf{r}_{\ell}}{c_{\ell}} - \mathbf{w}_\ell \right\|_2
 \leq \epsilon
 \end{align*}
 by the property of the $\epsilon$-net.
-Multiplying by $\| \mathbf{r}_{i-1} \|_2$ gives
+Multiplying by $|c_\ell|$ gives
 \begin{align*}
-\| \mathbf{r}_i \|_2 =
-\| \mathbf{r}_{i-1} - c_i \mathbf{w}_i \|_2
-\leq \epsilon c_i = \epsilon \| \mathbf{r}_{i-1} \|_2
+\| \mathbf{r}_\ell \|_2 =
+\| \mathbf{r}_{\ell} - c_\ell \mathbf{w}_\ell \|_2
+\leq \epsilon c_\ell = \epsilon \| \mathbf{r}_{\ell-1} \|_2
 \end{align*}
 The inductive claim follows.
 
