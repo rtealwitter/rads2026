@@ -143,14 +143,14 @@ output:
     <td><a href="notes/17_sketched_regression.html">Sketched Regression</a></td>
     <td><a href="notes/17_sketched_regression.html">Sketched Regression</a></td>
     <td><a href="slides/Week13.pdf">Slides</a></td>
-    <td><a href="https://colab.research.google.com/drive/19zPXyyDEFFtQ04rdEqAKh5Osd2ybwI1S?usp=sharing">Problem 19</a>,<a href="https://colab.research.google.com/drive/19Sy6yMog6Uyg_LBcSoLVjJpgErXq9GrF?usp=sharing">Problem 20</a></td>
+    <td><a href="https://colab.research.google.com/drive/19zPXyyDEFFtQ04rdEqAKh5Osd2ybwI1S?usp=sharing">Problem 19</a>, <a href="https://colab.research.google.com/drive/19Sy6yMog6Uyg_LBcSoLVjJpgErXq9GrF?usp=sharing">Problem 20</a></td>
   </tr>
   <tr>
     <td>Week 14 (4/21 and 4/23)</td>
     <td><i>Project/Exam Preparation</i></td>
     <td><i>Midterm Exam</i></td>
     <td></td>
-    <td></td>
+    <td><a href="project/proposal.pdf">Project Proposal</a> (<a href="project/proposal.tex">TeX</a>)</td>
   </tr>
   <tr>
     <td>Week 15 (4/28 and 4/30)</td>
@@ -164,7 +164,7 @@ output:
     <td><a href="">TurboQuant</a></td>
     <td><i>Reading Day (No Class)</i></td>
     <td></td>
-    <td></td>
+    <td><a href="project/project.pdf">Final Project</a> (<a href="project/project.tex">TeX</a>)</td>
   </tr>
   <tr>
     <td>Week 17 (5/12 and 5/14)</td>
