@@ -157,7 +157,7 @@ output:
     <td><a href="notes/18_fast_jl_transform.html">Fast JL Transform</a></td>
     <td><a href="notes/explainable_ai.html">Explainable AI</a></td>
     <td><a href="slides/Week15.pdf">Slides</a></td>
-    <td></td>
+    <td><a href="https://colab.research.google.com/drive/1W2OZ-UWNjreSrctrVbRIce-wItRvGSBZ?usp=sharing">Problem 21</a></td>
   </tr>
   <tr>
     <td>Week 16 (5/5 and 5/7)</td>
