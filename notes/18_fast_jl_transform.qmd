@@ -21,19 +21,13 @@ $$
 \tilde{\mathbf{x}} = \arg\min_{\mathbf{x} \in \mathbb{R}^m} \|\mathbf{\Pi Ax} - \mathbf{\Pi b}\|_2^2.
 $$
 It would take $O(md^2)$ time to compute the solution 
-$\tilde{\mathbf{x}}=(\mathbf{\Pi A}^\top \mathbf{\Pi A})^{-1} \mathbf{\Pi A}^\top \mathbf{\Pi b}$
+$\tilde{\mathbf{x}}=((\mathbf{\Pi A})^\top \mathbf{\Pi A})^{-1} (\mathbf{\Pi A})^\top \mathbf{\Pi b}$
 or $O(md)\cdot(\# \text{iterations})$ time to compute the solution iteratively.
 
 But even computing $\mathbf{\Pi A}$ is expensive.
 Since $\mathbf{\Pi}$ is $m \times n$ and $\mathbf{A}$ is $n \times d$, it would take $O(mnd)=O(nd^2)$ time to compute the matrix product $\mathbf{\Pi A}$.
 
-Our goal today is to develop faster Johnson-Lindenstrauss projections.
-
-<p align="center">
-<img src="images/sparseJL.png" width="200px">
-</p>
-
-Typically, we use sparse or structured matrices instead of fully random JL matrices because they are faster to compute.
+Our goal today is to develop faster Johnson-Lindenstrauss projections. Typically, we use sparse or structured matrices instead of fully random JL matrices because they are faster to compute.
 
 We will develop a method that reduces a vector $\mathbf{x} \in \mathbb{R}^n$ down to $m \approx \frac{\log(1/\delta)}{\epsilon^2}$ dimensions in roughly $O(n \log n)$ time and guarantee that
 $$
@@ -46,7 +40,7 @@ Let $\mathbf{S} \in \mathbb{R}^{m \times n}$ be a random sampling matrix.
 Every row contains a value $s=\sqrt{n/m}$ in a single location and is zero everywhere else.
 
 <p align="center">
-<img src="images/subsampling.png" width="200px">
+<img src="images/subsampling.png" width="400px">
 </p>
 
 If we take $m$ samples, then $\tilde{\mathbf{x}} = \mathbf{Sx}$ is a random projection that can be computed in $O(m)$ time.
@@ -54,11 +48,11 @@ But, there's an issue.
 The approach only works well if $\mathbf{x}$ is "flat".
 
 <p align="center">
-<img src="images/uniform_hard.png" width="200px">
+<img src="images/uniform_hard.png" width="400px">
 </p>
 
 **Claim:**
-If $\mathbf{x}_i ^2 \leq \frac{c}{n} \| \mathbf{x} \|_2^2$ for all $i$, then
+If $x_i ^2 \leq \frac{c}{n} \| \mathbf{x} \|_2^2$ for all $i$, then
 $m = O(c \log(1/\delta) /\epsilon^2)$ samples suffice to preserve the $\ell_2$-norm within an $\epsilon$ multiplicative factor with probability $1-\delta$.
 
 The claim follows from the standard Hoeffding inequality.
@@ -82,11 +76,11 @@ $$\mathbf{\Pi x} = \mathbf{SM x}.$$
 Good mixing matrices should look random.
 In fact, for $\mathbf{Mx}$ to preserve the $\ell_2$-norm of any $\mathbf{x}$ with high probability, $\mathbf{M}$ must be a random matrix.
 
-We can see this starting from the observation that $\| \mathbf{Mx} \|_2^2 = \|\mathbf{x}\|_2^2$ so $\mathbf{M}$ must be an orthogonal matrix.
+We can see that $\mathbf{M}$ must be a random matrix from the observation that $\| \mathbf{Mx} \|_2^2 = \|\mathbf{x}\|_2^2$ (i.e., $\mathbf{M}$ is orthogonal).
 Since $\mathbf{M}$ is orthogonal, it has an inverse $\mathbf{M}^{-1}$.
 Then we can solve for an $\mathbf{x}$ such that $\mathbf{e}_1 = \mathbf{Mx}$ where $\mathbf{e}_1$ is the first standard basis vector.
 In particular, $\mathbf{x} = \mathbf{M}^{-1} \mathbf{e}_1$.
-If $\mathbf{M}$ is known in advance, we can adversarily choose $\mathbf{x}$ to give concentrated mass to the first coordinate.
+If $\mathbf{M}$ is known in advance, we can adversarially choose $\mathbf{x}$ to give concentrated mass to the first coordinate.
 Our solution is to use a random mixing matrix $\mathbf{M}$ so that, with high probability, $\mathbf{Mx}$ is flat even if $\mathbf{x}$ is not.
 
 We have argued that $\mathbf{M}$ must be a random orthogonal matrix.
@@ -140,19 +134,19 @@ We can compute $\mathbf{\Pi x} = \mathbf{S HDx}$ in $O(n \log n)$ time.
 
 Notice that
 \begin{align*}
-\mathbf{H}_kx
+\mathbf{H}_k \mathbf{x}
 &= \frac{1}{\sqrt{2}} \begin{bmatrix} \mathbf{H}_{k-1} & \mathbf{H}_{k-1} \\ \mathbf{H}_{k-1} & -\mathbf{H}_{k-1} \end{bmatrix} \begin{bmatrix} \mathbf{x}_a \\ \mathbf{x}_b \end{bmatrix} \\
 &= \frac{1}{\sqrt{2}} \begin{bmatrix} \mathbf{H}_{k-1} \mathbf{x}_a + \mathbf{H}_{k-1} \mathbf{x}_b \\ \mathbf{H}_{k-1} \mathbf{x}_a - \mathbf{H}_{k-1} \mathbf{x}_b \end{bmatrix}
 \end{align*}
 where $\mathbf{x}_a$ and $\mathbf{x}_b$ are the first and second halves of $\mathbf{x}$.
-Since we only need to compute $\mathbf{H}_{k-1} \mathbf{x}_a$ and $\mathbf{H}_{k-1} \mathbf{x}_b$ each once,$\mathbf{H}_k \mathbf{x}$ is $T(n) = 2T(n/2) + O(n) = O(n \log n)$.
+Since we only need to compute $\mathbf{H}_{k-1} \mathbf{x}_a$ and $\mathbf{H}_{k-1} \mathbf{x}_b$ each once, the time to compute $\mathbf{H}_k \mathbf{x}$ is $T(n) = 2T(n/2) + O(n) = O(n \log n)$.
 
 **Property 3**:
 The randomized Hadamard matrix $\mathbf{HD}$ is a good mixing matrix for smoothing out vectors.
 
 <p align="center">
-<img src="images/hadamard_structured.png" width="200px">
-<img src="images/hadamard_randomized.png" width="200px">
+<img src="images/hadamard_structured.png" width="300px">
+<img src="images/hadamard_randomized.png" width="300px">
 </p>
 
 The figure on the left is a Hadamard matrix $\mathbf{H}$ where blue squares are $\frac1{\sqrt{n}}$ and white squares are $-\frac1{\sqrt{n}}$.
@@ -172,13 +166,16 @@ z_i^2 \leq \frac{c \log(n/\delta)}{n} \| \mathbf{z} \|_2^2
 $$
 for all $i$ where $c$ is a universal constant.
 
-**Proof:**
+::: {.proof-block}
+<details open>
+<summary>Proof of SHRT Mixing Lemma</summary>
+
 Let $\mathbf{h}_i^\top$ be the $i$th row of $\mathbf{H}$. Then $z_i = \mathbf{h}_i^\top \mathbf{Dx}$ and
 \begin{align*}
 \mathbf{h}_i^\top \mathbf{D} = \frac{1}{\sqrt{n}} \begin{bmatrix} 1 & 1 & \cdots & - 1 & -1 \end{bmatrix}
 \begin{bmatrix} D_{1,1} \\ & D_{2,2} \\ & & \ddots \\ & & & D_{n,n} \end{bmatrix}
 \end{align*}
-where $D_{1,1}, \ldots, D_{n,n}$ are independent random variables with $D_{,j} = \pm 1$ chosen uniformly at random.
+where $D_{1,1}, \ldots, D_{n,n}$ are independent random variables with $D_{j,j} = \pm 1$ chosen uniformly at random.
 Equivalently,
 \begin{align*}
 \mathbf{h}_i^\top \mathbf{D} = \frac{1}{\sqrt{n}} \begin{bmatrix} R_1 & R_2  & \ldots & R_n \end{bmatrix}
@@ -196,9 +193,8 @@ To see this, we can write
 and, by linearity of variance,
 \begin{align*}
 \textrm{Var} \left[ z_i \right]
-= \frac{1}{n} \sum_{j=1}^n x_j^2 \textrm{Var} \left[ R_j \right] = \frac{1}{n} \sum_{i=1}^n x_i^2 = \frac{1}{n} \| \mathbf{x} \|_2^2.
+= \frac{1}{n} \sum_{j=1}^n x_j^2 \textrm{Var} \left[ R_j \right] = \frac{1}{n} \sum_{j=1}^n x_j^2 = \frac{1}{n} \| \mathbf{x} \|_2^2.
 \end{align*}
-
 
 We will apply a Bernstein type concentration inequality to prove the bound.
 
@@ -217,7 +213,7 @@ It is specialized to sums of scaled $\pm 1$'s and is a bit tighter and easier to
 
 Applying the inequality, we have, with probability $1-\delta$,
 \begin{align*}
-z_i \leq \sqrt{ \frac{c \log(n/\delta)}{n} \|} \mathbf{x} \|_2 = \sqrt{ \frac{c \log(n/\delta)}{n} \|} \mathbf{z} \|_2
+z_i \leq \sqrt{ \frac{c \log(n/\delta)}{n} } \| \mathbf{x} \|_2 = \sqrt{ \frac{c \log(n/\delta)}{n} } \| \mathbf{z} \|_2
 \end{align*}
 where the second equality follows because multiplying by $\mathbf{H}$ and $\mathbf{D}$ preserve the $\ell_2$-norm.
 As shown earlier, we can thus guarantee that
@@ -229,6 +225,9 @@ as long as $\mathbf{S} \in \mathbb{R}^{m \times n}$ is a subsampled randomized H
 We have
 $\| \mathbf{Sz} \|_2^2 = \| \mathbf{SHDx} \|_2^2 = \| \mathbf{\Pi x} \|_2^2$
 and $\| \mathbf{z} \|_2^2 = \| \mathbf{x} \|_2^2$ so we are done.
+
+</details>
+:::
 
 In words, the SHRT mixing lemma shows that the mixed vector is very close to uniform with high probability.
 As we saw earlier, we can therefore argue that
@@ -255,5 +254,4 @@ where $\text{nnz}(\mathbf{A})$ is the number of non-zero entries in $\mathbf{A}$
 The proofs use totally different techniques than the Johnson-Lindenstrauss and $\epsilon$-net arguments we used.
 
 We covered this algorithm because it is simple and easy to implement.
-The algorithm has also been used for accelerating vector dimensionality reduction, linear algebra, locality sensitive hasing, and randomized kernel learning methods.
-
+The algorithm has also been used for accelerating vector dimensionality reduction, linear algebra, locality sensitive hashing, and randomized kernel learning methods.

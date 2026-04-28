@@ -183,26 +183,22 @@ window.Quarto = {
 <p>Last class, we discussed how to speed up regression using randomization. Consider the feature matrix <span class="math inline">\(\mathbf{A} \in \mathbb{R}^{n \times d}\)</span> and target vector <span class="math inline">\(\mathbf{b} \in \mathbb{R}^n\)</span>. We wanted to find the least squares solution <span class="math display">\[\mathbf{x}^* = \arg\min_{\mathbf{x} \in \mathbb{R}^d} \|\mathbf{Ax} - \mathbf{b}\|_2^2.\]</span> But solving the problem directly is expensive: It would take <span class="math inline">\(O(nd^2)\)</span> time to compute the solution <span class="math inline">\(\mathbf{x}^*=(\mathbf{A}^\top \mathbf{A})^{-1} \mathbf{A}^\top \mathbf{b}\)</span> or <span class="math inline">\(O(nd)\cdot(\# \text{iterations})\)</span> time to compute the solution iteratively.</p>
 <p>Instead, we used a random JL matrix <span class="math inline">\(\mathbf{\Pi} \in \mathbb{R}^{m \times n}\)</span> to reduce the dimension of the problem and find <span class="math display">\[
 \tilde{\mathbf{x}} = \arg\min_{\mathbf{x} \in \mathbb{R}^m} \|\mathbf{\Pi Ax} - \mathbf{\Pi b}\|_2^2.
-\]</span> It would take <span class="math inline">\(O(md^2)\)</span> time to compute the solution <span class="math inline">\(\tilde{\mathbf{x}}=(\mathbf{\Pi A}^\top \mathbf{\Pi A})^{-1} \mathbf{\Pi A}^\top \mathbf{\Pi b}\)</span> or <span class="math inline">\(O(md)\cdot(\# \text{iterations})\)</span> time to compute the solution iteratively.</p>
+\]</span> It would take <span class="math inline">\(O(md^2)\)</span> time to compute the solution <span class="math inline">\(\tilde{\mathbf{x}}=((\mathbf{\Pi A})^\top \mathbf{\Pi A})^{-1} (\mathbf{\Pi A})^\top \mathbf{\Pi b}\)</span> or <span class="math inline">\(O(md)\cdot(\# \text{iterations})\)</span> time to compute the solution iteratively.</p>
 <p>But even computing <span class="math inline">\(\mathbf{\Pi A}\)</span> is expensive. Since <span class="math inline">\(\mathbf{\Pi}\)</span> is <span class="math inline">\(m \times n\)</span> and <span class="math inline">\(\mathbf{A}\)</span> is <span class="math inline">\(n \times d\)</span>, it would take <span class="math inline">\(O(mnd)=O(nd^2)\)</span> time to compute the matrix product <span class="math inline">\(\mathbf{\Pi A}\)</span>.</p>
-<p>Our goal today is to develop faster Johnson-Lindenstrauss projections.</p>
-<p align="center">
-<img src="images/sparseJL.png" width="200px">
-</p>
-<p>Typically, we use sparse or structured matrices instead of fully random JL matrices because they are faster to compute.</p>
+<p>Our goal today is to develop faster Johnson-Lindenstrauss projections. Typically, we use sparse or structured matrices instead of fully random JL matrices because they are faster to compute.</p>
 <p>We will develop a method that reduces a vector <span class="math inline">\(\mathbf{x} \in \mathbb{R}^n\)</span> down to <span class="math inline">\(m \approx \frac{\log(1/\delta)}{\epsilon^2}\)</span> dimensions in roughly <span class="math inline">\(O(n \log n)\)</span> time and guarantee that <span class="math display">\[
 (1-\epsilon) \|\mathbf{x}\|_2^2 \leq \|\mathbf{\Pi x}\|_2^2 \leq (1+\epsilon) \|\mathbf{x}\|_2^2.
 \]</span></p>
 <p>Recall that once this bound is proven, linearity lets us preserve quantities like <span class="math inline">\(\| \mathbf{y} - \mathbf{x} \|_2\)</span> and <span class="math inline">\(\| \mathbf{Ax} - \mathbf{b} \|_2\)</span> for all <span class="math inline">\(\mathbf{x}\)</span>.</p>
 <p>Let <span class="math inline">\(\mathbf{S} \in \mathbb{R}^{m \times n}\)</span> be a random sampling matrix. Every row contains a value <span class="math inline">\(s=\sqrt{n/m}\)</span> in a single location and is zero everywhere else.</p>
 <p align="center">
-<img src="images/subsampling.png" width="200px">
+<img src="images/subsampling.png" width="400px">
 </p>
 <p>If we take <span class="math inline">\(m\)</span> samples, then <span class="math inline">\(\tilde{\mathbf{x}} = \mathbf{Sx}\)</span> is a random projection that can be computed in <span class="math inline">\(O(m)\)</span> time. But, there’s an issue. The approach only works well if <span class="math inline">\(\mathbf{x}\)</span> is “flat”.</p>
 <p align="center">
-<img src="images/uniform_hard.png" width="200px">
+<img src="images/uniform_hard.png" width="400px">
 </p>
-<p><strong>Claim:</strong> If <span class="math inline">\(\mathbf{x}_i ^2 \leq \frac{c}{n} \| \mathbf{x} \|_2^2\)</span> for all <span class="math inline">\(i\)</span>, then <span class="math inline">\(m = O(c \log(1/\delta) /\epsilon^2)\)</span> samples suffice to preserve the <span class="math inline">\(\ell_2\)</span>-norm within an <span class="math inline">\(\epsilon\)</span> multiplicative factor with probability <span class="math inline">\(1-\delta\)</span>.</p>
+<p><strong>Claim:</strong> If <span class="math inline">\(x_i ^2 \leq \frac{c}{n} \| \mathbf{x} \|_2^2\)</span> for all <span class="math inline">\(i\)</span>, then <span class="math inline">\(m = O(c \log(1/\delta) /\epsilon^2)\)</span> samples suffice to preserve the <span class="math inline">\(\ell_2\)</span>-norm within an <span class="math inline">\(\epsilon\)</span> multiplicative factor with probability <span class="math inline">\(1-\delta\)</span>.</p>
 <p>The claim follows from the standard Hoeffding inequality.</p>
 <p>Unfortunately, we can’t guarantee that <span class="math inline">\(\mathbf{x}\)</span> is flat. However, we can multiply by a <em>mixing matrix</em> <span class="math inline">\(\mathbf{M}\)</span> which ensures it cannot be too concentrated in one place.</p>
 <p>We will show a mixing matrix <span class="math inline">\(\mathbf{M}\)</span> that satisfies the following properties:</p>
@@ -214,7 +210,7 @@ window.Quarto = {
 <p>Then we will multiply by a subsampling matrix <span class="math inline">\(\mathbf{S}\)</span> to reduce the dimension. The projection is</p>
 <p><span class="math display">\[\mathbf{\Pi x} = \mathbf{SM x}.\]</span></p>
 <p>Good mixing matrices should look random. In fact, for <span class="math inline">\(\mathbf{Mx}\)</span> to preserve the <span class="math inline">\(\ell_2\)</span>-norm of any <span class="math inline">\(\mathbf{x}\)</span> with high probability, <span class="math inline">\(\mathbf{M}\)</span> must be a random matrix.</p>
-<p>We can see this starting from the observation that <span class="math inline">\(\| \mathbf{Mx} \|_2^2 = \|\mathbf{x}\|_2^2\)</span> so <span class="math inline">\(\mathbf{M}\)</span> must be an orthogonal matrix. Since <span class="math inline">\(\mathbf{M}\)</span> is orthogonal, it has an inverse <span class="math inline">\(\mathbf{M}^{-1}\)</span>. Then we can solve for an <span class="math inline">\(\mathbf{x}\)</span> such that <span class="math inline">\(\mathbf{e}_1 = \mathbf{Mx}\)</span> where <span class="math inline">\(\mathbf{e}_1\)</span> is the first standard basis vector. In particular, <span class="math inline">\(\mathbf{x} = \mathbf{M}^{-1} \mathbf{e}_1\)</span>. If <span class="math inline">\(\mathbf{M}\)</span> is known in advance, we can adversarily choose <span class="math inline">\(\mathbf{x}\)</span> to give concentrated mass to the first coordinate. Our solution is to use a random mixing matrix <span class="math inline">\(\mathbf{M}\)</span> so that, with high probability, <span class="math inline">\(\mathbf{Mx}\)</span> is flat even if <span class="math inline">\(\mathbf{x}\)</span> is not.</p>
+<p>We can see that <span class="math inline">\(\mathbf{M}\)</span> must be a random matrix from the observation that <span class="math inline">\(\| \mathbf{Mx} \|_2^2 = \|\mathbf{x}\|_2^2\)</span> (i.e., <span class="math inline">\(\mathbf{M}\)</span> is orthogonal). Since <span class="math inline">\(\mathbf{M}\)</span> is orthogonal, it has an inverse <span class="math inline">\(\mathbf{M}^{-1}\)</span>. Then we can solve for an <span class="math inline">\(\mathbf{x}\)</span> such that <span class="math inline">\(\mathbf{e}_1 = \mathbf{Mx}\)</span> where <span class="math inline">\(\mathbf{e}_1\)</span> is the first standard basis vector. In particular, <span class="math inline">\(\mathbf{x} = \mathbf{M}^{-1} \mathbf{e}_1\)</span>. If <span class="math inline">\(\mathbf{M}\)</span> is known in advance, we can adversarially choose <span class="math inline">\(\mathbf{x}\)</span> to give concentrated mass to the first coordinate. Our solution is to use a random mixing matrix <span class="math inline">\(\mathbf{M}\)</span> so that, with high probability, <span class="math inline">\(\mathbf{Mx}\)</span> is flat even if <span class="math inline">\(\mathbf{x}\)</span> is not.</p>
 <p>We have argued that <span class="math inline">\(\mathbf{M}\)</span> must be a random orthogonal matrix. But, for our approach to work, we need to be able to compute <span class="math inline">\(\mathbf{Mx}\)</span> quickly. So we will use a <em>pseudorandom</em> matrix instead.</p>
 <p>We will use the mixing matrix <span class="math inline">\(\mathbf{M} = \mathbf{HD}\)</span> where:</p>
 <ul>
@@ -245,13 +241,13 @@ window.Quarto = {
 \end{align*}\]</span></p>
 <p><strong>Property 2:</strong> We can compute <span class="math inline">\(\mathbf{\Pi x} = \mathbf{S HDx}\)</span> in <span class="math inline">\(O(n \log n)\)</span> time.</p>
 <p>Notice that <span class="math display">\[\begin{align*}
-\mathbf{H}_kx
+\mathbf{H}_k \mathbf{x}
 &amp;= \frac{1}{\sqrt{2}} \begin{bmatrix} \mathbf{H}_{k-1} &amp; \mathbf{H}_{k-1} \\ \mathbf{H}_{k-1} &amp; -\mathbf{H}_{k-1} \end{bmatrix} \begin{bmatrix} \mathbf{x}_a \\ \mathbf{x}_b \end{bmatrix} \\
 &amp;= \frac{1}{\sqrt{2}} \begin{bmatrix} \mathbf{H}_{k-1} \mathbf{x}_a + \mathbf{H}_{k-1} \mathbf{x}_b \\ \mathbf{H}_{k-1} \mathbf{x}_a - \mathbf{H}_{k-1} \mathbf{x}_b \end{bmatrix}
-\end{align*}\]</span> where <span class="math inline">\(\mathbf{x}_a\)</span> and <span class="math inline">\(\mathbf{x}_b\)</span> are the first and second halves of <span class="math inline">\(\mathbf{x}\)</span>. Since we only need to compute <span class="math inline">\(\mathbf{H}_{k-1} \mathbf{x}_a\)</span> and <span class="math inline">\(\mathbf{H}_{k-1} \mathbf{x}_b\)</span> each once,<span class="math inline">\(\mathbf{H}_k \mathbf{x}\)</span> is <span class="math inline">\(T(n) = 2T(n/2) + O(n) = O(n \log n)\)</span>.</p>
+\end{align*}\]</span> where <span class="math inline">\(\mathbf{x}_a\)</span> and <span class="math inline">\(\mathbf{x}_b\)</span> are the first and second halves of <span class="math inline">\(\mathbf{x}\)</span>. Since we only need to compute <span class="math inline">\(\mathbf{H}_{k-1} \mathbf{x}_a\)</span> and <span class="math inline">\(\mathbf{H}_{k-1} \mathbf{x}_b\)</span> each once, the time to compute <span class="math inline">\(\mathbf{H}_k \mathbf{x}\)</span> is <span class="math inline">\(T(n) = 2T(n/2) + O(n) = O(n \log n)\)</span>.</p>
 <p><strong>Property 3</strong>: The randomized Hadamard matrix <span class="math inline">\(\mathbf{HD}\)</span> is a good mixing matrix for smoothing out vectors.</p>
 <p align="center">
-<img src="images/hadamard_structured.png" width="200px"> <img src="images/hadamard_randomized.png" width="200px">
+<img src="images/hadamard_structured.png" width="300px"> <img src="images/hadamard_randomized.png" width="300px">
 </p>
 <p>The figure on the left is a Hadamard matrix <span class="math inline">\(\mathbf{H}\)</span> where blue squares are <span class="math inline">\(\frac1{\sqrt{n}}\)</span> and white squares are <span class="math inline">\(-\frac1{\sqrt{n}}\)</span>. The figure on the right is a randomized Hadamard matrix <span class="math inline">\(\mathbf{HD}\)</span>.</p>
 <p>Pseudorandom objects like this appear all the time in computer science. For example, error correcting codes, efficient hash functions, and more.</p>
@@ -259,10 +255,15 @@ window.Quarto = {
 <p><strong>SHRT Mixing Lemma:</strong> Let <span class="math inline">\(\mathbf{H}\)</span> be an <span class="math inline">\(n \times n\)</span> Hadamard matrix and <span class="math inline">\(\mathbf{D}\)</span> be an <span class="math inline">\(n \times n\)</span> diagonal matrix with <span class="math inline">\(D_{i,i} = \pm 1\)</span> chosen uniformly at random. For any <span class="math inline">\(\mathbf{x} \in \mathbb{R}^n\)</span>, let <span class="math inline">\(\mathbf{z} = \mathbf{HDx}\)</span>. Then, with probability at least <span class="math inline">\(1-\delta\)</span>, we have <span class="math display">\[
 z_i^2 \leq \frac{c \log(n/\delta)}{n} \| \mathbf{z} \|_2^2
 \]</span> for all <span class="math inline">\(i\)</span> where <span class="math inline">\(c\)</span> is a universal constant.</p>
-<p><strong>Proof:</strong> Let <span class="math inline">\(\mathbf{h}_i^\top\)</span> be the <span class="math inline">\(i\)</span>th row of <span class="math inline">\(\mathbf{H}\)</span>. Then <span class="math inline">\(z_i = \mathbf{h}_i^\top \mathbf{Dx}\)</span> and <span class="math display">\[\begin{align*}
+<div class="proof-block">
+<details open="">
+<summary>
+Proof of SHRT Mixing Lemma
+</summary>
+<p>Let <span class="math inline">\(\mathbf{h}_i^\top\)</span> be the <span class="math inline">\(i\)</span>th row of <span class="math inline">\(\mathbf{H}\)</span>. Then <span class="math inline">\(z_i = \mathbf{h}_i^\top \mathbf{Dx}\)</span> and <span class="math display">\[\begin{align*}
 \mathbf{h}_i^\top \mathbf{D} = \frac{1}{\sqrt{n}} \begin{bmatrix} 1 &amp; 1 &amp; \cdots &amp; - 1 &amp; -1 \end{bmatrix}
 \begin{bmatrix} D_{1,1} \\ &amp; D_{2,2} \\ &amp; &amp; \ddots \\ &amp; &amp; &amp; D_{n,n} \end{bmatrix}
-\end{align*}\]</span> where <span class="math inline">\(D_{1,1}, \ldots, D_{n,n}\)</span> are independent random variables with <span class="math inline">\(D_{,j} = \pm 1\)</span> chosen uniformly at random. Equivalently, <span class="math display">\[\begin{align*}
+\end{align*}\]</span> where <span class="math inline">\(D_{1,1}, \ldots, D_{n,n}\)</span> are independent random variables with <span class="math inline">\(D_{j,j} = \pm 1\)</span> chosen uniformly at random. Equivalently, <span class="math display">\[\begin{align*}
 \mathbf{h}_i^\top \mathbf{D} = \frac{1}{\sqrt{n}} \begin{bmatrix} R_1 &amp; R_2  &amp; \ldots &amp; R_n \end{bmatrix}
 \end{align*}\]</span> where <span class="math inline">\(R_1, \ldots, R_n\)</span> are independent random variables with <span class="math inline">\(R_j = \pm 1\)</span> chosen uniformly at random. Then <span class="math inline">\(z_i = \frac{1}{\sqrt{n}} \sum_{j=1}^n R_j x_j\)</span>. Notice that <span class="math inline">\(z_i\)</span> is a random variable with mean 0 and variance <span class="math inline">\(\frac{1}{n} \| \mathbf{x} \|_2^2\)</span>.</p>
 <p>To see this, we can write <span class="math display">\[\begin{align*}
@@ -270,7 +271,7 @@ z_i^2 \leq \frac{c \log(n/\delta)}{n} \| \mathbf{z} \|_2^2
 = \frac{1}{\sqrt{n}} \sum_{j=1}^n x_j \mathbb{E} \left[ R_j \right] = 0
 \end{align*}\]</span> and, by linearity of variance, <span class="math display">\[\begin{align*}
 \textrm{Var} \left[ z_i \right]
-= \frac{1}{n} \sum_{j=1}^n x_j^2 \textrm{Var} \left[ R_j \right] = \frac{1}{n} \sum_{i=1}^n x_i^2 = \frac{1}{n} \| \mathbf{x} \|_2^2.
+= \frac{1}{n} \sum_{j=1}^n x_j^2 \textrm{Var} \left[ R_j \right] = \frac{1}{n} \sum_{j=1}^n x_j^2 = \frac{1}{n} \| \mathbf{x} \|_2^2.
 \end{align*}\]</span></p>
 <p>We will apply a Bernstein type concentration inequality to prove the bound.</p>
 <p><strong>Rademacher Concentration:</strong> Let <span class="math inline">\(R_1, \ldots, R_n\)</span> be independent random variables with <span class="math inline">\(R_j = \pm 1\)</span> chosen uniformly at random. Then, for any <span class="math inline">\(t &gt; 0\)</span> and vector <span class="math inline">\(\mathbf{a} \in \mathbb{R}^n\)</span>, we have <span class="math display">\[
@@ -281,11 +282,13 @@ z_i^2 \leq \frac{c \log(n/\delta)}{n} \| \mathbf{z} \|_2^2
 \]</span></p>
 <p>This inequality is called the Khintchine inequality. It is specialized to sums of scaled <span class="math inline">\(\pm 1\)</span>’s and is a bit tighter and easier to apply than the generic Bernstein bound.</p>
 <p>Applying the inequality, we have, with probability <span class="math inline">\(1-\delta\)</span>, <span class="math display">\[\begin{align*}
-z_i \leq \sqrt{ \frac{c \log(n/\delta)}{n} \|} \mathbf{x} \|_2 = \sqrt{ \frac{c \log(n/\delta)}{n} \|} \mathbf{z} \|_2
+z_i \leq \sqrt{ \frac{c \log(n/\delta)}{n} } \| \mathbf{x} \|_2 = \sqrt{ \frac{c \log(n/\delta)}{n} } \| \mathbf{z} \|_2
 \end{align*}\]</span> where the second equality follows because multiplying by <span class="math inline">\(\mathbf{H}\)</span> and <span class="math inline">\(\mathbf{D}\)</span> preserve the <span class="math inline">\(\ell_2\)</span>-norm. As shown earlier, we can thus guarantee that <span class="math display">\[
 (1-\epsilon) \| \mathbf{z} \|_2^2 \leq \| \mathbf{Sz} \|_2^2 \leq (1+\epsilon) \| \mathbf{z} \|_2^2
 \]</span> as long as <span class="math inline">\(\mathbf{S} \in \mathbb{R}^{m \times n}\)</span> is a subsampled randomized Hadamard transform with <span class="math inline">\(m = O\left(\frac{\log(n/\delta) \log(1/\delta)}{\epsilon^2}\right)\)</span>.</p>
 <p>We have <span class="math inline">\(\| \mathbf{Sz} \|_2^2 = \| \mathbf{SHDx} \|_2^2 = \| \mathbf{\Pi x} \|_2^2\)</span> and <span class="math inline">\(\| \mathbf{z} \|_2^2 = \| \mathbf{x} \|_2^2\)</span> so we are done.</p>
+</details>
+</div>
 <p>In words, the SHRT mixing lemma shows that the mixed vector is very close to uniform with high probability. As we saw earlier, we can therefore argue that <span class="math inline">\(\| \mathbf{S z} \|_2^2 \approx \| \mathbf{z} \|_2^2.\)</span></p>
 <p>The main result then follows directly from our sampling result.</p>
 <p><strong>Fast JL Lemma:</strong> Let <span class="math inline">\(\mathbf{\Pi} = \mathbf{SHD} \in \mathbb{R}^{m \times n}\)</span> be a subsampled randomized Hadamard transform with <span class="math inline">\(m = O\left(\frac{\log(n/\delta) \log(1/\delta)}{\epsilon^2}\right)\)</span>. Then, for any fixed <span class="math inline">\(\mathbf{x}\)</span>, we have <span class="math display">\[
@@ -293,7 +296,7 @@ z_i \leq \sqrt{ \frac{c \log(n/\delta)}{n} \|} \mathbf{x} \|_2 = \sqrt{ \frac{c 
 \]</span> with probability <span class="math inline">\(1-\delta\)</span>.</p>
 <p>We can apply the theorem to regression. We compute <span class="math inline">\(\mathbf{\Pi A}\)</span> in <span class="math inline">\(O(nd \log n)\)</span> time instead of <span class="math inline">\(O(nd^2)\)</span> time. This is because there are <span class="math inline">\(d\)</span> columns and each column can be computed in <span class="math inline">\(O(n \log n)\)</span> time. The result is quite impressive because there are only <span class="math inline">\(O(nd)\)</span> entries in <span class="math inline">\(\mathbf{A}\)</span> so the projection is nearly linear.</p>
 <p>However, we may want to go faster when <span class="math inline">\(\mathbf{A}\)</span> is sparse. For this setting, Clarkson and Woodruff in 2013 <a href="https://arxiv.org/abs/1207.6365">showed</a> that we can compute <span class="math inline">\(\mathbf{\Pi A}\)</span> with an ultra-sparse matrix in <span class="math inline">\(O(\text{nnz}(\mathbf{A}))\)</span> time where <span class="math inline">\(\text{nnz}(\mathbf{A})\)</span> is the number of non-zero entries in <span class="math inline">\(\mathbf{A}\)</span>. The proofs use totally different techniques than the Johnson-Lindenstrauss and <span class="math inline">\(\epsilon\)</span>-net arguments we used.</p>
-<p>We covered this algorithm because it is simple and easy to implement. The algorithm has also been used for accelerating vector dimensionality reduction, linear algebra, locality sensitive hasing, and randomized kernel learning methods.</p>
+<p>We covered this algorithm because it is simple and easy to implement. The algorithm has also been used for accelerating vector dimensionality reduction, linear algebra, locality sensitive hashing, and randomized kernel learning methods.</p>
 
 
 
