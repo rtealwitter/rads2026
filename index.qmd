@@ -169,7 +169,7 @@ output:
   <tr>
     <td>Week 17 (5/12 and 5/14)</td>
     <td><i>Finals (No Class)</i></td>
-    <td><i>Project Presentation 2-5pm</i></td>
+    <td><i>Project Presentation 2-5pm on Friday 5/15</i></td>
     <td></td>
     <td></td>
   </tr>
