@@ -7,8 +7,7 @@ format:
     include-after-body: readtime.html
 ---
 
-In this course, we have explored how machine learning can be used to solve tasks, from supervised learning with linear models to reinforcement learning with neural networks.
-The approaches we've discussed, especially when we throw lots of compute and data at them, tend to work very well in practice.
+Machine learning models are increasingly being deployed in high-stakes settings, from healthcare to criminal justice.
 However, as these models are deployed in the real world, it becomes increasingly important to understand their behavior.
 Today, we'll explore one way to gain insights into model behavior.
 
@@ -117,7 +116,7 @@ $$
 = \phi_i,
 $$
 where the second equality follows by the linearity of expectation, and the last equality follows because the expectation of an indicator random variable is the probability that the indicator is 1.
-While it's important that the estimator is right expectation, we also care about how closely it concentrates around $\phi_i$.
+While it's important that the estimator is right in expectation, we also care about how closely it concentrates around $\phi_i$.
 To this end, let's compute the variance. We'll use three properties of the variance:
 
 - **Scalar Constant:** If $c$ is a constant, then $\text{Var}(cX) = \mathbb{E}[(cX)^2] - \mathbb{E}[cX]^2 = c^2 \text{Var}(X)$. 
@@ -132,7 +131,7 @@ $$
 \text{Var}(\tilde{\phi}_i^\text{MC})
 \leq \frac1{m^2} \sum_{j=1}^{m} \sum_{S \subseteq [d] \setminus \{i\}}
 \left(\frac{v(S \cup \{i\}) - v(S)}{d \binom{d-1}{|S|} p_S}\right)^2
-\Pr(\mathbb{1}[S_j = S])
+\mathbb{E}(\mathbb{1}[S_j = S])
 = \frac1{m} \sum_{S \subseteq [d] \setminus \{i\}}
 \left(\frac{v(S \cup \{i\}) - v(S)}{d \binom{d-1}{|S|} p_S}\right)^2
 p_S
@@ -162,9 +161,9 @@ Observe that
 $$
 \begin{align}
 \phi_i &= \sum_{S \subseteq [d] \setminus \{i\}} \frac{v(S \cup \{i\}) - v(S)}{d \binom{d-1}{|S|}}
-\\&= \sum_{S \subseteq [d] \setminus \{i\} : i \in S} \frac{v(S)}{d \binom{d-1}{|S|-1}}
-- \sum_{S \subseteq [d] \setminus \{i\} : i \notin S} \frac{v(S)}{d \binom{d-1}{|S|}}
-\\&= \sum_{S \subseteq [d] \setminus \{i\}} v(S) \left(\frac{\mathbb{1}[i \in S]}{d \binom{d-1}{|S|-1}}
+\\&= \sum_{S \subseteq [d]: i \in S} \frac{v(S)}{d \binom{d-1}{|S|-1}}
+- \sum_{S \subseteq [d]: i \notin S} \frac{v(S)}{d \binom{d-1}{|S|}}
+\\&= \sum_{S \subseteq [d]} v(S) \left(\frac{\mathbb{1}[i \in S]}{d \binom{d-1}{|S|-1}}
 - \frac{\mathbb{1}[i \notin S]}{d \binom{d-1}{|S|}}\right).
 \end{align}
 $$
@@ -178,7 +177,7 @@ $$
 &= \frac1{m} \sum_{j=1}^m v(S_j) \left(
 \frac{\mathbb{1}[i \in S_j]}{d \binom{d-1}{|S_j|-1}} - \frac{\mathbb{1}[i \notin S_j]}{d \binom{d-1}{|S_j|}}
 \right)
-\frac{1}{p_S}.
+\frac{1}{p_{S_j}}.
 \end{align}
 $$
 
@@ -192,7 +191,7 @@ Shapley values have many wonderful and surprising properties.
 One of them is that they are the best linear approximation to the function $v$, for a certain weighting of the values $v(S)$.
 
 For notational convenience, suppose that $v(\emptyset) =0$.
-(If not, we could subtract $v(\emptyset)$ from all values to center them without change the Shapley values.)
+(If not, we could subtract $v(\emptyset)$ from all values to center them without changing the Shapley values.)
 We can write the vector of Shapley values as
 $$
 \boldsymbol{\phi} =
@@ -226,8 +225,8 @@ $$
 \\& = \arg \min_{\boldsymbol{\beta} \in \mathbb{R}^d} \| \mathbf{A} \boldsymbol{\beta} - \mathbf{b} \|^2 + \mathbf{1} \frac{v([d])}{d},
 \end{align}
 $$
-where we define $\mathbf{b} = \mathbf{b'} - \mathbf{A' 1} \frac{v([d])}{d}$,
-we define $\mathbf{A}= \mathbf{A' P}$,
+where we define $\mathbf{b} = \mathbf{b'} - \mathbf{A}' \mathbf{1} \frac{v([d])}{d}$,
+we define $\mathbf{A}= \mathbf{A}' \mathbf{P}$,
 and we define $\mathbf{P} = \mathbf{I} - \frac1{d} \mathbf{1} \mathbf{1}^\top$ as the projection matrix onto the subspace orthogonal to the constant vector $\mathbf{1}$.
 
 Now we can apply our favorite linear regression tools.
@@ -257,7 +256,7 @@ $$
 The least squares solution on the sampled problem is given by:
 $$
 \tilde{\boldsymbol{\beta}}=\arg \min_{\boldsymbol{\beta} \in \mathbb{R}^d}
-\| \boldsymbol{\Pi} \mathbf{A} \boldsymbol{\beta} - \boldsymbol{\Pi} \mathbf{b} \|_2
+\| \boldsymbol{\Pi} \mathbf{A} \boldsymbol{\beta} - \boldsymbol{\Pi} \mathbf{b} \|^2
 = \left( \mathbf{A}^\top \boldsymbol{\Pi}^\top \boldsymbol{\Pi} \mathbf{A} \right)^{+} \mathbf{A}^\top \boldsymbol{\Pi}^\top \boldsymbol{\Pi} \mathbf{b}
 $$
 Notice that we reweight the sampling matrix so that $\mathbf{A}^\top \boldsymbol{\Pi}^\top \boldsymbol{\Pi} \mathbf{A}$ and $\mathbf{A}^\top \boldsymbol{\Pi}^\top \boldsymbol{\Pi} \mathbf{b}$ are correct in expectation; that is, $\mathbb{E}[ \boldsymbol{\Pi}^\top \boldsymbol{\Pi}] = \mathbf{I}$.
