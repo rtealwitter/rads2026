@@ -221,7 +221,7 @@ J(\mathbf{x}, \mathbf{y})
 <section id="minhash-algorithm" class="level3">
 <h3 class="anchored" data-anchor-id="minhash-algorithm">MinHash Algorithm</h3>
 <p>We’ll use the MinHash algorithm to build the compression function <span class="math inline">\(c:\{0,1\}^d \rightarrow \mathbb{R}^k\)</span>.</p>
-<p>Consider an input <span class="math inline">\(\mathbf{x} \in \{0,1\}^d\)</span>. We start by choosing <span class="math inline">\(k\)</span> random hash functions <span class="math inline">\(h_i: \{0, \ldots, d\} \rightarrow [0,1]\)</span> for <span class="math inline">\(i \in [k]\)</span>. For each hash function <span class="math inline">\(h_i\)</span> we’ll compute <span class="math display">\[\begin{align*}
+<p>Consider an input <span class="math inline">\(\mathbf{x} \in \{0,1\}^d\)</span>. We start by choosing <span class="math inline">\(k\)</span> random hash functions <span class="math inline">\(h_i: \{1, \ldots, d\} \rightarrow [0,1]\)</span> for <span class="math inline">\(i \in [k]\)</span>. For each hash function <span class="math inline">\(h_i\)</span> we’ll compute <span class="math display">\[\begin{align*}
 c_i(\mathbf{x}) = \min_{j \in \{1, \ldots, d\}: x_j = 1} h_i(j).
 \end{align*}\]</span> In words, we hash each index where <span class="math inline">\(\mathbf{x}\)</span> is non-zero to a random value in <span class="math inline">\([0,1]\)</span>. Then we take the minimum value of the hash function over all the non-zero indices. We call the compression <span class="math inline">\(C(\mathbf{x}) = (c_1(\mathbf{x}), \ldots, c_k(\mathbf{x}))\)</span>. We can see this process represented in the figure below.</p>
 <p align="center">
@@ -255,7 +255,6 @@ Proof of Claim
 \textrm{Var}( \tilde{J}(\mathbf{x}, \mathbf{y}) )
 &amp;= \frac1{k^2} \sum_{i=1}^k \textrm{Var}( \mathbb{1}[c_i(\mathbf{x}) = c_i(\mathbf{y})] ) \\
 &amp;= \frac1{k^2} \sum_{i=1}^k \left(J(\mathbf{x}, \mathbf{y}) -  J(\mathbf{x}, \mathbf{y})^2\right)
-\leq \frac1{k} J(\mathbf{x}, \mathbf{y})
 \leq \frac1{4k},
 \end{align*}\]</span> where we used the fact that the variance of a Bernoulli random variable with parameter <span class="math inline">\(p\)</span> is <span class="math inline">\(p(1-p)\)</span> and that <span class="math inline">\(p(1-p) \leq 1/4\)</span> for all <span class="math inline">\(p \in [0,1]\)</span>.</p>
 <p>How big should we choose <span class="math inline">\(k\)</span> so that the estimate is with an additive error <span class="math inline">\(\epsilon\)</span> of its expectation with probability <span class="math inline">\(1-\delta\)</span>?</p>
@@ -344,7 +343,7 @@ Proof of Claim
 &amp;= \| \mathbf{x} \|_2^2 + \| \mathbf{y} \|_2^2 - 2 \langle \mathbf{x}, \mathbf{y} \rangle \\
 &amp;= 2 - 2 \cos(\theta(\mathbf{x}, \mathbf{y})).
 \end{align*}\]</span></p>
-<p>Let’s design a LSH scheme for cosine similarity with <span class="math inline">\(r\)</span> rows. Let <span class="math inline">\(\mathbf{g}_1, \ldots, \mathbf{g}_r \in \mathbb{R}^d\)</span> be random vectors with each entry drawn from the standard normal distribution <span class="math inline">\(\mathcal{N}(0,1)\)</span>. Let <span class="math inline">\(f: \{-1, 1\}^r \to \{1, \ldots, m\}\)</span> be a uniform random hash function. Then we define the LSH hash function <span class="math inline">\(h: \mathbb{R}^d \to \{1, \ldots, m\}\)</span> as <span class="math display">\[\begin{align*}
+<p>Let’s design a LSH scheme for cosine similarity with <span class="math inline">\(r\)</span> rows. Let <span class="math inline">\(\mathbf{g}_1, \ldots, \mathbf{g}_r \in \mathbb{R}^d\)</span> be random vectors with each entry drawn from the standard normal distribution <span class="math inline">\(\mathcal{N}(0,1)\)</span>. Let <span class="math inline">\(f: \{-1, 1\}^r \to \{1, \ldots, m\}\)</span> be a uniform random hash function, and <span class="math inline">\(\textrm{sign}(y) = 1\)</span> if <span class="math inline">\(y \geq 0\)</span> and <span class="math inline">\(-1\)</span> otherwise. Then we define the LSH hash function <span class="math inline">\(h: \mathbb{R}^d \to \{1, \ldots, m\}\)</span> as <span class="math display">\[\begin{align*}
 h(\mathbf{x}) = f([\textrm{sign}(\langle \mathbf{g}_1, \mathbf{x} \rangle), \ldots,\textrm{sign}(\langle \mathbf{g}_r, \mathbf{x} \rangle) ]).
 \end{align*}\]</span></p>
 <p>Let <span class="math inline">\(\theta = \theta(\mathbf{x}, \mathbf{y})\)</span>. We will show that <span class="math display">\[\begin{align*}

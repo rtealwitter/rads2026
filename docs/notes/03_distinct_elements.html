@@ -199,7 +199,7 @@ window.Quarto = {
 <h2 class="anchored" data-anchor-id="chebyshevs-inequality">Chebyshev’s Inequality</h2>
 <p><strong>Lemma:</strong> Let <span class="math inline">\(X\)</span> be a random variable with expectation <span class="math inline">\(\mathbb{E}[X]\)</span> and variance <span class="math inline">\(\sigma^2 = \textrm{Var}[X]\)</span>. Then for any <span class="math inline">\(k &gt; 0\)</span>,</p>
 <p><span class="math display">\[
-\Pr(|X - \mathbb{E}[X]| &gt; k \sigma) \leq \frac{1}{k^2}.
+\Pr(|X - \mathbb{E}[X]| \geq k \sigma) \leq \frac{1}{k^2}.
 \]</span></p>
 <p>When the variance is smaller, we expect <span class="math inline">\(X\)</span> to concentrate more closely around its expectation. Chebyshev’s inequality is one way to formalize this intuition.</p>
 <p>There are two main benefits of Chebyshev’s over Markov’s:</p>
@@ -411,12 +411,12 @@ $$
 \leq \frac{1}{(D+1)^2}.
 \]</span></p>
 <p>Let’s try applying Chebyshev’s inequality. We know <span class="math inline">\(\mathbb{E}[S] = \frac{1}{D+1} = \mu\)</span> and <span class="math inline">\(\textrm{Var}(S) \leq \frac{1}{(D+1)^2} = \mu^2\)</span>. The bound we want is <span class="math inline">\(\Pr(|S - \mu | \geq \epsilon \mu) \leq \delta\)</span> where <span class="math inline">\(\delta\)</span> is a (small) probability of failure. Instead, Chebyshev’s inequality gives <span class="math display">\[
-\Pr(|S - \mu| \geq \epsilon \mu) = \Pr( |S - \mu| \geq \epsilon \sigma )
+\Pr(|S - \mu| \geq \epsilon \mu) \leq \Pr( |S - \mu| \geq \epsilon \sigma )
 \leq \frac{1}{\epsilon^2}.
 \]</span> But <span class="math inline">\(\epsilon\)</span> is a number less than <span class="math inline">\(1\)</span> so the bound is vacuous!!</p>
 <section id="variance-reduction" class="level3">
 <h3 class="anchored" data-anchor-id="variance-reduction">Variance Reduction</h3>
-<p>Just as we repeated the core subroutine in the count-min algorithm, we’ll repeat the core subroutine in this algorithm. The new algorithm is to choose <span class="math inline">\(k\)</span> random hash functions <span class="math inline">\(h_1, \ldots, h_k: \mathcal{U} \rightarrow [0, 1]\)</span>. We’ll keep <span class="math inline">\(k\)</span> independent sketches of the minimum value <span class="math inline">\(S_1, \ldots, S_k\)</span> that are all initialized to <span class="math inline">\(1\)</span>. Then, when we see item <span class="math inline">\(x_i\)</span>, we update <span class="math display">\[S_j \gets \min(S_j, h_j(x_i))\]</span> for every <span class="math inline">\(j \in \{1, \ldots, k\}\)</span>. At the end of the stream, we take the average <span class="math inline">\(S = (S_1 + \ldots + S_k)/k\)</span> and return the estimate <span class="math inline">\(\hat{D} = \frac{1}{S} - 1\)</span>.</p>
+<p>Just as we repeated the core subroutine in the count-min algorithm, we’ll repeat the core subroutine in this algorithm. The new algorithm is to choose <span class="math inline">\(k\)</span> random hash functions <span class="math inline">\(h_1, \ldots, h_k: \mathcal{U} \rightarrow [0, 1]\)</span>. We’ll keep <span class="math inline">\(k\)</span> independent sketches of the minimum value <span class="math inline">\(S_1, \ldots, S_k\)</span> that are all initialized to <span class="math inline">\(1\)</span>. Then, when we see item <span class="math inline">\(x_i\)</span>, we update <span class="math display">\[S_j \gets \min(S_j, h_j(x_i))\]</span> for every <span class="math inline">\(j \in \{1, \ldots, k\}\)</span>. At the end of the stream, we take the average <span class="math inline">\(\bar{S} = (S_1 + \ldots + S_k)/k\)</span> and return the estimate <span class="math inline">\(\hat{D} = \frac{1}{\bar{S}} - 1\)</span>.</p>
 <p>Our new algorithm is an example of a general strategy for variance reduction. We repeat many independent trials and take the mean. Given i.i.d. (independent, identically distributed) random variables, <span class="math inline">\(X_1, \ldots, X_k\)</span> with mean <span class="math inline">\(\mu\)</span> and variance <span class="math inline">\(\sigma^2\)</span>, we know that</p>
 <p><span class="math display">\[
 \mathbb{E} \left[ \frac{1}{k} \sum_{i=1}^k X_i \right]
@@ -426,29 +426,29 @@ $$
 <p><span class="math display">\[
 \textrm{Var}\left[
 \frac{1}{k}
-\sum_{i}^k X_i\right]
-= \frac{1}{k^2}\sum_{i}^k \textrm{Var} \left[X_i\right]
+\sum_{i=1}^k X_i\right]
+= \frac{1}{k^2}\sum_{i=1}^k \textrm{Var} \left[X_i\right]
 = \frac{\sigma^2}{k}
 \]</span> where we used linearity of expectation and linearity of variance (since each <span class="math inline">\(X_i\)</span> is independent).</p>
-<p>Applying the variance reduction analysis to our algorithm, we have that <span class="math inline">\(\mathbb{E}[S] = \mu\)</span> as before but now <span class="math inline">\(\textrm{Var}(S) \leq \frac{\mu^2}{k}\)</span>. Then Chebyshev’s inequality gives <span class="math display">\[
-\Pr\left(|S - \mu| \geq c \frac{\mu}{\sqrt{k}} \right) \leq \frac{1}{c^2}.
+<p>Applying the variance reduction analysis to our algorithm, we have that <span class="math inline">\(\mathbb{E}[\bar{S}] = \mu\)</span> as before but now <span class="math inline">\(\textrm{Var}(\bar{S}) \leq \frac{\mu^2}{k}\)</span>. Then Chebyshev’s inequality gives <span class="math display">\[
+\Pr\left(|\bar{S} - \mu| \geq c \frac{\mu}{\sqrt{k}} \right) \leq \frac{1}{c^2}.
 \]</span> Setting <span class="math inline">\(c = \frac{1}{\sqrt{\delta}}\)</span> and <span class="math inline">\(k = \frac{1}{\epsilon^2 \delta}\)</span>, we have <span class="math display">\[
-\Pr(|S - \mu| \geq \epsilon \mu) \leq \delta.
+\Pr(|\bar{S} - \mu| \geq \epsilon \mu) \leq \delta.
 \]</span></p>
-<p>We’re <em>nearly</em> done except that we have only bounded <span class="math inline">\(S\)</span> around its expectation. We really need to bound <span class="math inline">\(\hat{D}\)</span> around its expectation. We know that with probability <span class="math inline">\(\delta\)</span>, <span class="math display">\[
-(1-\epsilon) \mathbb{E}[S]
-\leq S \leq (1+\epsilon) \mathbb{E}[S].
+<p>We’re <em>nearly</em> done except that we have only bounded <span class="math inline">\(\bar{S}\)</span> around its expectation. We really need to bound <span class="math inline">\(\hat{D}\)</span> around its expectation. We know that with probability <span class="math inline">\(1-\delta\)</span>, <span class="math display">\[
+(1-\epsilon) \mathbb{E}[\bar{S}]
+\leq \bar{S} \leq (1+\epsilon) \mathbb{E}[\bar{S}].
 \]</span> Inverting gives, <span class="math display">\[
-\frac{1}{(1+\epsilon) \mathbb{E}[S]} \leq \frac{1}{S} \leq \frac{1}{(1-\epsilon) \mathbb{E}[S]}.
+\frac{1}{(1+\epsilon) \mathbb{E}[\bar{S}]} \leq \frac{1}{\bar{S}} \leq \frac{1}{(1-\epsilon) \mathbb{E}[\bar{S}]}.
 \]</span> We can use the fact (easily verified on a graphing calculator like <a href="https://www.desmos.com/calculator/5u3kwrwq7p">Desmos</a>) that <span class="math inline">\(\frac{1}{1+\epsilon} \geq 1 - 2\epsilon\)</span> and <span class="math inline">\(\frac{1}{1-\epsilon} \leq 1 + 2\epsilon\)</span>. We subtract 1 from each term to get <span class="math display">\[
-(1-2\epsilon) \frac{1}{\mathbb{E}[S]} - 1
-\leq \frac{1}{S} - 1 \leq (1+2\epsilon)
-\frac{1}{\mathbb{E}[S]} - 1.
-\]</span> Then, for <span class="math inline">\(\mathbb{E}[S] \leq \frac12\)</span>, we have <span class="math display">\[
-(1-4 \epsilon)\left( \frac{1}{\mathbb{E}[S]} - 1 \right)
-\leq \frac{1}{S} - 1
-\leq (1+4\epsilon) \left( \frac{1}{\mathbb{E}[S]} - 1 \right).
-\]</span> (You can check the inequalities by plotting <a href="https://www.desmos.com/calculator/qwxy34rllc">here</a>.) Since <span class="math inline">\(D = \frac{1}{\mathbb{E}[S]} - 1\)</span> and <span class="math inline">\(\hat{D} = \frac{1}{S} - 1\)</span>, we have that with probability <span class="math inline">\(\delta\)</span>, <span class="math display">\[
+(1-2\epsilon) \frac{1}{\mathbb{E}[\bar{S}]} - 1
+\leq \frac{1}{\bar{S}} - 1 \leq (1+2\epsilon)
+\frac{1}{\mathbb{E}[\bar{S}]} - 1.
+\]</span> Then, for <span class="math inline">\(\mathbb{E}[\bar{S}] \leq \frac12\)</span>, we have <span class="math display">\[
+(1-4 \epsilon)\left( \frac{1}{\mathbb{E}[\bar{S}]} - 1 \right)
+\leq \frac{1}{\bar{S}} - 1
+\leq (1+4\epsilon) \left( \frac{1}{\mathbb{E}[\bar{S}]} - 1 \right).
+\]</span> (You can check the inequalities by plotting <a href="https://www.desmos.com/calculator/qwxy34rllc">here</a>.) Since <span class="math inline">\(D = \frac{1}{\mathbb{E}[\bar{S}]} - 1\)</span> and <span class="math inline">\(\hat{D} = \frac{1}{\bar{S}} - 1\)</span>, we have that with probability <span class="math inline">\(1-\delta\)</span>, <span class="math display">\[
 (1-4\epsilon) D \leq \hat{D} \leq (1+4\epsilon) D.
 \]</span> We lose a small factor on the <span class="math inline">\(\epsilon\)</span> but this goes into the big-O notation. So our final space complexity is <span class="math inline">\(O(k \log D) = O\left(\frac{\log D}{\epsilon^2 \delta}\right)\)</span>. The <span class="math inline">\(\log D\)</span> factor comes from the fact that each of the <span class="math inline">\(k\)</span> hash functions needs <span class="math inline">\(\log D\)</span> bits to represent the input. Impressively, the space complexity has no <em>linear</em> dependence on the number of distinct elements <span class="math inline">\(D\)</span>. We know that the <span class="math inline">\(\frac{1}{\epsilon^2}\)</span> dependence cannot be improved but we can get a better bound depending on <span class="math inline">\(\log(1/\delta)\)</span> instead of <span class="math inline">\(1/\delta\)</span> by using a stronger concentration inequality.</p>
 <p>For our analysis, we assumed that we could hash to real numbers on <span class="math inline">\([0,1]\)</span>. In practice, the hash function maps to bit vectors and the estimate <span class="math inline">\(S\)</span> is the number of leading zeros in the bit vector. Intuitively, the more distinct hashes we see, the higher we expect the maximum number of leading zeros to be.</p>

@@ -62,7 +62,7 @@ We'll use the MinHash algorithm to build the compression function $c:\{0,1\}^d \
 
 Consider an input $\mathbf{x} \in \{0,1\}^d$.
 We start by choosing $k$ random hash functions
-$h_i: \{0, \ldots, d\} \rightarrow [0,1]$ for $i \in [k]$.
+$h_i: \{1, \ldots, d\} \rightarrow [0,1]$ for $i \in [k]$.
 For each hash function $h_i$
 we'll compute
 \begin{align*}
@@ -119,7 +119,6 @@ The variance of the estimator is
 \textrm{Var}( \tilde{J}(\mathbf{x}, \mathbf{y}) )
 &= \frac1{k^2} \sum_{i=1}^k \textrm{Var}( \mathbb{1}[c_i(\mathbf{x}) = c_i(\mathbf{y})] ) \\
 &= \frac1{k^2} \sum_{i=1}^k \left(J(\mathbf{x}, \mathbf{y}) -  J(\mathbf{x}, \mathbf{y})^2\right)
-\leq \frac1{k} J(\mathbf{x}, \mathbf{y})
 \leq \frac1{4k},
 \end{align*}
 where we used the fact that the variance of a Bernoulli random variable with parameter $p$ is $p(1-p)$ and that $p(1-p) \leq 1/4$ for all $p \in [0,1]$.
@@ -310,7 +309,7 @@ Then we have
 
 Let's design a LSH scheme for cosine similarity with $r$ rows.
 Let $\mathbf{g}_1, \ldots, \mathbf{g}_r \in \mathbb{R}^d$ be random vectors with each entry drawn from the standard normal distribution $\mathcal{N}(0,1)$.
-Let $f: \{-1, 1\}^r \to \{1, \ldots, m\}$ be a uniform random hash function.
+Let $f: \{-1, 1\}^r \to \{1, \ldots, m\}$ be a uniform random hash function, and $\textrm{sign}(y) = 1$ if $y \geq 0$ and $-1$ otherwise.
 Then we define the LSH hash function
 $h: \mathbb{R}^d \to \{1, \ldots, m\}$ as
 \begin{align*}

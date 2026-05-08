@@ -16,7 +16,7 @@ This class, we will learn and use linearity of variance and Chebyshev's inequali
 and variance $\sigma^2 = \textrm{Var}[X]$. Then for any $k > 0$,
 
 $$
-\Pr(|X - \mathbb{E}[X]| > k \sigma) \leq \frac{1}{k^2}.
+\Pr(|X - \mathbb{E}[X]| \geq k \sigma) \leq \frac{1}{k^2}.
 $$
 
 When the variance is smaller, we expect $X$ to concentrate more closely around its expectation.
@@ -366,7 +366,7 @@ The bound we want is $\Pr(|S - \mu | \geq \epsilon \mu) \leq \delta$
 where $\delta$ is a (small) probability of failure.
 Instead, Chebyshev's inequality gives
 $$
-\Pr(|S - \mu| \geq \epsilon \mu) = \Pr( |S - \mu| \geq \epsilon \sigma )
+\Pr(|S - \mu| \geq \epsilon \mu) \leq \Pr( |S - \mu| \geq \epsilon \sigma )
 \leq \frac{1}{\epsilon^2}.
 $$
 But $\epsilon$ is a number less than $1$ so the bound is vacuous!!
@@ -381,8 +381,8 @@ Then, when we see item $x_i$, we
 update
 $$S_j \gets \min(S_j, h_j(x_i))$$ for every $j \in \{1, \ldots, k\}$.
 At the end of the stream,
-we take the average $S = (S_1 + \ldots + S_k)/k$ and return
-the estimate $\hat{D} = \frac{1}{S} - 1$.
+we take the average $\bar{S} = (S_1 + \ldots + S_k)/k$ and return
+the estimate $\hat{D} = \frac{1}{\bar{S}} - 1$.
 
 Our new algorithm is an example of a general strategy for variance reduction.
 We repeat many independent trials and take the mean.
@@ -400,55 +400,55 @@ and
 $$
 \textrm{Var}\left[
 \frac{1}{k}
-\sum_{i}^k X_i\right]
-= \frac{1}{k^2}\sum_{i}^k \textrm{Var} \left[X_i\right]
+\sum_{i=1}^k X_i\right]
+= \frac{1}{k^2}\sum_{i=1}^k \textrm{Var} \left[X_i\right]
 = \frac{\sigma^2}{k}
 $$
 where we used linearity of expectation and linearity of variance
 (since each $X_i$ is independent).
 
 Applying the variance reduction analysis to our algorithm,
-we have that $\mathbb{E}[S] = \mu$ as before but now
-$\textrm{Var}(S) \leq \frac{\mu^2}{k}$.
+we have that $\mathbb{E}[\bar{S}] = \mu$ as before but now
+$\textrm{Var}(\bar{S}) \leq \frac{\mu^2}{k}$.
 Then Chebyshev's inequality gives
 $$
-\Pr\left(|S - \mu| \geq c \frac{\mu}{\sqrt{k}} \right) \leq \frac{1}{c^2}.
+\Pr\left(|\bar{S} - \mu| \geq c \frac{\mu}{\sqrt{k}} \right) \leq \frac{1}{c^2}.
 $$
 Setting $c = \frac{1}{\sqrt{\delta}}$ and $k = \frac{1}{\epsilon^2 \delta}$, we have
 $$
-\Pr(|S - \mu| \geq \epsilon \mu) \leq \delta.
+\Pr(|\bar{S} - \mu| \geq \epsilon \mu) \leq \delta.
 $$
 
-We're *nearly* done except that we have only bounded $S$
+We're *nearly* done except that we have only bounded $\bar{S}$
 around its expectation.
 We really need to bound $\hat{D}$ around its expectation.
-We know that with probability $\delta$,
+We know that with probability $1-\delta$,
 $$
-(1-\epsilon) \mathbb{E}[S] 
-\leq S \leq (1+\epsilon) \mathbb{E}[S].
+(1-\epsilon) \mathbb{E}[\bar{S}]
+\leq \bar{S} \leq (1+\epsilon) \mathbb{E}[\bar{S}].
 $$
 Inverting gives,
 $$
-\frac{1}{(1+\epsilon) \mathbb{E}[S]} \leq \frac{1}{S} \leq \frac{1}{(1-\epsilon) \mathbb{E}[S]}.
+\frac{1}{(1+\epsilon) \mathbb{E}[\bar{S}]} \leq \frac{1}{\bar{S}} \leq \frac{1}{(1-\epsilon) \mathbb{E}[\bar{S}]}.
 $$
 We can use the fact (easily verified on a graphing calculator like [Desmos](https://www.desmos.com/calculator/5u3kwrwq7p)) that $\frac{1}{1+\epsilon} \geq 1 - 2\epsilon$
 and $\frac{1}{1-\epsilon} \leq 1 + 2\epsilon$.
 We subtract 1 from each term to get
 $$
-(1-2\epsilon) \frac{1}{\mathbb{E}[S]} - 1 
-\leq \frac{1}{S} - 1 \leq (1+2\epsilon)
-\frac{1}{\mathbb{E}[S]} - 1.
+(1-2\epsilon) \frac{1}{\mathbb{E}[\bar{S}]} - 1
+\leq \frac{1}{\bar{S}} - 1 \leq (1+2\epsilon)
+\frac{1}{\mathbb{E}[\bar{S}]} - 1.
 $$
-Then, for $\mathbb{E}[S] \leq \frac12$, we have
+Then, for $\mathbb{E}[\bar{S}] \leq \frac12$, we have
 $$
-(1-4 \epsilon)\left( \frac{1}{\mathbb{E}[S]} - 1 \right)
-\leq \frac{1}{S} - 1 
-\leq (1+4\epsilon) \left( \frac{1}{\mathbb{E}[S]} - 1 \right).
+(1-4 \epsilon)\left( \frac{1}{\mathbb{E}[\bar{S}]} - 1 \right)
+\leq \frac{1}{\bar{S}} - 1
+\leq (1+4\epsilon) \left( \frac{1}{\mathbb{E}[\bar{S}]} - 1 \right).
 $$
 (You can check the inequalities by plotting [here](https://www.desmos.com/calculator/qwxy34rllc).)
-Since $D = \frac{1}{\mathbb{E}[S]} - 1$ and
-$\hat{D} = \frac{1}{S} - 1$, we have
-that with probability $\delta$,
+Since $D = \frac{1}{\mathbb{E}[\bar{S}]} - 1$ and
+$\hat{D} = \frac{1}{\bar{S}} - 1$, we have
+that with probability $1-\delta$,
 $$
 (1-4\epsilon) D \leq \hat{D} \leq (1+4\epsilon) D.
 $$
