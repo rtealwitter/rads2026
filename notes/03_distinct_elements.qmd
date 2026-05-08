@@ -187,7 +187,6 @@ $$
 X = \int_{x=0}^X dx = \int_{x=0}^\infty \mathbb{1}[X \geq x] dx.
 $$
 Taking expectation yields the identity.
-There are other ways to prove this identity described in notes [here](https://stat.uiowa.edu/sites/stat.uiowa.edu/files/cae/Lo_Expectation.pdf).
 
 Now let's deploy the identity for the continuous random variable $S$:
 $$

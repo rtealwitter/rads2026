@@ -241,9 +241,9 @@ To see this, observe that
 by the property of the $\epsilon$-net.
 Multiplying by $|c_\ell|$ gives
 \begin{align*}
-\| \mathbf{r}_\ell \|_2 =
+\| \mathbf{r}_{\ell+1} \|_2 =
 \| \mathbf{r}_{\ell} - c_\ell \mathbf{w}_\ell \|_2
-\leq \epsilon c_\ell = \epsilon \| \mathbf{r}_{\ell-1} \|_2
+\leq \epsilon c_\ell = \epsilon \| \mathbf{r}_{\ell} \|_2
 \end{align*}
 The inductive claim follows.
 

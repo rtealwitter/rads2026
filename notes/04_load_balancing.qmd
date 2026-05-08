@@ -65,7 +65,11 @@ In order to reduce notation and keep the math simple,
 let's assume that $m=n$. That is, we assume that we have
 exactly the same number of servers and requests.
 As we did in the last problem, we'll continue to assume we have
-access to a uniformly random hash function $h$ so that
+access to a uniformly random hash function $h$,
+meaning $h$ is drawn uniformly at random from all possible functions
+$\mathcal{U} \rightarrow \{1, \ldots, n\}$.
+In particular, for any distinct $x \neq y$, $h(x)$ and $h(y)$ are independent
+uniform random variables on $\{1, \ldots, n\}$, which implies
 $\Pr(h(x) = h(y))=\frac{1}{n}$ when $x \neq y$ and $\Pr(h(x)=h(x))=1$ for all $x$.
 
 We can visualize the load balancing problem in the following figure:
@@ -155,8 +159,9 @@ We have
 $$
 s_i = \sum_{j=1}^m s_{i,j}.
 $$
-Since each $s_{i,j}$ and $s_{i,j'}$ are independent, we can apply
-linearity of variance and get
+Since $h(x_j)$ and $h(x_{j'})$ are independent for distinct inputs $x_j \neq x_{j'}$,
+the indicators $s_{i,j}$ and $s_{i,j'}$ are independent for $j \neq j'$.
+We can therefore apply linearity of variance and get
 $$
 \textrm{Var}(s_i)
 =\sum_{j=1}^m \textrm{Var}(s_{i,j}).

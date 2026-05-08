@@ -224,9 +224,8 @@ k &amp; \textrm{with probability } \frac{1}{2k^2}.
 \Pr(|X| \geq k) \leq \frac{1}{k^2}.
 \]</span> This is exactly true for our random variable <span class="math inline">\(X\)</span> so Chebyshev’s inequality is tight for this random variable. Notice that we constructed the random variable after fixing the value <span class="math inline">\(k\)</span>. Do you think there’s one random variable that is tight for <em>all</em> values of <span class="math inline">\(k\)</span>?</p>
 <p>While Chebyshev’s inequality is tight for some random variables, it is loose for many other random variables. We may therefore suspect that if we make stronger assumptions on the random variables, we can get better concentration inequalities. The central limit theorem gives us a hint about what type of random variables we should consider.</p>
-<p><strong>Central Limit Theorem:</strong> Any sum of <em>mutually independent</em> and identically distributed random variables <span class="math inline">\(X_1, \ldots, X_n\)</span> with mean <span class="math inline">\(\mu\)</span> and finite variance <span class="math inline">\(\sigma^2\)</span> converges to a Gaussian random variable with mean <span class="math inline">\(n \cdot \mu\)</span> and variance <span class="math inline">\(n \cdot \sigma^2\)</span> as <span class="math inline">\(n\)</span> goes to infinity. Formally, <span class="math display">\[
-\lim_{n \rightarrow \infty}
-\sum_{i=1}^n X_i \sim \mathcal{N}(n \mu, n \sigma^2).
+<p><strong>Central Limit Theorem:</strong> Any sum of <em>mutually independent</em> and identically distributed random variables <span class="math inline">\(X_1, \ldots, X_n\)</span> with mean <span class="math inline">\(\mu\)</span> and finite variance <span class="math inline">\(\sigma^2\)</span> converges to a Gaussian random variable with mean <span class="math inline">\(n \cdot \mu\)</span> and variance <span class="math inline">\(n \cdot \sigma^2\)</span> as <span class="math inline">\(n\)</span> goes to infinity. That is, for large <span class="math inline">\(n\)</span>, <span class="math display">\[
+\sum_{i=1}^n X_i \approx \mathcal{N}(n\mu, n\sigma^2).
 \]</span></p>
 <p>By linearity of expectation and linearity of variance, we know what the mean and variance of the sum should be. The interesting part of the central limit theorem is that the sum converges to a Gaussian distribution.</p>
 <p>We stated the central limit theorem for random variables that are identically distributed so that we could cleanly describe the expectation and variance of the sum. But the central limit theorem also holds for random variables that are not identically distributed.</p>
@@ -235,7 +234,7 @@ k &amp; \textrm{with probability } \frac{1}{2k^2}.
 \]</span> <span class="math display">\[
 = \Pr(X_1=v_1) \cdot \ldots \cdot \Pr(X_n = v_n).
 \]</span></p>
-<p>Let’s consider the central limit in the context of the coin flip example. The figure below shows how closely the sum of <span class="math inline">\(n\)</span> coin flips is approximated by the corresponding Gaussian distribution. As <span class="math inline">\(n\)</span> increases, the approximation gets better and better.</p>
+<p>Let’s consider the central limit theorem in the context of the coin flip example. The figure below shows how closely the sum of <span class="math inline">\(n\)</span> coin flips is approximated by the corresponding Gaussian distribution. As <span class="math inline">\(n\)</span> increases, the approximation gets better and better.</p>
 <p><img src="images/central_limit_theorem.png" class="img-fluid"></p>
 <p>Using Chebyshev’s inequality, we showed that if we flip a fair coin 100 times, the probability we see fewer than 30 or more than 70 heads is at most <span class="math inline">\(6.25\%\)</span>. Let’s <em>assume</em> that the central limit theorem holds exactly for 100 coin flips. Then the sum of the random variables <span class="math inline">\(X_1, \ldots, X_{100}\)</span> would be distributed as <span class="math inline">\(\mathcal{N}(50, 25)\)</span>. (Recall we computed that the mean is 50 and the variance is 25 using a sum of indicator random variables for the event that each flip landed heads.) By the Gaussian tail bound, <span class="math display">\[
 \Pr(|X - \mu| \geq k \cdot \sigma) =
@@ -341,7 +340,7 @@ n \geq \frac{3 \log(2/\delta)}{\epsilon^2}.
 \Leftrightarrow
 \epsilon \geq 2 \log(10n).
 \]</span> Plugging in this choice of <span class="math inline">\(\epsilon\)</span>, we have <span class="math display">\[
-\Pr(S \geq 1 + 2 \log(10n))
+\Pr(S_i \geq 1 + 2 \log(10n))
 \leq \frac{1}{10n}.
 \]</span></p>
 <p>So the server with the maximum load has at most <span class="math inline">\(O(\log n)\)</span> jobs with high probability. This is much better than the <span class="math inline">\(O(\sqrt{n})\)</span> bound we proved with Chebyshev’s inequality.</p>

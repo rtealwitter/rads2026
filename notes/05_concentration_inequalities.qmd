@@ -84,10 +84,9 @@ The central limit theorem gives us a hint about what type of random variables we
 
 **Central Limit Theorem:**
 Any sum of *mutually independent* and identically distributed random variables $X_1, \ldots, X_n$ with mean $\mu$ and finite variance $\sigma^2$ converges to a Gaussian random variable with mean $n \cdot \mu$ and variance $n \cdot \sigma^2$ as $n$ goes to infinity.
-Formally,
+That is, for large $n$,
 $$
-\lim_{n \rightarrow \infty}
-\sum_{i=1}^n X_i \sim \mathcal{N}(n \mu, n \sigma^2).
+\sum_{i=1}^n X_i \approx \mathcal{N}(n\mu, n\sigma^2).
 $$
 
 By linearity of expectation and linearity of variance, we know what the mean and variance of the sum should be. The interesting part of the central limit theorem is that the sum converges to a Gaussian distribution.
@@ -103,7 +102,7 @@ $$
 = \Pr(X_1=v_1) \cdot \ldots \cdot \Pr(X_n = v_n).
 $$
 
-Let's consider the central limit in the context of the coin flip example.
+Let's consider the central limit theorem in the context of the coin flip example.
 The figure below shows how closely the sum of $n$ coin flips is approximated by the corresponding Gaussian distribution.
 As $n$ increases, the approximation gets better and better.
 
@@ -322,7 +321,7 @@ $$
 Plugging in this choice of $\epsilon$,
 we have
 $$
-\Pr(S \geq 1 + 2 \log(10n))
+\Pr(S_i \geq 1 + 2 \log(10n))
 \leq \frac{1}{10n}.
 $$
 

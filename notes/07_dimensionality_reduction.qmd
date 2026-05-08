@@ -265,7 +265,7 @@ Then we can write
 Here, we observed that $\textrm{Var}(Z_i) = \mathbb{E}[Z_i^2] - \mathbb{E}[Z_i]^2 = \mathbb{E}[Z_i^2] = \|\mathbf{x}\|_2^2$ since $\mathbb{E}[Z_i] = 0$.
 
 Now that we know the expectation of $\| \mathbf{\Pi} \mathbf{x} \|_2^2$, we will apply a concentration inequality to show that the random variable $\| \mathbf{\Pi} \mathbf{x} \|_2^2$ concentrates around its mean.
-We will use a specialized concentration inequality for chi-squared random variables with $k$ degrees of freedom which are simply sums of $k$ squared Gaussian random variables.
+We will use a specialized concentration inequality for chi-squared random variables with $k$ degrees of freedom, which are simply sums of $k$ squared Gaussian random variables.
 
 **Concentration of Chi-squared Random Variables:**
 Let $Z$ be a scaled chi-squared random variable with $k$ degrees of freedom.

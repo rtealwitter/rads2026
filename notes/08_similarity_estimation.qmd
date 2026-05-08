@@ -271,7 +271,7 @@ The probability that we find $\mathbf{y}$ is
 The full LSH scheme now has two parameters: $r$ the number of rows and $t$ the number of tables.
 Changing $r$ and $t$ changes the false positive and false negative rates.
 If we increase the number of tables $t$, we decrease the false negative rate and increase the false positive rate.
-If we decrease the number of rows $r$, we increase the false negative rate and decrease the false positive rate.
+If we increase the number of rows $r$, we increase the false negative rate and decrease the false positive rate.
 
 Intuitively, these parameters are in tension but we can find a sweet spot that works well for each application.
 
@@ -331,7 +331,7 @@ As an intermediate result, we will show that
 = 1 - \frac{\theta}{\pi}.
 \end{align*}
 
-We will first show the result in one dimension.
+We will first show the result in two dimensions.
 Consider the random vector $\mathbf{g}$ and its hyperplane.
 Since it is drawn from the standard normal distribution, the direction of $\mathbf{g}$ is uniformly distributed around the unit circle.
 Similarly, the hyperplane is also uniformly distributed around the unit circle.
